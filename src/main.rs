@@ -1,7 +1,7 @@
-mod note;
-use note::{Note};
+use fantasy_in_rust::note::{Note, PitchClass};
+use fantasy_in_rust::scale::{Scale};
 
 fn main() {
-    let not = Note{pitch_class:"sadf".to_string(), octave: 1};
-    println!("asd")
+    let not = Note{pitch_class: PitchClass::As, octave: 1};
+    println!("{:?}", not);
 }
