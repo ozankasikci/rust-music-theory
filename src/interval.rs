@@ -35,7 +35,7 @@ impl Interval {
         let (mut number, mut quality) : (Number, Quality);
         match sc {
             0 => { number = Number::Unison; quality = Quality::Perfect; }
-            1 => { number = Number::Unison }
+            1 => { number = Number::Second; quality = Quality::Minor; }
             2 => { number = Number::Unison }
             3 => { number = Number::Unison }
             4 => { number = Number::Unison }
