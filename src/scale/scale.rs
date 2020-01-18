@@ -1,28 +1,39 @@
-use crate::note::{PitchClass, Note};
-use crate::scale::{ScaleType};
+use crate::interval::{Interval };
+use crate::note::{Note, PitchClass};
+use crate::scale::{ScaleType, Mode};
 
 #[derive(Debug)]
 pub struct Scale {
     pub tonic: PitchClass,
     pub octave: i8,
     pub scale_type: ScaleType,
-    pub steps: Vec<i8>,
+    pub mode: Mode,
+    pub intervals: Vec<Interval>,
 }
 
 impl Scale {
-    pub fn get_notes() -> &[Note] {
+    pub fn new(scale_type: ScaleType, tonic: PitchClass, octave: i8) -> Self {
+        let newIntervals = Interval::new_by_semitones;
+
+        let intervals = match scale_type {
+            ScaleType::Diatonic => newIntervals(&[2,2,1,2,2,2,1]),
+        };
+
+        match intervals {
+            Err(_) => Scale{ tonic, octave, scale_type, mode: Mode::Ionian, intervals: vec![] },
+            Ok(i) => Scale{ tonic, octave, scale_type, mode: Mode::Ionian, intervals: i },
+        }
 
     }
+    
+    pub fn notes(&self) -> Vec<Note> {
+        let mut notes: Vec<Note> = vec![];
 
-    pub fn get_steps(&self) -> &[i8] {
-        match self.scale_type {
-            ScaleType::Chromatic => &[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-            ScaleType::Octatonic => &[],
-            ScaleType::Heptatonic => {}
-            ScaleType::Hexatonic => {}
-            ScaleType::Pentatonic => {}
-            ScaleType::Tetratonic => {}
-            ScaleType::Monotonic => {}
+        for i in 0..self.intervals.len() {
+            let note = self.intervals[i].second_note(&Note::new(PitchClass::C, 4));
+            println!("{:?}, {:?}", note, self.intervals[i]);
         }
+
+        notes
     }
 }

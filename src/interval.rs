@@ -1,4 +1,13 @@
-enum Quality {
+use crate::interval::errors::InvalidIntervalError;
+use crate::note::{Note, PitchClass};
+use strum_macros::Display;
+
+
+
+mod errors;
+
+#[derive(Display, Debug, Copy, Clone)]
+pub enum Quality {
     Perfect,
     Major,
     Minor,
@@ -6,7 +15,8 @@ enum Quality {
     Diminished,
 }
 
-enum Number {
+#[derive(Display, Debug, Copy, Clone)]
+pub enum Number {
     Unison,
     Second,
     Third,
@@ -17,39 +27,107 @@ enum Number {
     Octave,
 }
 
-enum Step {
+#[derive(Display, Debug, Copy, Clone)]
+pub enum Step {
     Half,
     Whole,
     Tritone,
 }
 
+#[derive(Debug, Copy, Clone)]
 pub struct Interval {
-    pub semitone_count: i8,
+    pub semitone_count: u8,
     pub quality: Quality,
     pub number: Number,
-    pub step: Step,
+    pub step: Option<Step>,
 }
 
 impl Interval {
-    pub fn new_by_semitone_count(sc: i8) -> Self {
-        let (mut number, mut quality) : (Number, Quality);
+    pub fn new_by_semitones(semi_tones: &[u8]) -> Result<Vec<Self>, errors::InvalidIntervalError> {
+        let mut intervals: Vec<Interval> = vec![];
+
+        if semi_tones.len() == 0 {
+            return Err(InvalidIntervalError)
+        }
+
+        for i in semi_tones {
+            let interval = Self::new_by_semitone(*i)?;
+            intervals.push(interval);
+        }
+
+        Ok(intervals)
+    }
+
+    pub fn new_by_semitone(sc: u8) -> Result<Self, errors::InvalidIntervalError> {
+        let (mut number, mut quality, mut step): (Number, Quality, Option<Step>);
+        step = None;
+
         match sc {
-            0 => { number = Number::Unison; quality = Quality::Perfect; }
-            1 => { number = Number::Second; quality = Quality::Minor; }
-            2 => { number = Number::Unison }
-            3 => { number = Number::Unison }
-            4 => { number = Number::Unison }
-            5 => { number = Number::Unison }
-            6 => { number = Number::Unison }
-            7 => { number = Number::Unison }
-            8 => { number = Number::Unison }
-            9 => { number = Number::Unison }
-            10 => { number = Number::Unison }
-            11 => { number = Number::Unison }
-            12 => { number = Number::Unison }
-            _ => {}
+            0 => {
+                number = Number::Unison;
+                quality = Quality::Perfect;
+            }
+            1 => {
+                number = Number::Second;
+                quality = Quality::Minor;
+                step = Some(Step::Half);
+            }
+            2 => {
+                number = Number::Second;
+                quality = Quality::Major;
+                step = Some(Step::Whole);
+            }
+            3 => {
+                number = Number::Third;
+                quality = Quality::Minor;
+            }
+            4 => {
+                number = Number::Third;
+                quality = Quality::Major;
+            }
+            5 => {
+                number = Number::Fourth;
+                quality = Quality::Perfect;
+            }
+            6 => {
+                number = Number::Fifth;
+                quality = Quality::Diminished;
+                step = Some(Step::Tritone);
+            }
+            7 => {
+                number = Number::Fifth;
+                quality = Quality::Perfect;
+            }
+            8 => {
+                number = Number::Sixth;
+                quality = Quality::Minor;
+            }
+            9 => {
+                number = Number::Sixth;
+                quality = Quality::Major;
+            }
+            10 => {
+                number = Number::Seventh;
+                quality = Quality::Minor;
+            }
+            11 => {
+                number = Number::Seventh;
+                quality = Quality::Major;
+            }
+            12 => {
+                number = Number::Octave;
+                quality = Quality::Perfect;
+            }
+            _ => {
+                return Err(InvalidIntervalError);
+            }
         };
 
-        Interval
+        Ok(Interval{semitone_count: sc, number, quality, step })
+    }
+
+    pub fn second_note(&self, first_note: &Note) ->  Note {
+       let pc = PitchClass::from_interval(&first_note.pitch_class, self);
+       Note{ octave: first_note.octave, pitch_class: pc }
     }
 }

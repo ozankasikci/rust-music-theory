@@ -1,7 +1,8 @@
+#![allow(dead_code)]
 use fantasy_in_rust::note::{Note, PitchClass};
-use fantasy_in_rust::scale::{Scale};
+use fantasy_in_rust::scale::{Scale, ScaleType};
 
 fn main() {
-    let not = Note{pitch_class: PitchClass::As, octave: 1};
-    println!("{:?}", not);
+    let scale = Scale::new(ScaleType::Diatonic, PitchClass::C, 4);
+    scale.notes();
 }
