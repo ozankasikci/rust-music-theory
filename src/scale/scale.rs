@@ -1,6 +1,6 @@
-use crate::interval::{Interval };
+use crate::interval::Interval;
 use crate::note::{Note, PitchClass};
-use crate::scale::{ScaleType, Mode};
+use crate::scale::{Mode, ScaleType};
 
 #[derive(Debug)]
 pub struct Scale {
@@ -16,16 +16,27 @@ impl Scale {
         let newIntervals = Interval::new_by_semitones;
 
         let intervals = match scale_type {
-            ScaleType::Diatonic => newIntervals(&[2,2,1,2,2,2,1]),
+            ScaleType::Diatonic => newIntervals(&[2, 2, 1, 2, 2, 2, 1]),
         };
 
         match intervals {
-            Err(_) => Scale{ tonic, octave, scale_type, mode: Mode::Ionian, intervals: vec![] },
-            Ok(i) => Scale{ tonic, octave, scale_type, mode: Mode::Ionian, intervals: i },
+            Err(_) => Scale {
+                tonic,
+                octave,
+                scale_type,
+                mode: Mode::Ionian,
+                intervals: vec![],
+            },
+            Ok(i) => Scale {
+                tonic,
+                octave,
+                scale_type,
+                mode: Mode::Ionian,
+                intervals: i,
+            },
         }
-
     }
-    
+
     pub fn notes(&self) -> Vec<Note> {
         let mut notes: Vec<Note> = vec![];
 

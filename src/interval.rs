@@ -2,8 +2,6 @@ use crate::interval::errors::InvalidIntervalError;
 use crate::note::{Note, PitchClass};
 use strum_macros::Display;
 
-
-
 mod errors;
 
 #[derive(Display, Debug, Copy, Clone)]
@@ -47,7 +45,7 @@ impl Interval {
         let mut intervals: Vec<Interval> = vec![];
 
         if semi_tones.len() == 0 {
-            return Err(InvalidIntervalError)
+            return Err(InvalidIntervalError);
         }
 
         for i in semi_tones {
@@ -123,11 +121,19 @@ impl Interval {
             }
         };
 
-        Ok(Interval{semitone_count: sc, number, quality, step })
+        Ok(Interval {
+            semitone_count: sc,
+            number,
+            quality,
+            step,
+        })
     }
 
-    pub fn second_note(&self, first_note: &Note) ->  Note {
-       let pc = PitchClass::from_interval(&first_note.pitch_class, self);
-       Note{ octave: first_note.octave, pitch_class: pc }
+    pub fn second_note(&self, first_note: &Note) -> Note {
+        let pc = PitchClass::from_interval(&first_note.pitch_class, self);
+        Note {
+            octave: first_note.octave,
+            pitch_class: pc,
+        }
     }
 }

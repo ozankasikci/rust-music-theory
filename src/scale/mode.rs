@@ -9,7 +9,4 @@ pub enum Mode {
     Locrian,
 }
 
-impl Mode {
-    
-}
-
+impl Mode {}

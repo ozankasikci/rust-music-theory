@@ -1,5 +1,5 @@
-use std::fmt;
 use crate::interval::Interval;
+use std::fmt;
 
 #[derive(Debug, Copy, Clone)]
 pub enum PitchClass {
@@ -21,8 +21,8 @@ impl PitchClass {
     pub fn from_u8(val: u8) -> Self {
         use PitchClass::*;
         match val {
-           1 =>  C,
-            2 =>  Cs,
+            1 => C,
+            2 => Cs,
             3 => D,
             4 => Ds,
             5 => E,
@@ -33,15 +33,16 @@ impl PitchClass {
             10 => A,
             11 => As,
             12 => B,
-            _ => {
-                B
-            }
+            _ => B,
         }
     }
 
-    pub fn from_interval(pitch: &Self,interval: &Interval) -> Self {
+    pub fn from_interval(pitch: &Self, interval: &Interval) -> Self {
         let current_pitch = *pitch as u8;
-        println!("Current pitch: {}, Semitone Count: {}", current_pitch, interval.semitone_count);
+        println!(
+            "Current pitch: {}, Semitone Count: {}",
+            current_pitch, interval.semitone_count
+        );
 
         let new_pitch = (current_pitch + interval.semitone_count) % 12;
         Self::from_u8(new_pitch)

@@ -8,6 +8,9 @@ pub struct Note {
 
 impl Note {
     pub fn new(pitch_class: PitchClass, octave: i8) -> Self {
-       Note{pitch_class, octave}
+        Note {
+            pitch_class,
+            octave,
+        }
     }
 }
