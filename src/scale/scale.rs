@@ -20,7 +20,7 @@ pub struct Scale {
 }
 
 impl Scale {
-    pub fn new(scale_type: ScaleType, tonic: PitchClass, octave: u8) -> Self {
+    pub fn new(scale_type: ScaleType, tonic: PitchClass, octave: u8, mode: Mode) -> Self {
         let new_intervals = Interval::from_semitones;
 
         let intervals = match scale_type {
@@ -41,7 +41,7 @@ impl Scale {
                 tonic,
                 octave,
                 scale_type,
-                mode: Mode::Ionian,
+                mode,
                 intervals: i,
                 ..Default::default()
             },
@@ -56,10 +56,16 @@ impl Scale {
 
         let mut notes: Vec<Note> = vec![root_note];
 
-        for i in 0..self.intervals.len() {
+        let mut intervals_clone = self.intervals.clone();
+        if let Mode::Aeolian = self.mode {
+            intervals_clone.rotate_right(2);
+            println!("after shift: {:#?}", intervals_clone);
+        }
+
+        for i in 0..intervals_clone.len() {
             let last_note = notes.last().unwrap();
             let interval_first_note = Note::new(last_note.pitch_class, last_note.octave);
-            let interval_second_note = self.intervals[i].second_note_from(interval_first_note);
+            let interval_second_note = intervals_clone[i].second_note_from(interval_first_note);
             notes.push(interval_second_note);
         }
 

@@ -1,4 +1,6 @@
 use crate::note::PitchClass;
+use std::fmt;
+use std::fmt::{Formatter, Error};
 
 #[derive(Debug)]
 pub struct Note {
@@ -14,3 +16,10 @@ impl Note {
         }
     }
 }
+
+impl fmt::Display for Note {
+    fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+        write!(f, "{}", self.pitch_class)
+    }
+}
+
