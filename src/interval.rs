@@ -41,7 +41,7 @@ pub struct Interval {
 }
 
 impl Interval {
-    pub fn new_by_semitones(semi_tones: &[u8]) -> Result<Vec<Self>, errors::InvalidIntervalError> {
+    pub fn from_semitones(semi_tones: &[u8]) -> Result<Vec<Self>, errors::InvalidIntervalError> {
         let mut intervals: Vec<Interval> = vec![];
 
         if semi_tones.len() == 0 {
@@ -49,14 +49,14 @@ impl Interval {
         }
 
         for i in semi_tones {
-            let interval = Self::new_by_semitone(*i)?;
+            let interval = Self::from_semitone(*i)?;
             intervals.push(interval);
         }
 
         Ok(intervals)
     }
 
-    pub fn new_by_semitone(sc: u8) -> Result<Self, errors::InvalidIntervalError> {
+    pub fn from_semitone(sc: u8) -> Result<Self, errors::InvalidIntervalError> {
         let (mut number, mut quality, mut step): (Number, Quality, Option<Step>);
         step = None;
 

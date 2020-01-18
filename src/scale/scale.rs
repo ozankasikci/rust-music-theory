@@ -13,7 +13,7 @@ pub struct Scale {
 
 impl Scale {
     pub fn new(scale_type: ScaleType, tonic: PitchClass, octave: i8) -> Self {
-        let newIntervals = Interval::new_by_semitones;
+        let newIntervals = Interval::from_semitones;
 
         let intervals = match scale_type {
             ScaleType::Diatonic => newIntervals(&[2, 2, 1, 2, 2, 2, 1]),
