@@ -129,11 +129,14 @@ impl Interval {
         })
     }
 
-    pub fn second_note(&self, first_note: &Note) -> Note {
-        let pc = PitchClass::from_interval(&first_note.pitch_class, self);
+    pub fn second_note_from(&self, first_note: Note) -> Note {
+        let pitch_class = PitchClass::from_interval(&first_note.pitch_class, self);
+        let octave = first_note.octave;
+        let excess_octave = (first_note.pitch_class as u8 + self.semitone_count) / 12;
+
         Note {
-            octave: first_note.octave,
-            pitch_class: pc,
+            octave: octave + excess_octave,
+            pitch_class,
         }
     }
 }

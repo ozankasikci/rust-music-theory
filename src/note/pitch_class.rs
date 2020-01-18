@@ -33,18 +33,14 @@ impl PitchClass {
             10 => A,
             11 => As,
             12 => B,
-            _ => B,
+            rest => Self::from_u8(val % 12),
         }
     }
 
     pub fn from_interval(pitch: &Self, interval: &Interval) -> Self {
         let current_pitch = *pitch as u8;
-        println!(
-            "Current pitch: {}, Semitone Count: {}",
-            current_pitch, interval.semitone_count
-        );
+        let new_pitch = current_pitch + interval.semitone_count;
 
-        let new_pitch = (current_pitch + interval.semitone_count) % 12;
         Self::from_u8(new_pitch)
     }
 }
