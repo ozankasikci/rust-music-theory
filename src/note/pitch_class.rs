@@ -1,7 +1,8 @@
 use crate::interval::Interval;
+use strum_macros::{EnumIter};
 use std::fmt;
 
-#[derive(Debug, Copy, Clone, PartialEq)]
+#[derive(Debug, Copy, Clone, PartialEq, EnumIter)]
 pub enum PitchClass {
     C = 1,
     Cs,
