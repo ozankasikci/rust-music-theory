@@ -53,10 +53,10 @@ impl Scale {
             pitch_class: self.tonic,
         };
 
-        let mut notes: Vec<Note> = vec![root_note];
 
         let mut intervals_clone = self.intervals.clone();
 
+        // shift the scale based on the mode
         match &self.mode {
             None => {}
             Some(mode) => {
@@ -72,14 +72,7 @@ impl Scale {
             }
         };
 
-        for i in 0..intervals_clone.len() {
-            let last_note = notes.last().unwrap();
-            let interval_first_note = Note::new(last_note.pitch_class, last_note.octave);
-            let interval_second_note = intervals_clone[i].second_note_from(interval_first_note);
-            notes.push(interval_second_note);
-        }
-
-        notes
+        Interval::to_notes(root_note, intervals_clone)
     }
 }
 

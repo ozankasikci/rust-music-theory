@@ -139,4 +139,17 @@ impl Interval {
             pitch_class,
         }
     }
+
+    pub fn to_notes(root: Note, intervals: Vec<Interval>) -> Vec<Note> {
+        let mut notes = vec![root];
+
+        for i in 0..intervals.len() {
+            let last_note = notes.last().unwrap();
+            let interval_first_note = Note::new(last_note.pitch_class, last_note.octave);
+            let interval_second_note = intervals[i].second_note_from(interval_first_note);
+            notes.push(interval_second_note);
+        };
+
+        notes
+    }
 }
