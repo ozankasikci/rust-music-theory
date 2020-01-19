@@ -47,19 +47,20 @@ impl PitchClass {
 
 impl fmt::Display for PitchClass {
     fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
+        use PitchClass::*;
         match *self {
-            PitchClass::C => write!(fmt, "C"),
-            PitchClass::Cs => write!(fmt, "C#"),
-            PitchClass::D => write!(fmt, "D"),
-            PitchClass::Ds => write!(fmt, "D#"),
-            PitchClass::E => write!(fmt, "E"),
-            PitchClass::F => write!(fmt, "F"),
-            PitchClass::Fs => write!(fmt, "F#"),
-            PitchClass::G => write!(fmt, "G"),
-            PitchClass::Gs => write!(fmt, "G#"),
-            PitchClass::A => write!(fmt, "A"),
-            PitchClass::As => write!(fmt, "A#"),
-            PitchClass::B => write!(fmt, "B"),
+            C => write!(fmt, "C"),
+            Cs => write!(fmt, "C#"),
+            D => write!(fmt, "D"),
+            Ds => write!(fmt, "D#"),
+            E => write!(fmt, "E"),
+            F => write!(fmt, "F"),
+            Fs => write!(fmt, "F#"),
+            G => write!(fmt, "G"),
+            Gs => write!(fmt, "G#"),
+            A => write!(fmt, "A"),
+            As => write!(fmt, "A#"),
+            B => write!(fmt, "B"),
         }
     }
 }
