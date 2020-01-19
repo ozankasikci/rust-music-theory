@@ -53,7 +53,6 @@ impl Scale {
             pitch_class: self.tonic,
         };
 
-
         let mut intervals_clone = self.intervals.clone();
 
         // shift the scale based on the mode
