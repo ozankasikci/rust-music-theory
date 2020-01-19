@@ -9,6 +9,7 @@ pub enum Quality {
     DiminishedTriad,
     MajorSeventh,
     MinorSeventh,
+    AugmentedSeventh,
 }
 
 #[derive(Debug)]
@@ -29,6 +30,7 @@ impl Chord {
             DiminishedTriad => Interval::from_semitones(&[3, 3]),
             MajorSeventh => Interval::from_semitones(&[4, 3, 4]),
             MinorSeventh => Interval::from_semitones(&[3, 4, 3]),
+            AugmentedSeventh => Interval::from_semitones(&[4, 4, 2]),
         }
         .unwrap();
 
