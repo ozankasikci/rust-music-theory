@@ -1,7 +1,7 @@
 use crate::interval::Interval;
 use std::fmt;
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, PartialEq)]
 pub enum PitchClass {
     C = 1,
     Cs,

@@ -25,7 +25,7 @@ impl Scale {
         scale_type: ScaleType,
         tonic: PitchClass,
         octave: u8,
-        mode: Mode,
+        mode: Option<Mode>,
     ) -> Result<Self, String> {
         let new_intervals = Interval::from_semitones;
 
@@ -34,13 +34,13 @@ impl Scale {
             ScaleType::HarmonicMinor => new_intervals(&[2, 1, 2, 2, 1, 3, 1]),
             ScaleType::MelodicMinor => new_intervals(&[2, 1, 2, 2, 2, 2, 1]),
         }
-        .or(Err("Cant determine the intervals for the scale"))?;
+        .or(Err("Can't determine the intervals for the scale"))?;
 
         Ok(Scale {
             tonic,
             octave,
             scale_type,
-            mode: Some(mode),
+            mode,
             intervals,
             ..Default::default()
         })

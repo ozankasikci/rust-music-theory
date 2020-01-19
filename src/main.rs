@@ -4,7 +4,7 @@ use fantasy_in_rust::note::{Note, PitchClass};
 use fantasy_in_rust::scale::{Mode, Scale, ScaleType};
 
 fn main() {
-    let scale = Scale::new(ScaleType::Diatonic, PitchClass::Fs, 4, Mode::Locrian).unwrap();
+    let scale = Scale::new(ScaleType::Diatonic, PitchClass::Fs, 4, Some(Mode::Locrian)).unwrap();
 
     let chord = Chord::new(PitchClass::C, ChordQuality::DiminishedSeventh).notes();
     println!("{:#?}", chord);

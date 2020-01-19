@@ -1,7 +1,7 @@
 use crate::interval::Interval;
 use crate::note::{Note, PitchClass};
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub enum Quality {
     MajorTriad,
     MinorTriad,
