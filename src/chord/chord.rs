@@ -5,6 +5,8 @@ use crate::note::{Note, PitchClass};
 pub enum Quality {
     MajorTriad,
     MinorTriad,
+    AugmentedTriad,
+    DiminishedTriad,
 }
 
 #[derive(Debug)]
@@ -21,6 +23,8 @@ impl Chord {
         let intervals = match quality {
             MajorTriad => Interval::from_semitones(&[4, 3]),
             MinorTriad => Interval::from_semitones(&[3, 4]),
+            AugmentedTriad => Interval::from_semitones(&[4, 4]),
+            DiminishedTriad => Interval::from_semitones(&[3, 3]),
         }
         .unwrap();
 

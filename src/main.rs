@@ -6,8 +6,8 @@ use fantasy_in_rust::scale::{Mode, Scale, ScaleType};
 fn main() {
     let scale = Scale::new(ScaleType::Diatonic, PitchClass::Fs, 4, Mode::Locrian).unwrap();
 
-    let chord = Chord::new(PitchClass::C, ChordQuality::MajorTriad).notes();
+    let chord = Chord::new(PitchClass::C, ChordQuality::AugmentedTriad).notes();
     println!("{:#?}", chord);
-    let chord = Chord::new(PitchClass::C, ChordQuality::MinorTriad).notes();
+    let chord = Chord::new(PitchClass::C, ChordQuality::DiminishedTriad).notes();
     println!("{:#?}", chord);
 }
