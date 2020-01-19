@@ -8,5 +8,3 @@ pub enum Mode {
     Aeolian,
     Locrian,
 }
-
-impl Mode {}
