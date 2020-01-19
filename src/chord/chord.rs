@@ -10,6 +10,7 @@ pub enum Quality {
     MajorSeventh,
     MinorSeventh,
     AugmentedSeventh,
+    AugmentedMajorSeventh,
 }
 
 #[derive(Debug)]
@@ -31,6 +32,7 @@ impl Chord {
             MajorSeventh => Interval::from_semitones(&[4, 3, 4]),
             MinorSeventh => Interval::from_semitones(&[3, 4, 3]),
             AugmentedSeventh => Interval::from_semitones(&[4, 4, 2]),
+            AugmentedMajorSeventh => Interval::from_semitones(&[4, 4, 3]),
         }
         .unwrap();
 
