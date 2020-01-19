@@ -11,6 +11,10 @@ pub enum Quality {
     MinorSeventh,
     AugmentedSeventh,
     AugmentedMajorSeventh,
+    DiminishedSeventh,
+    HalfDiminishedSeventh,
+    MinorMajorSeventh,
+    DominantSeventh,
 }
 
 #[derive(Debug)]
@@ -33,6 +37,10 @@ impl Chord {
             MinorSeventh => Interval::from_semitones(&[3, 4, 3]),
             AugmentedSeventh => Interval::from_semitones(&[4, 4, 2]),
             AugmentedMajorSeventh => Interval::from_semitones(&[4, 4, 3]),
+            DiminishedSeventh => Interval::from_semitones(&[3, 3, 3]),
+            HalfDiminishedSeventh => Interval::from_semitones(&[3, 3, 4]),
+            MinorMajorSeventh => Interval::from_semitones(&[3, 4, 4]),
+            DominantSeventh => Interval::from_semitones(&[4, 3, 3]),
         }
         .unwrap();
 
