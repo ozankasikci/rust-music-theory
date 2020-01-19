@@ -1,18 +1,22 @@
 use std::error;
 use std::fmt;
 
-#[derive(Debug, Clone)]
-pub struct ScaleIntervalError;
+#[derive(Debug)]
+pub enum ScaleError {
+    InvalidInterval,
+}
 
-impl fmt::Display for ScaleIntervalError {
+impl fmt::Display for ScaleError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "Can't determine the intervals for the scale scale!")
+        match *self {
+            ScaleError::InvalidInterval => write!(f, "Can't determine the intervals for the scale scale!"),
+        }
     }
 }
 
-impl error::Error for ScaleIntervalError {
+impl error::Error for ScaleError {
     fn source(&self) -> Option<&(dyn error::Error + 'static)> {
-        // Generic error, underlying cause isn't tracked.
         None
     }
 }
+

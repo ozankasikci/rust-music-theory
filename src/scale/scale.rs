@@ -2,8 +2,8 @@ use crate::interval::Interval;
 use crate::note::{Note, PitchClass};
 use crate::scale::scale::Direction::Ascending;
 use crate::scale::{Mode, ScaleType};
-use crate::scale::errors::ScaleIntervalError;
-use std::fmt::Error;
+use crate::scale::errors::ScaleError;
+use std::error;
 
 #[derive(Debug)]
 pub enum Direction {
@@ -27,15 +27,14 @@ impl Scale {
         tonic: PitchClass,
         octave: u8,
         mode: Option<Mode>,
-    ) -> Result<Self, String> {
+    ) -> Result<Self, Box<dyn error::Error>> {
         let new_intervals = Interval::from_semitones;
 
         let intervals = match scale_type {
             ScaleType::Diatonic => new_intervals(&[2, 2, 1, 2, 2, 2, 1]),
             ScaleType::HarmonicMinor => new_intervals(&[2, 1, 2, 2, 1, 3, 1]),
             ScaleType::MelodicMinor => new_intervals(&[2, 1, 2, 2, 2, 2, 1]),
-        }
-        .or(Err(ScaleIntervalError))?;
+        }?;
 
         Ok(Scale {
             tonic,

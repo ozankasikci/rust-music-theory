@@ -1,4 +1,3 @@
-#![allow(dead_code)]
 use fantasy_in_rust::chord::{Chord, ChordQuality};
 use fantasy_in_rust::note::{Note, PitchClass};
 use fantasy_in_rust::scale::{Mode, Scale, ScaleType};
