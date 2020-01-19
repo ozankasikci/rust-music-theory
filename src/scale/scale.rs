@@ -2,6 +2,7 @@ use crate::interval::Interval;
 use crate::note::{Note, PitchClass};
 use crate::scale::scale::Direction::Ascending;
 use crate::scale::{Mode, ScaleType};
+use crate::scale::errors::ScaleIntervalError;
 use std::fmt::Error;
 
 #[derive(Debug)]
@@ -34,7 +35,7 @@ impl Scale {
             ScaleType::HarmonicMinor => new_intervals(&[2, 1, 2, 2, 1, 3, 1]),
             ScaleType::MelodicMinor => new_intervals(&[2, 1, 2, 2, 2, 2, 1]),
         }
-        .or(Err("Can't determine the intervals for the scale"))?;
+        .or(Err(ScaleIntervalError))?;
 
         Ok(Scale {
             tonic,
