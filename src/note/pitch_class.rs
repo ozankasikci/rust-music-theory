@@ -4,7 +4,7 @@ use std::fmt;
 
 #[derive(Debug, Copy, Clone, PartialEq, EnumIter)]
 pub enum PitchClass {
-    C = 1,
+    C,
     Cs,
     D,
     Ds,
@@ -22,18 +22,18 @@ impl PitchClass {
     pub fn from_u8(val: u8) -> Self {
         use PitchClass::*;
         match val {
-            1 => C,
-            2 => Cs,
-            3 => D,
-            4 => Ds,
-            5 => E,
-            6 => F,
-            7 => Fs,
-            8 => G,
-            9 => Gs,
-            10 => A,
-            11 => As,
-            12 => B,
+            0 => C,
+            1 => Cs,
+            2 => D,
+            3 => Ds,
+            4 => E,
+            5 => F,
+            6 => Fs,
+            7 => G,
+            8 => Gs,
+            9 => A,
+            10 => As,
+            11 => B,
             rest => Self::from_u8(val % 12),
         }
     }
