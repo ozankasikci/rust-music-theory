@@ -1,5 +1,5 @@
 use crate::interval::Interval;
-use regex::Regex;
+use regex::{Regex, Match};
 use strum_macros::{EnumIter};
 use std::fmt;
 use std::error;
@@ -43,6 +43,25 @@ impl PitchClass {
         }
     }
 
+    pub fn from_str(str: &str) -> Self {
+        use PitchClass::*;
+        match str {
+            "C" => C,
+            "C#"| "Cs" => Cs,
+            "D" => D,
+            "D#" | "Ds" => Ds,
+            "E" => E,
+            "F" => F,
+            "F#" | "Fs" => Fs,
+            "G" => G,
+            "G#" | "Gs" => Gs,
+            "A" => A,
+            "A#" | "As" => As,
+            "B" => B,
+            _ => C,
+        }
+    }
+
     pub fn from_interval(pitch: &Self, interval: &Interval) -> Self {
         let current_pitch = *pitch as u8;
         let new_pitch = current_pitch + interval.semitone_count;
@@ -50,11 +69,15 @@ impl PitchClass {
         Self::from_u8(new_pitch)
     }
 
-    pub fn from_regex(string: &str) -> Result<Self, Box<dyn error::Error>> {
+    pub fn from_regex(string: &str) -> Result<(Self, Match), Box<dyn error::Error>> {
         let r_pitch = Regex::new(REGEX_PITCH)?;
-        let pitch = r_pitch.find(string).ok_or("no item")?;
-        println!("{} {}", pitch.start(), pitch.end());
-        Ok(PitchClass::C)
+        let r_pitch_accidental = Regex::new(REGEX_PITCH_ACCIDENTAL)?;
+
+        let pitch = r_pitch_accidental.find(&string)
+            .or_else(|| r_pitch.find(&string))
+            .ok_or("no item")?;
+
+        Ok((Self::from_str(&string[pitch.start()..pitch.end()]), pitch))
     }
 }
 
