@@ -1,5 +1,5 @@
 use strum_macros::{Display, EnumIter};
-use crate::scale::Mode;
+use crate::scale::{Mode, Mode::*};
 
 #[derive(Display, Debug, EnumIter)]
 pub enum ScaleType {
@@ -20,11 +20,12 @@ impl ScaleType {
     }
 
     pub fn from_mode(mode: &Mode) -> Self {
-        use Mode::*;
         use ScaleType::*;
         match mode {
             Ionian => Diatonic,
             Aeolian => Diatonic,
+            Mode::HarmonicMinor => ScaleType::HarmonicMinor,
+            Mode::MelodicMinor => ScaleType::MelodicMinor,
             _ => Diatonic,
         }
     }

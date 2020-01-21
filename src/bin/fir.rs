@@ -8,7 +8,9 @@ fn main() {
 
     let (pitch, regex_match) = PitchClass::from_regex(&input).unwrap();
     let (mode, regex_match) = Mode::from_regex(&input[regex_match.end()..]).unwrap();
+    eprintln!("mode = {:?}", mode);
     let scale_type = ScaleType::from_mode(&mode);
+    eprintln!("scale_type = {:?}", scale_type);
     let octave = 4;
 
     let scale = Scale::new(scale_type, pitch, octave, Some(mode)).unwrap();

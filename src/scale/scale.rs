@@ -67,6 +67,7 @@ impl Scale {
                     Mixolydian => intervals_clone.rotate_left(4),
                     Aeolian => intervals_clone.rotate_right(2),
                     Locrian => intervals_clone.rotate_right(1),
+                    _ => {}
                 };
             }
         };

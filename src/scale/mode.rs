@@ -3,6 +3,8 @@ use regex::{Regex, Match};
 use std::error;
 use crate::scale::errors::ScaleError::ModeFromRegexError;
 use crate::scale::errors::ScaleError;
+use crate::scale::mode::Mode::*;
+use crate::scale::scale_type::ScaleType::{HarmonicMinor, MelodicMinor};
 
 const REGEX_MAJOR: &str = "(M|maj|Maj|Major|major)";
 const REGEX_MINOR: &str = "(m|min|Min|Minor|minor)";
@@ -11,6 +13,8 @@ const REGEX_PHRYGIAN: &str = "(phy|phr|phrygian)";
 const REGEX_LYDIAN: &str = "(lyd|lydian)";
 const REGEX_MIXOLYDIAN: &str = "(mix|mixolydian)";
 const REGEX_LOCRIAN: &str = "(loc|locrian)";
+const REGEX_MELODIC_MINOR: &str = "(mel minor|melodicminor|melodic minor|Melodic Minor|MelodicMinor)";
+const REGEX_HARMONIC_MINOR: &str = "(har minor|harmonicminor|harmonic minor|Harmonic Minor|HarmonicMinor)";
 
 #[derive(Debug, EnumIter, Display)]
 pub enum Mode {
@@ -21,11 +25,12 @@ pub enum Mode {
     Mixolydian,
     Aeolian,
     Locrian,
+    HarmonicMinor,
+    MelodicMinor,
 }
 
 impl Mode {
     pub fn from_u8(val: u8) -> Self {
-        use Mode::*;
         match val {
             1 => Ionian,
             2 => Dorian,
@@ -39,7 +44,6 @@ impl Mode {
     }
 
     pub fn from_str(str: &str) -> Self {
-        use Mode::*;
         match str {
             "M" | "maj" | "Major" | "major" | "ion" | "Ionian" | "ionian" => Ionian,
             "m" | "min" | "Minor" |"minor" | "aeo" | "Aeolian" | "aeolian" => Aeolian,
@@ -56,26 +60,26 @@ impl Mode {
 
     pub fn from_regex(string: &str) -> Result<(Self, Match), ScaleError> {
         let regexes = vec![
-            Regex::new(REGEX_MAJOR),
-            Regex::new(REGEX_MINOR),
-            Regex::new(REGEX_DORIAN),
-            Regex::new(REGEX_LOCRIAN),
-            Regex::new(REGEX_MIXOLYDIAN),
-            Regex::new(REGEX_PHRYGIAN),
-            Regex::new(REGEX_LYDIAN),
+            (Regex::new(REGEX_MAJOR), Ionian),
+            (Regex::new(REGEX_HARMONIC_MINOR), Mode::HarmonicMinor),
+            (Regex::new(REGEX_MELODIC_MINOR), Mode::MelodicMinor),
+            (Regex::new(REGEX_MINOR), Aeolian),
+            (Regex::new(REGEX_DORIAN), Dorian),
+            (Regex::new(REGEX_LOCRIAN), Locrian),
+            (Regex::new(REGEX_MIXOLYDIAN), Mixolydian),
+            (Regex::new(REGEX_PHRYGIAN), Phrygian),
+            (Regex::new(REGEX_LYDIAN), Lydian),
         ];
 
         let mode: Option<Match>;
 
-        for regex in regexes {
+        for (regex, mode_enum) in regexes {
            let mode = regex?.find(string);
 
             match mode {
-                Some(mode) => {
-                    return Ok((Self::from_str(&string[mode.start()..mode.end()]), mode));
-                },
+                Some(mode_match) => return Ok((mode_enum, mode_match)),
                 _ => {}
-            }
+            };
         }
 
         Err(ModeFromRegexError)
