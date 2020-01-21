@@ -1,6 +1,11 @@
 use crate::interval::Interval;
+use regex::Regex;
 use strum_macros::{EnumIter};
 use std::fmt;
+use std::error;
+
+const REGEX_PITCH: &str = "^[ABCDEFG]";
+const REGEX_PITCH_ACCIDENTAL: &str = "^[ABCDEFG][b♯#]";
 
 #[derive(Debug, Copy, Clone, PartialEq, EnumIter)]
 pub enum PitchClass {
@@ -34,7 +39,7 @@ impl PitchClass {
             9 => A,
             10 => As,
             11 => B,
-            rest => Self::from_u8(val % 12),
+            _ => Self::from_u8(val % 12),
         }
     }
 
@@ -43,6 +48,13 @@ impl PitchClass {
         let new_pitch = current_pitch + interval.semitone_count;
 
         Self::from_u8(new_pitch)
+    }
+
+    pub fn from_regex(string: &str) -> Result<Self, Box<dyn error::Error>> {
+        let r_pitch = Regex::new(REGEX_PITCH)?;
+        let pitch = r_pitch.find(string).ok_or("no item")?;
+        println!("{} {}", pitch.start(), pitch.end());
+        Ok(PitchClass::C)
     }
 }
 
