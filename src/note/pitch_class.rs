@@ -4,8 +4,8 @@ use strum_macros::{EnumIter};
 use std::fmt;
 use std::error;
 
-const REGEX_PITCH: &str = "^[ABCDEFG]";
-const REGEX_PITCH_ACCIDENTAL: &str = "^[ABCDEFG][b♯#]";
+const REGEX_PITCH: &str = "^[ABCDEFGabcdefg]";
+const REGEX_PITCH_ACCIDENTAL: &str = "^[ABCDEFGabcdefg][b♯#]";
 
 #[derive(Debug, Copy, Clone, PartialEq, EnumIter)]
 pub enum PitchClass {
@@ -46,18 +46,18 @@ impl PitchClass {
     pub fn from_str(str: &str) -> Self {
         use PitchClass::*;
         match str {
-            "C" => C,
-            "C#"| "Cs" => Cs,
-            "D" => D,
-            "D#" | "Ds" => Ds,
-            "E" => E,
-            "F" => F,
-            "F#" | "Fs" => Fs,
-            "G" => G,
-            "G#" | "Gs" => Gs,
-            "A" => A,
-            "A#" | "As" => As,
-            "B" => B,
+            "C" | "c" => C,
+            "C#"| "Cs" | "c#" | "cs" => Cs,
+            "D" | "d" => D,
+            "D#" | "Ds" | "d#" | "ds" => Ds,
+            "E" | "e" => E,
+            "F" | "f" => F,
+            "F#" | "Fs" | "f#" | "fs" => Fs,
+            "G" | "g" => G,
+            "G#" | "Gs" | "g#" | "gs" => Gs,
+            "A" | "a" => A,
+            "A#" | "As" | "a#" | "as" => As,
+            "B" | "b" => B,
             _ => C,
         }
     }

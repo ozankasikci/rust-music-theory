@@ -73,6 +73,15 @@ impl Scale {
 
         Interval::to_notes(root_note, intervals_clone)
     }
+
+    pub fn print_notes(&self) {
+       let notes = self.notes();
+
+        println!("Notes:");
+        for (i, note) in notes.iter().enumerate() {
+            println!("  {}: {}", i + 1, note.pitch_class)
+        }
+    }
 }
 
 impl Default for Scale {
