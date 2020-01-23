@@ -45,19 +45,6 @@ impl Mode {
         }
     }
 
-    pub fn from_str(str: &str) -> Self {
-        match str {
-            "M" | "maj" | "Major" | "major" | "ion" | "Ionian" | "ionian" => Ionian,
-            "m" | "min" | "Minor" | "minor" | "aeo" | "Aeolian" | "aeolian" => Aeolian,
-            "Dorian" | "dor" | "dorian" => Dorian,
-            "Phrygian" | "phr" | "phy" | "phrygian" => Phrygian,
-            "Lydian" | "lyd" | "lydian" => Lydian,
-            "Mixolydian" | "mix" | "mixolydian" => Mixolydian,
-            "Locrian" | "loc" | "locrian" => Locrian,
-            _ => Ionian,
-        }
-    }
-
     pub fn from_regex(string: &str) -> Result<(Self, Match), ScaleError> {
         let regexes = vec![
             (Regex::new(REGEX_MAJOR), Ionian),
