@@ -1,6 +1,8 @@
 use crate::interval::Interval;
 use crate::note::{Note, PitchClass};
 use crate::chord::{Quality, Number};
+use regex::Match;
+use crate::chord::errors::ChordError;
 
 #[derive(Debug)]
 pub struct Chord {
@@ -39,6 +41,14 @@ impl Chord {
             quality,
             number,
         }
+    }
+
+    pub fn from_regex(string: &str) -> Result<Self, ChordError> {
+        let (pitch_class, pitch_match) = PitchClass::from_regex(&string).unwrap();
+        let (quality, quality_match) = Quality::from_regex(&string[pitch_match.end()..]).unwrap();
+        let (number, number_match) = Number::from_regex(&string[quality_match.end()..]).unwrap();
+
+        Ok(Chord::new(pitch_class, quality, number))
     }
 
     pub fn notes(&self) -> Vec<Note> {

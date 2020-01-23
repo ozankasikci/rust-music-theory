@@ -22,3 +22,18 @@ impl fmt::Display for Note {
         write!(f, "{}", self.pitch_class)
     }
 }
+
+
+pub trait Notes {
+    fn notes(&self) -> Vec<Note>;
+
+    fn print_notes(&self) {
+        let notes = self.notes();
+
+        println!("Notes:");
+        for (i, note) in notes.iter().enumerate() {
+            println!("  {}: {}", i + 1, note.pitch_class)
+        }
+    }
+}
+

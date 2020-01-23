@@ -6,8 +6,8 @@ use regex::{Match, Regex};
 use std::error;
 use strum_macros::{Display, EnumIter};
 
-const REGEX_MAJOR: &str = "(M|maj|Maj|Major|major)";
-const REGEX_MINOR: &str = "(m|min|Min|Minor|minor)";
+const REGEX_MAJOR: &str = "(M|maj|Maj|Major|major|Ionian|ionian)";
+const REGEX_MINOR: &str = "(m|min|Min|Minor|minor|Aeolian|aeolian)";
 const REGEX_DORIAN: &str = "(dor|dorian)";
 const REGEX_PHRYGIAN: &str = "(phy|phr|phrygian)";
 const REGEX_LYDIAN: &str = "(lyd|lydian)";

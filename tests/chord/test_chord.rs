@@ -34,4 +34,13 @@ mod chord_tests {
             assert_notes(pitches, chord.notes());
         }
     }
+    
+    #[test]
+    fn test_regex() {
+        let string = "D major seventh";
+        let chord = Chord::from_regex(string).unwrap();
+        eprintln!("chord.notes() = {:?}", chord.notes());
+        assert_eq!(chord.root, PitchClass::D);
+        eprintln!("chord = {:?}", chord);
+    }
 }

@@ -3,6 +3,7 @@ use regex::{Match, Regex};
 use std::error;
 use std::fmt;
 use strum_macros::EnumIter;
+use crate::note::errors::NoteError;
 
 const REGEX_PITCH: &str = "^[ABCDEFGabcdefg]";
 const REGEX_PITCH_ACCIDENTAL: &str = "^[ABCDEFGabcdefg][b♯#]";
@@ -69,14 +70,14 @@ impl PitchClass {
         Self::from_u8(new_pitch)
     }
 
-    pub fn from_regex(string: &str) -> Result<(Self, Match), Box<dyn error::Error>> {
+    pub fn from_regex(string: &str) -> Result<(Self, Match), NoteError> {
         let r_pitch = Regex::new(REGEX_PITCH)?;
         let r_pitch_accidental = Regex::new(REGEX_PITCH_ACCIDENTAL)?;
 
         let pitch = r_pitch_accidental
             .find(&string)
             .or_else(|| r_pitch.find(&string))
-            .ok_or("no item")?;
+            .ok_or(NoteError::InvalidPitch)?;
 
         Ok((Self::from_str(&string[pitch.start()..pitch.end()]), pitch))
     }

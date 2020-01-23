@@ -1,5 +1,5 @@
 use crate::interval::Interval;
-use crate::note::{Note, PitchClass};
+use crate::note::{Note, PitchClass, Notes};
 use crate::scale::errors::ScaleError;
 use crate::scale::scale::Direction::Ascending;
 use crate::scale::{Mode, ScaleType};
@@ -46,7 +46,18 @@ impl Scale {
         })
     }
 
-    pub fn notes(&self) -> Vec<Note> {
+    pub fn print_notes(&self) {
+        let notes = self.notes();
+
+        println!("Notes:");
+        for (i, note) in notes.iter().enumerate() {
+            println!("  {}: {}", i + 1, note.pitch_class)
+        }
+    }
+}
+
+impl Notes for Scale {
+    fn notes(&self) -> Vec<Note> {
         use Mode::*;
         let root_note = Note {
             octave: self.octave,
@@ -73,15 +84,6 @@ impl Scale {
         };
 
         Interval::to_notes(root_note, intervals_clone)
-    }
-
-    pub fn print_notes(&self) {
-        let notes = self.notes();
-
-        println!("Notes:");
-        for (i, note) in notes.iter().enumerate() {
-            println!("  {}: {}", i + 1, note.pitch_class)
-        }
     }
 }
 
