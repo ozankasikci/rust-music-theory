@@ -1,20 +1,21 @@
 use crate::interval::Interval;
 use crate::note::{Note, PitchClass};
 
+pub enum Number {
+    Triad,
+    Seventh,
+}
+
 #[derive(Debug, PartialEq)]
 pub enum Quality {
-    MajorTriad,
-    MinorTriad,
-    AugmentedTriad,
-    DiminishedTriad,
-    MajorSeventh,
-    MinorSeventh,
-    AugmentedSeventh,
-    AugmentedMajorSeventh,
-    DiminishedSeventh,
-    HalfDiminishedSeventh,
-    MinorMajorSeventh,
-    DominantSeventh,
+    Major,
+    Minor,
+    Diminished,
+    Augmented,
+    AugmentedMajor,
+    HalfDiminished,
+    MinorMajor,
+    Dominant,
 }
 
 #[derive(Debug)]
@@ -23,24 +24,27 @@ pub struct Chord {
     pub octave: u8,
     pub intervals: Vec<Interval>,
     pub quality: Quality,
+    pub number: Number,
 }
 
 impl Chord {
-    pub fn new(root: PitchClass, quality: Quality) -> Self {
+    pub fn new(root: PitchClass, quality: Quality, number: Number) -> Self {
+        use Number::*;
         use Quality::*;
-        let intervals = match quality {
-            MajorTriad => Interval::from_semitones(&[4, 3]),
-            MinorTriad => Interval::from_semitones(&[3, 4]),
-            AugmentedTriad => Interval::from_semitones(&[4, 4]),
-            DiminishedTriad => Interval::from_semitones(&[3, 3]),
-            MajorSeventh => Interval::from_semitones(&[4, 3, 4]),
-            MinorSeventh => Interval::from_semitones(&[3, 4, 3]),
-            AugmentedSeventh => Interval::from_semitones(&[4, 4, 2]),
-            AugmentedMajorSeventh => Interval::from_semitones(&[4, 4, 3]),
-            DiminishedSeventh => Interval::from_semitones(&[3, 3, 3]),
-            HalfDiminishedSeventh => Interval::from_semitones(&[3, 3, 4]),
-            MinorMajorSeventh => Interval::from_semitones(&[3, 4, 4]),
-            DominantSeventh => Interval::from_semitones(&[4, 3, 3]),
+        let intervals = match (quality, number) {
+            (Major, Triad) => Interval::from_semitones(&[4, 3]),
+            (Minor, Triad) => Interval::from_semitones(&[3, 4]),
+            (Augmented, Triad) => Interval::from_semitones(&[4, 4]),
+            (Diminished, Triad) => Interval::from_semitones(&[3, 3]),
+            (Major, Seventh) => Interval::from_semitones(&[4, 3, 4]),
+            (Minor, Seventh) => Interval::from_semitones(&[3, 4, 3]),
+            (Augmented, Seventh) => Interval::from_semitones(&[4, 4, 2]),
+            (AugmentedMajor, Seventh) => Interval::from_semitones(&[4, 4, 3]),
+            (Diminished, Seventh) => Interval::from_semitones(&[3, 3, 3]),
+            (HalfDiminished, Seventh) => Interval::from_semitones(&[3, 3, 4]),
+            (MinorMajor, Seventh) => Interval::from_semitones(&[3, 4, 4]),
+            (Dominant, Seventh) => Interval::from_semitones(&[4, 3, 3]),
+            _ => Interval::from_semitones(&[4, 3]),
         }
         .unwrap();
 
@@ -49,6 +53,7 @@ impl Chord {
             octave: 4,
             intervals,
             quality,
+            number,
         }
     }
 
@@ -58,5 +63,17 @@ impl Chord {
             pitch_class: self.root,
         };
         Interval::to_notes(root_note, self.intervals.clone())
+    }
+}
+
+impl Default for Chord {
+    fn default() -> Self {
+        Chord {
+            root: PitchClass::C,
+            octave: 4,
+            intervals: vec![],
+            quality: Quality::Major,
+            number: Number::Triad,
+        }
     }
 }

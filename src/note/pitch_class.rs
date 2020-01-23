@@ -1,8 +1,8 @@
 use crate::interval::Interval;
-use regex::{Regex, Match};
-use strum_macros::{EnumIter};
-use std::fmt;
+use regex::{Match, Regex};
 use std::error;
+use std::fmt;
+use strum_macros::EnumIter;
 
 const REGEX_PITCH: &str = "^[ABCDEFGabcdefg]";
 const REGEX_PITCH_ACCIDENTAL: &str = "^[ABCDEFGabcdefg][b♯#]";
@@ -47,7 +47,7 @@ impl PitchClass {
         use PitchClass::*;
         match str {
             "C" | "c" => C,
-            "C#"| "Cs" | "c#" | "cs" => Cs,
+            "C#" | "Cs" | "c#" | "cs" => Cs,
             "D" | "d" => D,
             "D#" | "Ds" | "d#" | "ds" => Ds,
             "E" | "e" => E,
@@ -73,7 +73,8 @@ impl PitchClass {
         let r_pitch = Regex::new(REGEX_PITCH)?;
         let r_pitch_accidental = Regex::new(REGEX_PITCH_ACCIDENTAL)?;
 
-        let pitch = r_pitch_accidental.find(&string)
+        let pitch = r_pitch_accidental
+            .find(&string)
             .or_else(|| r_pitch.find(&string))
             .ok_or("no item")?;
 

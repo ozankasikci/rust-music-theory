@@ -1,5 +1,5 @@
-use strum_macros::{Display, EnumIter};
 use crate::scale::{Mode, Mode::*};
+use strum_macros::{Display, EnumIter};
 
 #[derive(Display, Debug, EnumIter)]
 pub enum ScaleType {
@@ -15,7 +15,7 @@ impl ScaleType {
             1 => Diatonic,
             2 => MelodicMinor,
             3 => HarmonicMinor,
-            _ => Diatonic
+            _ => Diatonic,
         }
     }
 
@@ -30,4 +30,3 @@ impl ScaleType {
         }
     }
 }
-

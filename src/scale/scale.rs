@@ -1,8 +1,8 @@
 use crate::interval::Interval;
 use crate::note::{Note, PitchClass};
+use crate::scale::errors::ScaleError;
 use crate::scale::scale::Direction::Ascending;
 use crate::scale::{Mode, ScaleType};
-use crate::scale::errors::ScaleError;
 use std::error;
 
 #[derive(Debug)]
@@ -76,7 +76,7 @@ impl Scale {
     }
 
     pub fn print_notes(&self) {
-       let notes = self.notes();
+        let notes = self.notes();
 
         println!("Notes:");
         for (i, note) in notes.iter().enumerate() {
