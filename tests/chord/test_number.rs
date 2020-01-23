@@ -12,9 +12,10 @@ mod chord_number_tests {
         assert_eq!(Number::Seventh, number);
     }
 
+    #[test]
     fn test_number_triad() {
         let string = "triad";
         let (number, m) = Number::from_regex(string).unwrap();
-        assert_eq!(Number::Seventh, number);
+        assert_eq!(Number::Triad, number);
     }
 }

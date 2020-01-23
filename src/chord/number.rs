@@ -18,7 +18,7 @@ impl Number {
             (Regex::new(REGEX_NUMBER_SEVENTH), Seventh),
         ];
 
-        let mode: Option<Match>;
+        let number: Option<Match>;
 
         for (regex, number_enum) in regexes {
             let mode = regex?.find(string);
