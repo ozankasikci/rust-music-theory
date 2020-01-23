@@ -1,5 +1,5 @@
 use crate::interval::Interval;
-use crate::note::{Note, PitchClass};
+use crate::note::{Note, PitchClass, Notes};
 use crate::chord::{Quality, Number};
 use regex::Match;
 use crate::chord::errors::ChordError;
@@ -50,8 +50,10 @@ impl Chord {
 
         Ok(Chord::new(pitch_class, quality, number))
     }
+}
 
-    pub fn notes(&self) -> Vec<Note> {
+impl Notes for Chord {
+    fn notes(&self) -> Vec<Note> {
         let root_note = Note {
             octave: self.octave,
             pitch_class: self.root,
@@ -59,6 +61,7 @@ impl Chord {
         Interval::to_notes(root_note, self.intervals.clone())
     }
 }
+
 
 impl Default for Chord {
     fn default() -> Self {
