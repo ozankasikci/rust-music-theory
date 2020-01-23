@@ -1,5 +1,5 @@
 extern crate fantasy_in_rust as fir;
-use fir::chord::{ChordQuality::*, ChordNumber::*, *};
+use fir::chord::{Quality::*, Number::*, *};
 use fir::note::{PitchClass::*, *};
 
 fn assert_notes(pitches: &Vec<PitchClass>, notes: Vec<Note>) {

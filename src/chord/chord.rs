@@ -1,23 +1,6 @@
 use crate::interval::Interval;
 use crate::note::{Note, PitchClass};
-
-#[derive(Debug)]
-pub enum Number {
-    Triad,
-    Seventh,
-}
-
-#[derive(Debug, PartialEq)]
-pub enum Quality {
-    Major,
-    Minor,
-    Diminished,
-    Augmented,
-    AugmentedMajor,
-    HalfDiminished,
-    MinorMajor,
-    Dominant,
-}
+use crate::chord::{Quality, Number};
 
 #[derive(Debug)]
 pub struct Chord {
