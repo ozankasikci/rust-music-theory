@@ -1,4 +1,4 @@
-use crate::interval::errors::InvalidIntervalError;
+use crate::interval::errors::IntervalError;
 use crate::note::{Note, PitchClass};
 use strum_macros::Display;
 
@@ -39,11 +39,11 @@ pub struct Interval {
 }
 
 impl Interval {
-    pub fn from_semitones(semi_tones: &[u8]) -> Result<Vec<Self>, InvalidIntervalError> {
+    pub fn from_semitones(semi_tones: &[u8]) -> Result<Vec<Self>, IntervalError> {
         let mut intervals: Vec<Interval> = vec![];
 
         if semi_tones.len() == 0 {
-            return Err(InvalidIntervalError);
+            return Err(IntervalError::InvalidInterval);
         }
 
         for i in semi_tones {
@@ -54,7 +54,7 @@ impl Interval {
         Ok(intervals)
     }
 
-    pub fn from_semitone(sc: u8) -> Result<Self, InvalidIntervalError> {
+    pub fn from_semitone(sc: u8) -> Result<Self, IntervalError> {
         let (mut number, mut quality, mut step): (Number, Quality, Option<Step>);
         step = None;
 
@@ -115,7 +115,7 @@ impl Interval {
                 quality = Quality::Perfect;
             }
             _ => {
-                return Err(InvalidIntervalError);
+                return Err(IntervalError::InvalidInterval);
             }
         };
 
