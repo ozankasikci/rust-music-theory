@@ -1,5 +1,5 @@
 extern crate fantasy_in_rust as fir;
-use fir::chord::{ChordQuality::*, *};
+use fir::chord::{ChordQuality::*, ChordNumber::*, *};
 use fir::note::{PitchClass::*, *};
 
 fn assert_notes(pitches: &Vec<PitchClass>, notes: Vec<Note>) {
@@ -15,18 +15,18 @@ mod chord_tests {
     #[test]
     fn test_all_chords_in_c() {
         let chord_tuples = [
-            (Chord::new(C, MajorTriad), vec![C, E, G]),
-            (Chord::new(C, MinorTriad), vec![C, Ds, G]),
-            (Chord::new(C, AugmentedTriad), vec![C, E, Gs]),
-            (Chord::new(C, DiminishedTriad), vec![C, Ds, Fs]),
-            (Chord::new(C, MajorSeventh), vec![C, E, G, B]),
-            (Chord::new(C, MinorSeventh), vec![C, Ds, G, As]),
-            (Chord::new(C, AugmentedSeventh), vec![C, E, Gs, As]),
-            (Chord::new(C, AugmentedMajorSeventh), vec![C, E, Gs, B]),
-            (Chord::new(C, DiminishedSeventh), vec![C, Ds, Fs, A]),
-            (Chord::new(C, HalfDiminishedSeventh), vec![C, Ds, Fs, As]),
-            (Chord::new(C, MinorMajorSeventh), vec![C, Ds, G, B]),
-            (Chord::new(C, DominantSeventh), vec![C, E, G, As]),
+            (Chord::new(C, Major, Triad), vec![C, E, G]),
+            (Chord::new(C, Minor, Triad), vec![C, Ds, G]),
+            (Chord::new(C, Augmented, Triad), vec![C, E, Gs]),
+            (Chord::new(C, Diminished, Triad), vec![C, Ds, Fs]),
+            (Chord::new(C, Major, Seventh), vec![C, E, G, B]),
+            (Chord::new(C, Minor,Seventh), vec![C, Ds, G, As]),
+            (Chord::new(C, Augmented,Seventh), vec![C, E, Gs, As]),
+            (Chord::new(C, AugmentedMajor,Seventh), vec![C, E, Gs, B]),
+            (Chord::new(C, Diminished, Seventh), vec![C, Ds, Fs, A]),
+            (Chord::new(C, HalfDiminished, Seventh), vec![C, Ds, Fs, As]),
+            (Chord::new(C, MinorMajor, Seventh), vec![C, Ds, G, B]),
+            (Chord::new(C, Dominant, Seventh), vec![C, E, G, As]),
         ];
 
         for chord_tuple in chord_tuples.iter() {

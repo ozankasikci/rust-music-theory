@@ -48,11 +48,11 @@ mod scale_tests {
                 vec![C, Cs, Ds, F, G, Gs, As, C],
             ),
             (
-                Scale::new(HarmonicMinor, C, 4, None).unwrap(),
+                Scale::new(ScaleType::HarmonicMinor, C, 4, None).unwrap(),
                 vec![C, D, Ds, F, G, Gs, B, C],
             ),
             (
-                Scale::new(MelodicMinor, C, 4, None).unwrap(),
+                Scale::new(ScaleType::MelodicMinor, C, 4, None).unwrap(),
                 vec![C, D, Ds, F, G, A, B, C],
             ),
         ];

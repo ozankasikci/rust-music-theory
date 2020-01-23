@@ -1,6 +1,7 @@
 use crate::interval::Interval;
 use crate::note::{Note, PitchClass};
 
+#[derive(Debug)]
 pub enum Number {
     Triad,
     Seventh,
@@ -31,7 +32,7 @@ impl Chord {
     pub fn new(root: PitchClass, quality: Quality, number: Number) -> Self {
         use Number::*;
         use Quality::*;
-        let intervals = match (quality, number) {
+        let intervals = match (&quality, &number) {
             (Major, Triad) => Interval::from_semitones(&[4, 3]),
             (Minor, Triad) => Interval::from_semitones(&[3, 4]),
             (Augmented, Triad) => Interval::from_semitones(&[4, 4]),
