@@ -5,7 +5,7 @@ use std::fmt;
 use strum_macros::EnumIter;
 
 const REGEX_PITCH: &str = "^[ABCDEFGabcdefg]";
-const REGEX_PITCH_ACCIDENTAL: &str = "^[ABCDEFGabcdefg][b♯#]";
+const REGEX_PITCH_ACCIDENTAL: &str = "^[ABCDEFGabcdefg][b♯#s]";
 
 #[derive(Debug, Copy, Clone, PartialEq, EnumIter)]
 pub enum PitchClass {
@@ -43,23 +43,46 @@ impl PitchClass {
         }
     }
 
-    pub fn from_str(str: &str) -> Self {
+    pub fn from_str(string: &str) -> Option<Self> {
         use PitchClass::*;
-        match str {
-            "C" | "c" => C,
-            "C#" | "Cs" | "c#" | "cs" => Cs,
-            "D" | "d" => D,
-            "D#" | "Ds" | "d#" | "ds" => Ds,
-            "E" | "e" => E,
-            "F" | "f" => F,
-            "F#" | "Fs" | "f#" | "fs" => Fs,
-            "G" | "g" => G,
-            "G#" | "Gs" | "g#" | "gs" => Gs,
-            "A" | "a" => A,
-            "A#" | "As" | "a#" | "as" => As,
-            "B" | "b" => B,
+        let characters: Vec<char> = string.chars().collect();
+
+        let mut pitch = match characters[0] {
+            //"C#" | "Cs" | "c#" | "cs" => Cs,
+            'C' | 'c' => C,
+            //"D#" | "Ds" | "d#" | "ds" => Ds,
+            'D' | 'd' => D,
+            'E' | 'e' => E,
+            //"F#" | "Fs" | "f#" | "fs" => Fs,
+            'F' | 'f' => F,
+            //"G#" | "Gs" | "g#" | "gs" => Gs,
+            'G' | 'g' => G,
+            //"A#" | "As" | "a#" | "as" => As,
+            'A' | 'a' => A,
+            'B' | 'b' => B,
             _ => C,
+        };
+
+        if characters.len() > 1 {
+            let second_char = characters[1];
+            match second_char {
+                '#' | 's' | 'S' | '♯' => {
+                    let interval = Interval::from_semitone(1);
+                    if interval.is_ok() {
+                        pitch = Self::from_interval(&pitch, &interval.unwrap());
+                    }
+                }
+                'b' | '♭' => {
+                    let interval = Interval::from_semitone(11);
+                    if interval.is_ok() {
+                        pitch = Self::from_interval(&pitch, &interval.unwrap());
+                    }
+                }
+                _ => return None,
+            }
         }
+
+        Some(pitch)
     }
 
     pub fn from_interval(pitch: &Self, interval: &Interval) -> Self {
@@ -73,12 +96,15 @@ impl PitchClass {
         let r_pitch = Regex::new(REGEX_PITCH)?;
         let r_pitch_accidental = Regex::new(REGEX_PITCH_ACCIDENTAL)?;
 
-        let pitch = r_pitch_accidental
+        let pitch_match = r_pitch_accidental
             .find(&string)
             .or_else(|| r_pitch.find(&string))
             .ok_or(NoteError::InvalidPitch)?;
 
-        Ok((Self::from_str(&string[pitch.start()..pitch.end()]), pitch))
+        let pitch_class = Self::from_str(&string[pitch_match.start()..pitch_match.end()])
+            .ok_or(NoteError::InvalidPitch)?;
+
+        Ok((pitch_class, pitch_match))
     }
 }
 
