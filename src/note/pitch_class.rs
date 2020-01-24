@@ -1,9 +1,9 @@
+use crate::note::errors::NoteError;
 use crate::interval::Interval;
 use regex::{Match, Regex};
 use std::error;
 use std::fmt;
 use strum_macros::EnumIter;
-use crate::note::errors::NoteError;
 
 const REGEX_PITCH: &str = "^[ABCDEFGabcdefg]";
 const REGEX_PITCH_ACCIDENTAL: &str = "^[ABCDEFGabcdefg][b♯#]";

@@ -1,6 +1,7 @@
 use regex::Error;
 use std::error;
 use std::fmt;
+use crate::interval::IntervalError;
 
 #[derive(Debug)]
 pub enum ScaleError {
@@ -29,6 +30,14 @@ impl From<regex::Error> for ScaleError {
     fn from(e: regex::Error) -> Self {
         match e {
             _ => ScaleError::ModeFromRegexError,
+        }
+    }
+}
+
+impl From<IntervalError> for ScaleError {
+    fn from(e: IntervalError) -> Self {
+        match e {
+            _ => ScaleError::InvalidInterval,
         }
     }
 }

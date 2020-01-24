@@ -27,7 +27,7 @@ impl Scale {
         tonic: PitchClass,
         octave: u8,
         mode: Option<Mode>,
-    ) -> Result<Self, Box<dyn error::Error>> {
+    ) -> Result<Self, ScaleError> {
         let new_intervals = Interval::from_semitones;
 
         let intervals = match scale_type {
