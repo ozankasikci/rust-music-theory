@@ -39,6 +39,10 @@ pub struct Interval {
 }
 
 impl Interval {
+    pub fn new(semitone_count: u8, quality: Quality, number: Number, step: Option<Step>) -> Self {
+        Interval{ semitone_count, quality, number, step }
+    }
+
     pub fn from_semitones(semi_tones: &[u8]) -> Result<Vec<Self>, IntervalError> {
         let mut intervals: Vec<Interval> = vec![];
 
@@ -149,5 +153,16 @@ impl Interval {
         }
 
         notes
+    }
+}
+
+impl Default for Interval {
+    fn default() -> Self {
+        Interval {
+            semitone_count: 0,
+            quality: Quality::Major,
+            number: Number::Unison,
+            step: None,
+        }
     }
 }

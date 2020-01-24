@@ -1,3 +1,4 @@
+use crate::note::NoteError;
 use std::error;
 use std::fmt;
 
@@ -16,6 +17,14 @@ impl error::Error for ChordError {
     fn source(&self) -> Option<&(dyn error::Error + 'static)> {
         // Generic error, underlying cause isn't tracked.
         None
+    }
+}
+
+impl From<NoteError> for ChordError {
+    fn from(e: NoteError) -> Self {
+        match e {
+            _ => ChordError::InvalidRegex,
+        }
     }
 }
 

@@ -26,12 +26,10 @@ impl Scale {
         octave: u8,
         mode: Option<Mode>,
     ) -> Result<Self, ScaleError> {
-        let new_intervals = Interval::from_semitones;
-
         let intervals = match scale_type {
-            ScaleType::Diatonic => new_intervals(&[2, 2, 1, 2, 2, 2, 1]),
-            ScaleType::HarmonicMinor => new_intervals(&[2, 1, 2, 2, 1, 3, 1]),
-            ScaleType::MelodicMinor => new_intervals(&[2, 1, 2, 2, 2, 2, 1]),
+            ScaleType::Diatonic => Interval::from_semitones(&[2, 2, 1, 2, 2, 2, 1]),
+            ScaleType::HarmonicMinor => Interval::from_semitones(&[2, 1, 2, 2, 1, 3, 1]),
+            ScaleType::MelodicMinor => Interval::from_semitones(&[2, 1, 2, 2, 2, 2, 1]),
         }?;
 
         Ok(Scale {

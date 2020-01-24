@@ -1,14 +1,14 @@
 use crate::chord::errors::ChordError;
 use regex::{Match, Regex};
 
-const REGEX_QUALITY_MAJOR: &str = r"^(M|maj|Maj|Major|major)\s+";
-const REGEX_QUALITY_MINOR: &str = r"^(m|min|Min|Minor|minor)\s+";
-const REGEX_QUALITY_DIMINISHED: &str = r"(?i)^(dim|diminished)\s+";
-const REGEX_QUALITY_AUGMENTED: &str = r"(?i)^(aug|augmented)\s+";
-const REGEX_QUALITY_AUGMENTED_MAJOR: &str = r"(?i)^(augmented\s*major)\s+";
-const REGEX_QUALITY_AUGMENTED_MINOR: &str = r"(?i)^(augmented\s*minor)\s+";
-const REGEX_QUALITY_HALF_DIMINISHED: &str = r"(?i)^(half\s*diminished)\s+";
-const REGEX_QUALITY_MINOR_MAJOR: &str = r"(?i)^(minor\s*major)\s+";
+const REGEX_QUALITY_MAJOR: &str = r"^(M\s+|(?i)maj|Maj|Major|major)";
+const REGEX_QUALITY_MINOR: &str = r"^(m\s+|m$|(?i)min|Min|Minor|minor)";
+const REGEX_QUALITY_DIMINISHED: &str = r"(?i)^(dim|diminished)";
+const REGEX_QUALITY_AUGMENTED: &str = r"(?i)^(aug|augmented)";
+const REGEX_QUALITY_AUGMENTED_MAJOR: &str = r"(?i)^(augmented\s*major)";
+const REGEX_QUALITY_AUGMENTED_MINOR: &str = r"(?i)^(augmented\s*minor)";
+const REGEX_QUALITY_HALF_DIMINISHED: &str = r"(?i)^(half\s*diminished)";
+const REGEX_QUALITY_MINOR_MAJOR: &str = r"(?i)^(minor\s*major)";
 const REGEX_QUALITY_DOMINANT: &str = r"(?i)^(dom\s+|dominant)";
 
 #[derive(Debug, PartialEq)]
