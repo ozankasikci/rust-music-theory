@@ -16,8 +16,6 @@ pub struct Chord {
 
 impl Chord {
     pub fn new(root: PitchClass, quality: Quality, number: Number) -> Self {
-        eprintln!("quality = {:?}", quality);
-        eprintln!("number = {:?}", number);
         use Number::*;
         use Quality::*;
         let intervals = match (&quality, &number) {
