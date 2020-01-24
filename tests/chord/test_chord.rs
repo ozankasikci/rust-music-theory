@@ -22,10 +22,10 @@ mod chord_tests {
             (Chord::new(C, Major, Seventh), vec![C, E, G, B]),
             (Chord::new(C, Minor, Seventh), vec![C, Ds, G, As]),
             (Chord::new(C, Augmented, Seventh), vec![C, E, Gs, As]),
-            (Chord::new(C, AugmentedMajor, Seventh), vec![C, E, Gs, B]),
+            (Chord::new(C, Augmented, MajorSeventh), vec![C, E, Gs, B]),
             (Chord::new(C, Diminished, Seventh), vec![C, Ds, Fs, A]),
             (Chord::new(C, HalfDiminished, Seventh), vec![C, Ds, Fs, As]),
-            (Chord::new(C, MinorMajor, Seventh), vec![C, Ds, G, B]),
+            (Chord::new(C, Minor, MajorSeventh), vec![C, Ds, G, B]),
             (Chord::new(C, Dominant, Seventh), vec![C, E, G, As]),
         ];
 

@@ -1,16 +1,18 @@
 use crate::chord::errors::ChordError;
 use regex::{Match, Regex};
 
-const REGEX_NUMBER_TRIAD: &str = "(triad|Triad)";
-const REGEX_NUMBER_SEVENTH: &str = "(seventh|Seventh)";
-const REGEX_NUMBER_NINTH: &str = "(ninth|Ninth)";
-const REGEX_NUMBER_ELEVENTH: &str = "(eleventh|Eleventh)";
-const REGEX_NUMBER_THIRTEENTH: &str = "(thirteenth|Thirteenth)";
+const REGEX_NUMBER_TRIAD: &str = "(?i)(triad)";
+const REGEX_NUMBER_SEVENTH: &str = "(?i)(seventh)";
+const REGEX_NUMBER_MAJOR_SEVENTH: &str = r"(?i)(major\s*seventh)";
+const REGEX_NUMBER_NINTH: &str = "(?i)(ninth)";
+const REGEX_NUMBER_ELEVENTH: &str = "(?i)(eleventh)";
+const REGEX_NUMBER_THIRTEENTH: &str = "(?i)(thirteenth)";
 
 #[derive(Debug, PartialEq)]
 pub enum Number {
     Triad,
     Seventh,
+    MajorSeventh,
     Ninth,
     Eleventh,
     Thirteenth,
@@ -22,6 +24,7 @@ impl Number {
         let regexes = vec![
             (Regex::new(REGEX_NUMBER_TRIAD), Triad),
             (Regex::new(REGEX_NUMBER_SEVENTH), Seventh),
+            (Regex::new(REGEX_NUMBER_MAJOR_SEVENTH), MajorSeventh),
             (Regex::new(REGEX_NUMBER_NINTH), Ninth),
             (Regex::new(REGEX_NUMBER_ELEVENTH), Eleventh),
             (Regex::new(REGEX_NUMBER_THIRTEENTH), Thirteenth),

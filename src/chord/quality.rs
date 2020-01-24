@@ -17,10 +17,7 @@ pub enum Quality {
     Minor,
     Diminished,
     Augmented,
-    AugmentedMajor,
-    AugmentedMinor,
     HalfDiminished,
-    MinorMajor,
     Dominant,
 }
 
@@ -32,10 +29,7 @@ impl Quality {
             (Regex::new(REGEX_QUALITY_MINOR), Minor),
             (Regex::new(REGEX_QUALITY_DIMINISHED), Diminished),
             (Regex::new(REGEX_QUALITY_AUGMENTED), Augmented),
-            (Regex::new(REGEX_QUALITY_AUGMENTED_MAJOR), AugmentedMajor),
-            (Regex::new(REGEX_QUALITY_AUGMENTED_MINOR), AugmentedMinor),
             (Regex::new(REGEX_QUALITY_HALF_DIMINISHED), HalfDiminished),
-            (Regex::new(REGEX_QUALITY_MINOR_MAJOR), MinorMajor),
             (Regex::new(REGEX_QUALITY_DOMINANT), Dominant),
         ];
 
