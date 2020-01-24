@@ -2,7 +2,6 @@ extern crate rust_music_theory as theory;
 use theory::chord::{Chord, Quality::*};
 use theory::note::PitchClass::*;
 
-
 #[cfg(test)]
 mod chord_regex_tests {
     use super::*;

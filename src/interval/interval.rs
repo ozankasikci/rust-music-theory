@@ -40,7 +40,12 @@ pub struct Interval {
 
 impl Interval {
     pub fn new(semitone_count: u8, quality: Quality, number: Number, step: Option<Step>) -> Self {
-        Interval{ semitone_count, quality, number, step }
+        Interval {
+            semitone_count,
+            quality,
+            number,
+            step,
+        }
     }
 
     pub fn from_semitones(semi_tones: &[u8]) -> Result<Vec<Self>, IntervalError> {

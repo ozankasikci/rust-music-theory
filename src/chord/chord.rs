@@ -67,7 +67,7 @@ impl Chord {
             }
 
             // return a Triad by default
-            None => return Ok(Chord::new(pitch_class, quality, Triad))
+            None => return Ok(Chord::new(pitch_class, quality, Triad)),
         }
     }
 }

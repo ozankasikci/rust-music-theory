@@ -1,6 +1,6 @@
 use crate::note::PitchClass;
 use std::fmt;
-use std::fmt::{Formatter};
+use std::fmt::Formatter;
 
 #[derive(Debug)]
 pub struct Note {
