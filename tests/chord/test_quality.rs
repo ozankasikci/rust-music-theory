@@ -1,5 +1,5 @@
-extern crate fantasy_in_rust as fir;
-use fir::chord::Number;
+extern crate rust_music_theory as theory;
+use theory::chord::Number;
 
 #[cfg(test)]
 mod chord_number_tests {

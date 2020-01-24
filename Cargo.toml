@@ -1,14 +1,11 @@
 [package]
-name = "fantasy-in-rust"
+name = "rust-music-theory"
 version = "0.1.0"
 authors = ["Ozan Kasikci <ozan@kasikci.io>"]
 edition = "2018"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
 [dependencies]
 strum = "0.17.1"
 strum_macros = "0.17.1"
-termion = "*"
 regex = "1"
 clap = "2.31"

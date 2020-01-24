@@ -1,6 +1,6 @@
-extern crate fantasy_in_rust as fir;
-use fir::chord::{Number::*, Quality::*, *};
-use fir::note::{PitchClass::*, *};
+extern crate rust_music_theory as theory;
+use theory::chord::{Number::*, Quality::*, *};
+use theory::note::{PitchClass::*, *};
 
 fn assert_notes(pitches: &Vec<PitchClass>, notes: Vec<Note>) {
     for (i, pitch) in pitches.iter().enumerate() {

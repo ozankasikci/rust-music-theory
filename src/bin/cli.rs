@@ -1,5 +1,5 @@
-use fantasy_in_rust::chord::Chord;
-use fantasy_in_rust::note::{Notes};
+use rust_music_theory::chord::Chord;
+use rust_music_theory::note::{Notes};
 use std::env;
 
 fn main() {
