@@ -30,19 +30,6 @@ pub enum Mode {
 }
 
 impl Mode {
-    pub fn from_u8(val: u8) -> Self {
-        match val {
-            1 => Ionian,
-            2 => Dorian,
-            3 => Phrygian,
-            4 => Lydian,
-            5 => Mixolydian,
-            6 => Aeolian,
-            7 => Locrian,
-            _ => Ionian,
-        }
-    }
-
     pub fn from_regex(string: &str) -> Result<(Self, Match), ScaleError> {
         let regexes = vec![
             (Regex::new(REGEX_MAJOR), Ionian),
