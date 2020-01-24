@@ -1,9 +1,9 @@
-use crate::interval::Interval;
-use crate::note::{Note, PitchClass, Notes};
-use crate::chord::{Quality, Number};
-use regex::Match;
 use crate::chord::errors::ChordError;
 use crate::chord::number::Number::Triad;
+use crate::chord::{Number, Quality};
+use crate::interval::Interval;
+use crate::note::{Note, Notes, PitchClass};
+use regex::Match;
 
 #[derive(Debug)]
 pub struct Chord {
@@ -54,11 +54,12 @@ impl Chord {
 
     pub fn from_regex(string: &str) -> Result<Self, ChordError> {
         let (pitch_class, pitch_match) = PitchClass::from_regex(&string).unwrap();
-        let (quality, mut quality_match_option) = Quality::from_regex(&string[pitch_match.end()..]).unwrap();
+        let (quality, mut quality_match_option) =
+            Quality::from_regex(&string[pitch_match.end()..]).unwrap();
         let quality_match = quality_match_option.unwrap();
 
-        let (number, _) = Number::from_regex(&string[quality_match.end()..])
-            .unwrap_or((Triad, None));
+        let (number, _) =
+            Number::from_regex(&string[quality_match.end()..]).unwrap_or((Triad, None));
 
         Ok(Chord::new(pitch_class, quality, number))
     }
@@ -73,7 +74,6 @@ impl Notes for Chord {
         Interval::to_notes(root_note, self.intervals.clone())
     }
 }
-
 
 impl Default for Chord {
     fn default() -> Self {

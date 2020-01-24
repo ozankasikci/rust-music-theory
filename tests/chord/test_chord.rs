@@ -1,5 +1,5 @@
 extern crate fantasy_in_rust as fir;
-use fir::chord::{Quality::*, Number::*, *};
+use fir::chord::{Number::*, Quality::*, *};
 use fir::note::{PitchClass::*, *};
 
 fn assert_notes(pitches: &Vec<PitchClass>, notes: Vec<Note>) {
@@ -20,9 +20,9 @@ mod chord_tests {
             (Chord::new(C, Augmented, Triad), vec![C, E, Gs]),
             (Chord::new(C, Diminished, Triad), vec![C, Ds, Fs]),
             (Chord::new(C, Major, Seventh), vec![C, E, G, B]),
-            (Chord::new(C, Minor,Seventh), vec![C, Ds, G, As]),
-            (Chord::new(C, Augmented,Seventh), vec![C, E, Gs, As]),
-            (Chord::new(C, AugmentedMajor,Seventh), vec![C, E, Gs, B]),
+            (Chord::new(C, Minor, Seventh), vec![C, Ds, G, As]),
+            (Chord::new(C, Augmented, Seventh), vec![C, E, Gs, As]),
+            (Chord::new(C, AugmentedMajor, Seventh), vec![C, E, Gs, B]),
             (Chord::new(C, Diminished, Seventh), vec![C, Ds, Fs, A]),
             (Chord::new(C, HalfDiminished, Seventh), vec![C, Ds, Fs, As]),
             (Chord::new(C, MinorMajor, Seventh), vec![C, Ds, G, B]),
@@ -34,7 +34,7 @@ mod chord_tests {
             assert_notes(pitches, chord.notes());
         }
     }
-    
+
     #[test]
     fn test_regex() {
         let string = "D major seventh";

@@ -1,8 +1,8 @@
 mod chord;
-mod quality;
-mod number;
 mod errors;
+mod number;
+mod quality;
 
 pub use chord::Chord;
-pub use quality::Quality;
 pub use number::Number;
+pub use quality::Quality;

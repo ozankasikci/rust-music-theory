@@ -1,5 +1,5 @@
 use crate::interval::Interval;
-use crate::note::{Note, PitchClass, Notes};
+use crate::note::{Note, Notes, PitchClass};
 use crate::scale::errors::ScaleError;
 use crate::scale::scale::Direction::Ascending;
 use crate::scale::{Mode, ScaleType};

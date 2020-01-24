@@ -1,7 +1,7 @@
+use crate::interval::IntervalError;
 use regex::Error;
 use std::error;
 use std::fmt;
-use crate::interval::IntervalError;
 
 #[derive(Debug)]
 pub enum ScaleError {

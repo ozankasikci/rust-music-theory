@@ -3,7 +3,7 @@ use std::fmt;
 
 #[derive(Debug, Clone)]
 pub enum IntervalError {
-   InvalidInterval,
+    InvalidInterval,
 }
 
 impl fmt::Display for IntervalError {

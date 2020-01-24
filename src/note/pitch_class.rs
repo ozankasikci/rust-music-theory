@@ -1,5 +1,5 @@
-use crate::note::errors::NoteError;
 use crate::interval::Interval;
+use crate::note::errors::NoteError;
 use regex::{Match, Regex};
 use std::error;
 use std::fmt;

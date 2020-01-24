@@ -23,7 +23,6 @@ impl fmt::Display for Note {
     }
 }
 
-
 pub trait Notes {
     fn notes(&self) -> Vec<Note>;
 
@@ -36,4 +35,3 @@ pub trait Notes {
         }
     }
 }
-

@@ -1,5 +1,5 @@
-use regex::{Match, Regex};
 use crate::chord::errors::ChordError;
+use regex::{Match, Regex};
 
 const REGEX_NUMBER_TRIAD: &str = "(triad|Triad)";
 const REGEX_NUMBER_SEVENTH: &str = "(seventh|Seventh)";

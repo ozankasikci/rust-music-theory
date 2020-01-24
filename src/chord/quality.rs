@@ -1,5 +1,5 @@
-use regex::{Match, Regex};
 use crate::chord::errors::ChordError;
+use regex::{Match, Regex};
 
 const REGEX_QUALITY_MAJOR: &str = r"^(M|maj|Maj|Major|major)\s+";
 const REGEX_QUALITY_MINOR: &str = r"^(m|min|Min|Minor|minor)\s+";
@@ -10,7 +10,6 @@ const REGEX_QUALITY_AUGMENTED_MINOR: &str = r"(?i)^(aug|augmented\s*minor)\s+";
 const REGEX_QUALITY_HALF_DIMINISHED: &str = r"(?i)^(half\s*diminished)\s+";
 const REGEX_QUALITY_MINOR_MAJOR: &str = r"(?i)^(minor\s*major)\s+";
 const REGEX_QUALITY_DOMINANT: &str = r"(?i)^(dom\s+|dominant)";
-
 
 #[derive(Debug, PartialEq)]
 pub enum Quality {
@@ -47,7 +46,7 @@ impl Quality {
 
             match mode {
                 Some(quality_match) => return Ok((quality_enum, Some(quality_match))),
-                _ => {},
+                _ => {}
             };
         }
 

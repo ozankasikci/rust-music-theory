@@ -26,4 +26,3 @@ impl From<regex::Error> for NoteError {
         }
     }
 }
-

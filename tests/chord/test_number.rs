@@ -4,7 +4,7 @@ use fir::chord::Number;
 #[cfg(test)]
 mod chord_number_tests {
     use super::*;
-    
+
     #[test]
     fn test_number_seventh() {
         let string = "seventh";
