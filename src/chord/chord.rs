@@ -3,6 +3,7 @@ use crate::note::{Note, PitchClass, Notes};
 use crate::chord::{Quality, Number};
 use regex::Match;
 use crate::chord::errors::ChordError;
+use crate::chord::number::Number::Triad;
 
 #[derive(Debug)]
 pub struct Chord {
@@ -15,6 +16,8 @@ pub struct Chord {
 
 impl Chord {
     pub fn new(root: PitchClass, quality: Quality, number: Number) -> Self {
+        eprintln!("quality = {:?}", quality);
+        eprintln!("number = {:?}", number);
         use Number::*;
         use Quality::*;
         let intervals = match (&quality, &number) {
@@ -30,6 +33,14 @@ impl Chord {
             (HalfDiminished, Seventh) => Interval::from_semitones(&[3, 3, 4]),
             (MinorMajor, Seventh) => Interval::from_semitones(&[3, 4, 4]),
             (Dominant, Seventh) => Interval::from_semitones(&[4, 3, 3]),
+            (Dominant, Ninth) => Interval::from_semitones(&[4, 3, 3, 4]),
+            (Major, Ninth) => Interval::from_semitones(&[4, 3, 4, 3]),
+            (Dominant, Eleventh) => Interval::from_semitones(&[4, 3, 3, 4, 4]),
+            (Major, Eleventh) => Interval::from_semitones(&[4, 3, 4, 3, 3]),
+            (Minor, Eleventh) => Interval::from_semitones(&[3, 4, 3, 4, 3]),
+            (Dominant, Thirteenth) => Interval::from_semitones(&[4, 3, 3, 4, 3, 4]),
+            (Major, Thirteenth) => Interval::from_semitones(&[4, 3, 4, 3, 3, 4]),
+            (Minor, Thirteenth) => Interval::from_semitones(&[3, 4, 3, 4, 3, 4]),
             _ => Interval::from_semitones(&[4, 3]),
         }
         .unwrap();
@@ -45,8 +56,11 @@ impl Chord {
 
     pub fn from_regex(string: &str) -> Result<Self, ChordError> {
         let (pitch_class, pitch_match) = PitchClass::from_regex(&string).unwrap();
-        let (quality, quality_match) = Quality::from_regex(&string[pitch_match.end()..]).unwrap();
-        let (number, number_match) = Number::from_regex(&string[quality_match.end()..]).unwrap();
+        let (quality, mut quality_match_option) = Quality::from_regex(&string[pitch_match.end()..]).unwrap();
+        let quality_match = quality_match_option.unwrap();
+
+        let (number, _) = Number::from_regex(&string[quality_match.end()..])
+            .unwrap_or((Triad, None));
 
         Ok(Chord::new(pitch_class, quality, number))
     }
