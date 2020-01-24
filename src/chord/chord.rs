@@ -52,15 +52,23 @@ impl Chord {
     }
 
     pub fn from_regex(string: &str) -> Result<Self, ChordError> {
-        let (pitch_class, pitch_match) = PitchClass::from_regex(&string).unwrap();
+        let (pitch_class, pitch_match) = PitchClass::from_regex(&string)?;
+
         let (quality, quality_match_option) =
-            Quality::from_regex(&string[pitch_match.end()..]).unwrap();
-        let quality_match = quality_match_option.unwrap();
+            Quality::from_regex(&string[pitch_match.end()..].trim())?;
 
-        let (number, _) =
-            Number::from_regex(&string[quality_match.end()..]).unwrap_or((Triad, None));
+        match quality_match_option {
+            // there is
+            Some(quality_match) => {
+                let (number, _) =
+                    Number::from_regex(&string[quality_match.end()..]).unwrap_or((Triad, None));
 
-        Ok(Chord::new(pitch_class, quality, number))
+                return Ok(Chord::new(pitch_class, quality, number));
+            }
+
+            // return a Triad by default
+            None => return Ok(Chord::new(pitch_class, quality, Triad))
+        }
     }
 }
 
