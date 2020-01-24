@@ -27,8 +27,6 @@ impl Number {
             (Regex::new(REGEX_NUMBER_THIRTEENTH), Thirteenth),
         ];
 
-        let number: Option<Match>;
-
         for (regex, number_enum) in regexes {
             let mode = regex?.find(string);
 

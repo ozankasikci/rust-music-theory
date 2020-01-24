@@ -1,5 +1,4 @@
 use crate::interval::IntervalError;
-use regex::Error;
 use std::error;
 use std::fmt;
 

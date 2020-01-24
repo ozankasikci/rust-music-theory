@@ -8,14 +8,14 @@ mod chord_number_tests {
     #[test]
     fn test_number_seventh() {
         let string = "seventh";
-        let (number, m) = Number::from_regex(string).unwrap();
+        let (number, _) = Number::from_regex(string).unwrap();
         assert_eq!(Number::Seventh, number);
     }
 
     #[test]
     fn test_number_triad() {
         let string = "triad";
-        let (number, m) = Number::from_regex(string).unwrap();
+        let (number, _) = Number::from_regex(string).unwrap();
         assert_eq!(Number::Triad, number);
     }
 }

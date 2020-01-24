@@ -1,6 +1,5 @@
 use fantasy_in_rust::chord::Chord;
-use fantasy_in_rust::note::{Notes, PitchClass};
-use fantasy_in_rust::scale::{Mode, Scale, ScaleType};
+use fantasy_in_rust::note::{Notes};
 use std::env;
 
 fn main() {

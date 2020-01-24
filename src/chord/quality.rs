@@ -39,8 +39,6 @@ impl Quality {
             (Regex::new(REGEX_QUALITY_DOMINANT), Dominant),
         ];
 
-        let quality: Option<Match>;
-
         for (regex, quality_enum) in regexes {
             let mode = regex?.find(string.trim());
 

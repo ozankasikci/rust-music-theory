@@ -3,7 +3,6 @@ use crate::chord::number::Number::Triad;
 use crate::chord::{Number, Quality};
 use crate::interval::Interval;
 use crate::note::{Note, Notes, PitchClass};
-use regex::Match;
 
 #[derive(Debug)]
 pub struct Chord {
@@ -54,7 +53,7 @@ impl Chord {
 
     pub fn from_regex(string: &str) -> Result<Self, ChordError> {
         let (pitch_class, pitch_match) = PitchClass::from_regex(&string).unwrap();
-        let (quality, mut quality_match_option) =
+        let (quality, quality_match_option) =
             Quality::from_regex(&string[pitch_match.end()..]).unwrap();
         let quality_match = quality_match_option.unwrap();
 

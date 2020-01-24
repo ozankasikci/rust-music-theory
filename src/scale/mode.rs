@@ -1,9 +1,7 @@
 use crate::scale::errors::ScaleError;
 use crate::scale::errors::ScaleError::ModeFromRegexError;
 use crate::scale::mode::Mode::*;
-use crate::scale::scale_type::ScaleType::{HarmonicMinor, MelodicMinor};
 use regex::{Match, Regex};
-use std::error;
 use strum_macros::{Display, EnumIter};
 
 const REGEX_MAJOR: &str = "(M|maj|Maj|Major|major|Ionian|ionian)";
@@ -57,8 +55,6 @@ impl Mode {
             (Regex::new(REGEX_PHRYGIAN), Phrygian),
             (Regex::new(REGEX_LYDIAN), Lydian),
         ];
-
-        let mode: Option<Match>;
 
         for (regex, mode_enum) in regexes {
             let mode = regex?.find(string);

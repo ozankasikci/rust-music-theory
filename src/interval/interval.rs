@@ -55,7 +55,7 @@ impl Interval {
     }
 
     pub fn from_semitone(sc: u8) -> Result<Self, IntervalError> {
-        let (mut number, mut quality, mut step): (Number, Quality, Option<Step>);
+        let (number, quality, mut step): (Number, Quality, Option<Step>);
         step = None;
 
         match sc {
