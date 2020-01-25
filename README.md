@@ -57,7 +57,7 @@ This is the simplest form of the usage. For detailed examples, please see the te
 The binary is implemented as a regex parser cli that returns the notes of the given scale/chord.
 To quickly build and run the executable locally;
 
-`git clone http://github.com/ozankasikci/rust-music-theory && cd $`
+`git clone http://github.com/ozankasikci/rust-music-theory && cd $_`
 
 `cargo run scale D Locrian`
 ```yaml
