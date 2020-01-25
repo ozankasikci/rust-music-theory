@@ -18,7 +18,7 @@ Interval and more. The main purpose of this library is to let music theory be us
 Add `rust-music-theory` as a dependency in your Cargo.toml.
 ```toml
 [dependencies]
-rust_music_theory = "0.1"
+rust-music-theory = "0.1"
 ```
 
 After installing the dependencies, you can use the library as follows.
