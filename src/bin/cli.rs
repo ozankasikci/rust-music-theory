@@ -2,22 +2,48 @@ use rust_music_theory::chord::Chord;
 use rust_music_theory::note::Notes;
 use std::env;
 
+use clap::{App, Arg};
+
+const AVAILABLE_SCALES: [&str; 9] = [
+    "Major|Ionian",
+    "Minor|Aeolian",
+    "Dorian",
+    "Phrygian",
+    "Lydian",
+    "Mixolydian",
+    "Locrian",
+    "HarmonicMinor",
+    "MelodicMinor",
+];
+
 fn main() {
-    let args: Vec<String> = env::args().collect();
-    let input = args[1].clone();
+    let matches = App::new("RustMusicTheory")
+        .version("0.1")
+        .author("Ozan Kaşıkçı")
+        .about("A music theory guide")
+        .subcommand(
+            App::new("scale")
+                .subcommand(
+                    App::new("list")
+                )
+        )
+        .get_matches();
 
-    /*
-    let (pitch, regex_match) = PitchClass::from_regex(&input).unwrap();
-    let (mode, regex_match) = Mode::from_regex(&input[regex_match.end()..]).unwrap();
-    eprintln!("mode = {:?}", mode);
-    let scale_type = ScaleType::from_mode(&mode);
-    eprintln!("scale_type = {:?}", scale_type);
-    let octave = 4;
 
-    let scale = Scale::new(scale_type, pitch, octave, Some(mode)).unwrap();
-    scale.print_notes();
-    */
+    match matches.subcommand() {
+        ("scale", Some(scale_matches)) => {
+            match scale_matches.subcommand() {
+                ("list", _) => {
+                    println!("Available Scales:");
+                    for scale in &AVAILABLE_SCALES {
+                       println!(" - {}", scale);
+                    }
+                }
+                _ => unreachable!()
+            }
+        }
+        _ => unreachable!()
+    }
 
-    let chord = Chord::from_regex(&input).unwrap();
-    chord.print_notes()
+
 }
