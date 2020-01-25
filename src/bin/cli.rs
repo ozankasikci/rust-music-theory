@@ -11,8 +11,8 @@ const AVAILABLE_SCALES: [&str; 9] = [
     "Lydian",
     "Mixolydian",
     "Locrian",
-    "HarmonicMinor",
-    "MelodicMinor",
+    "Harmonic Minor",
+    "Melodic Minor",
 ];
 
 const AVAILABLE_CHORDS: [&str; 22] = [
@@ -27,7 +27,7 @@ const AVAILABLE_CHORDS: [&str; 22] = [
     "Augmented Seventh",
     "Augmented Major Seventh",
     "Diminished Seventh",
-    "HalfDiminished Seventh",
+    "Half Diminished Seventh",
     "Minor Major Seventh",
     "Dominant Seventh",
     "Dominant Ninth",
@@ -92,7 +92,7 @@ fn main() {
                 )
                 .arg(
                     Arg::with_name("args")
-                        .help("scale args")
+                        .help("scale args, examples:\nC melodic minor\nD# dorian")
                         .required(true)
                         .multiple(true)
                 )
@@ -104,7 +104,7 @@ fn main() {
                 )
                 .arg(
                     Arg::with_name("args")
-                        .help("chord args")
+                        .help("chord args, examples:\nC minor\nAb augmented major seventh")
                         .required(true)
                         .multiple(true)
                 )
