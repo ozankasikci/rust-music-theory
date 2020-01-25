@@ -42,6 +42,16 @@ impl Scale {
         })
     }
 
+    pub fn from_regex(string: &str) -> Result<Self, ScaleError> {
+        let (tonic, tonic_match) = PitchClass::from_regex(&string)?;
+        let (mode, regex_match) = Mode::from_regex(&string[tonic_match.end()..])?;
+        let scale_type = ScaleType::from_mode(&mode);
+        let octave = 4;
+
+        let scale = Scale::new(scale_type, tonic, octave, Some(mode))?;
+        Ok(scale)
+    }
+
     pub fn print_notes(&self) {
         let notes = self.notes();
 

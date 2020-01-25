@@ -1,5 +1,5 @@
 use crate::scale::errors::ScaleError;
-use crate::scale::errors::ScaleError::ModeFromRegexError;
+use crate::scale::errors::ScaleError::ModeFromRegex;
 use crate::scale::mode::Mode::*;
 use regex::{Match, Regex};
 use strum_macros::{Display, EnumIter};
@@ -52,6 +52,6 @@ impl Mode {
             };
         }
 
-        Err(ModeFromRegexError)
+        Err(ModeFromRegex)
     }
 }
