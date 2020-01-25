@@ -2,12 +2,13 @@
 name = "rust-music-theory"
 description = "A library that procedurally implements music theory notions like Scale, Chord, Interval, Note"
 license = "MIT"
-version = "0.1.5"
+version = "0.1.6"
 readme = "README.md"
 repository = "https://github.com/ozankasikci/rust-music-theory"
 authors = ["Ozan Kasikci <ozan@kasikci.io>"]
 edition = "2018"
 exclude = ["/.travis.yml", ".gitignore"]
+keywords = ["music", "music-theory"]
 
 [dependencies]
 strum = "0.17.1"
