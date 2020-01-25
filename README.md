@@ -18,7 +18,7 @@ Interval and more.
 ## Usage
 #### Usage as a Library
 Add `rust_music_theory` as a dependency in your Cargo.toml.
-```
+```toml
 [dependencies]
 rust_music_theory = "0.1"
 ```
