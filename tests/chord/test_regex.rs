@@ -109,4 +109,23 @@ mod chord_regex_tests {
 
         assert_chords(table);
     }
+
+    #[test]
+    fn test_dominant() {
+        let table = vec![
+            ("C dominant", C, Dominant, Triad),
+            ("E DOMINANT", E, Dominant, Triad),
+            ("C DOmInAnT", C, Dominant, Triad),
+            ("Cb Dominant", B, Dominant, Triad),
+            ("Cb Dominant seventh", B, Dominant, Seventh),
+            ("C Dominant", C, Dominant, Triad),
+            ("C Dominant Triad", C, Dominant, Triad),
+            ("C Dominant Seventh", C, Dominant, Seventh),
+            ("C Dominant Ninth", C, Dominant, Ninth),
+            ("C# Dominant Eleventh", Cs, Dominant, Eleventh),
+            ("Ds Dominant Thirteenth", Ds, Dominant, Thirteenth),
+        ];
+
+        assert_chords(table);
+    }
 }
