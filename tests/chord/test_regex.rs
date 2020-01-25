@@ -90,4 +90,23 @@ mod chord_regex_tests {
 
         assert_chords(table);
     }
+
+    #[test]
+    fn test_half_diminished() {
+        let table = vec![
+            ("C Half Diminished", C, HalfDiminished, Triad),
+            ("E halfdiminished", E, HalfDiminished, Triad),
+            ("C half diminished", C, HalfDiminished, Triad),
+            ("Cb HALFDIMINISHED", B, HalfDiminished, Triad),
+            ("Cb HalfDiminished seventh", B, HalfDiminished, Seventh),
+            ("C HalfDiminished", C, HalfDiminished, Triad),
+            ("C HalfDiminished Triad", C, HalfDiminished, Triad),
+            ("C HalfDiminished Seventh", C, HalfDiminished, Seventh),
+            ("C HalfDiminished Ninth", C, HalfDiminished, Ninth),
+            ("C# HalfDiminished Eleventh", Cs, HalfDiminished, Eleventh),
+            ("Ds HalfDiminished Thirteenth", Ds, HalfDiminished, Thirteenth),
+        ];
+
+        assert_chords(table);
+    }
 }
