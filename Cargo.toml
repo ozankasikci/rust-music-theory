@@ -1,5 +1,7 @@
 [package]
 name = "rust-music-theory"
+description = "A library that procedurally implements music theory notions like Scale, Chord, Interval, Note"
+license = "MIT"
 version = "0.1.0"
 authors = ["Ozan Kasikci <ozan@kasikci.io>"]
 edition = "2018"
