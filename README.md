@@ -16,7 +16,7 @@ A library and executable that provides programmatic implementation of the basis 
 Interval and more.
 
 ## Usage
-#### Usage as a Library
+### Usage as a Library
 Add `rust_music_theory` as a dependency in your Cargo.toml.
 ```toml
 [dependencies]
@@ -55,7 +55,7 @@ let chord_notes = chord.notes();
 This is the simplest form of the usage. For detailed examples, please see the tests folder.
 
 
-#### Usage as an Executable
+### Usage as an Executable
 The binary is implemented as a regex parser cli that returns the notes of the given scale/chord.
 To quickly build and run the executable locally;
 
