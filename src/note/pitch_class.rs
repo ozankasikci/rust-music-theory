@@ -48,16 +48,11 @@ impl PitchClass {
         let characters: Vec<char> = string.chars().collect();
 
         let mut pitch = match characters[0] {
-            //"C#" | "Cs" | "c#" | "cs" => Cs,
             'C' | 'c' => C,
-            //"D#" | "Ds" | "d#" | "ds" => Ds,
             'D' | 'd' => D,
             'E' | 'e' => E,
-            //"F#" | "Fs" | "f#" | "fs" => Fs,
             'F' | 'f' => F,
-            //"G#" | "Gs" | "g#" | "gs" => Gs,
             'G' | 'g' => G,
-            //"A#" | "As" | "a#" | "as" => As,
             'A' | 'a' => A,
             'B' | 'b' => B,
             _ => C,

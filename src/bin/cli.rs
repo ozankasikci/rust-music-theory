@@ -1,7 +1,7 @@
 use clap::{App, Arg, ArgMatches};
-use rust_music_theory::scale::Scale;
-use rust_music_theory::note::Notes;
 use rust_music_theory::chord::Chord;
+use rust_music_theory::note::{Notes, PitchClass};
+use rust_music_theory::scale::Scale;
 
 const AVAILABLE_SCALES: [&str; 9] = [
     "Major|Ionian",
@@ -51,7 +51,8 @@ fn scale_command(scale_matches: &ArgMatches) {
         _ => {}
     }
 
-    let scale_args = scale_matches.values_of("args")
+    let scale_args = scale_matches
+        .values_of("args")
         .unwrap()
         .collect::<Vec<_>>()
         .join(" ");
@@ -71,7 +72,8 @@ fn chord_command(chord_matches: &ArgMatches) {
         _ => {}
     }
 
-    let chord_args = chord_matches.values_of("args")
+    let chord_args = chord_matches
+        .values_of("args")
         .unwrap()
         .collect::<Vec<_>>()
         .join(" ");
@@ -86,31 +88,22 @@ fn main() {
         .author("Ozan Kaşıkçı")
         .about("A music theory guide")
         .subcommand(
-            App::new("scale")
-                .subcommand(
-                    App::new("list")
-                )
-                .arg(
-                    Arg::with_name("args")
-                        .help("scale args, examples:\nC melodic minor\nD# dorian")
-                        .required(true)
-                        .multiple(true)
-                )
+            App::new("scale").subcommand(App::new("list")).arg(
+                Arg::with_name("args")
+                    .help("scale args, examples:\nC melodic minor\nD# dorian")
+                    .required(true)
+                    .multiple(true),
+            ),
         )
         .subcommand(
-            App::new("chord")
-                .subcommand(
-                    App::new("list")
-                )
-                .arg(
-                    Arg::with_name("args")
-                        .help("chord args, examples:\nC minor\nAb augmented major seventh")
-                        .required(true)
-                        .multiple(true)
-                )
+            App::new("chord").subcommand(App::new("list")).arg(
+                Arg::with_name("args")
+                    .help("chord args, examples:\nC minor\nAb augmented major seventh")
+                    .required(true)
+                    .multiple(true),
+            ),
         )
         .get_matches();
-
 
     match matches.subcommand() {
         ("scale", Some(scale_matches)) => {
@@ -120,9 +113,7 @@ fn main() {
         ("chord", Some(chord_matches)) => {
             chord_command(chord_matches);
         }
-        
-        _ => unreachable!()
+
+        _ => unreachable!(),
     }
-
-
 }
