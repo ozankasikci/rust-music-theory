@@ -7,8 +7,8 @@ A library and executable that provides programmatic implementation of the basis 
 
 - [Overview](#overview)
 - [Usage](#usage)
-  * [Installing as an Executable](#installing-as-an-executable)
-  * [Installing as a Library](#usage-as-a-library)
+  * [Usage as an Executable](#usage-as-an-executable)
+  * [Usage as a Library](#usage-as-a-library)
 
 ## Overview
 
