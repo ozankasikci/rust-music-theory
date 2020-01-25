@@ -90,18 +90,28 @@ fn main() {
         .author("Ozan Kaşıkçı")
         .about("A music theory guide")
         .subcommand(
-            App::new("scale").subcommand(App::new("list")).arg(
+            App::new("scale")
+                .about("Provides information for the specified scale")
+                .subcommand(
+                    App::new("list").about("Prints out the available scales")
+                )
+                .arg(
                 Arg::with_name("args")
                     .help("scale args, examples:\nC melodic minor\nD# dorian")
                     .multiple(true),
-            ),
+                ),
         )
         .subcommand(
-            App::new("chord").subcommand(App::new("list")).arg(
+            App::new("chord")
+                .about("Provides information for the specified chord")
+                .subcommand(
+                    App::new("list").about("Prints out the available chords")
+                )
+                .arg(
                 Arg::with_name("args")
                     .help("chord args, examples:\nC minor\nAb augmented major seventh")
                     .multiple(true),
-            ),
+                ),
         )
         .get_matches();
 
@@ -114,6 +124,6 @@ fn main() {
             chord_command(chord_matches);
         }
 
-        _ => unreachable!(),
+        _ => println!("Please use the help command to see the available commands"),
     }
 }
