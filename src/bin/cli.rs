@@ -1,8 +1,6 @@
-use rust_music_theory::chord::Chord;
-use rust_music_theory::note::Notes;
-use std::env;
-
 use clap::{App, Arg};
+use rust_music_theory::scale::Scale;
+use rust_music_theory::note::Notes;
 
 const AVAILABLE_SCALES: [&str; 9] = [
     "Major|Ionian",
@@ -26,9 +24,14 @@ fn main() {
                 .subcommand(
                     App::new("list")
                 )
+                .arg(
+                    Arg::with_name("args")
+                        .help("scale args")
+                        .required(true)
+                        .multiple(true)
+                )
         )
         .get_matches();
-
 
     match matches.subcommand() {
         ("scale", Some(scale_matches)) => {
@@ -39,9 +42,18 @@ fn main() {
                        println!(" - {}", scale);
                     }
                 }
-                _ => unreachable!()
+                _ => {}
             }
+
+            let scale_args = scale_matches.values_of("args")
+                .unwrap()
+                .collect::<Vec<_>>()
+                .join(" ");
+
+            let scale = Scale::from_regex(&scale_args).unwrap();
+            scale.print_notes();
         }
+        
         _ => unreachable!()
     }
 
