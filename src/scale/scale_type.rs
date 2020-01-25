@@ -1,7 +1,7 @@
 use crate::scale::{Mode, Mode::*};
 use strum_macros::{Display, EnumIter};
 
-#[derive(Display, Debug, EnumIter)]
+#[derive(Display, Debug, EnumIter, PartialEq)]
 pub enum ScaleType {
     Diatonic,
     MelodicMinor,

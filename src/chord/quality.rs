@@ -1,15 +1,12 @@
 use crate::chord::errors::ChordError;
 use regex::{Match, Regex};
 
-const REGEX_QUALITY_MAJOR: &str = r"^(M\s+|(?i)maj|Maj|Major|major)";
+const REGEX_QUALITY_MAJOR: &str = r"^(M\s+|M$|(?i)maj|Maj|Major|major)";
 const REGEX_QUALITY_MINOR: &str = r"^(m\s+|m$|(?i)min|Min|Minor|minor)";
-const REGEX_QUALITY_DIMINISHED: &str = r"(?i)^(dim|diminished)";
-const REGEX_QUALITY_AUGMENTED: &str = r"(?i)^(aug|augmented)";
-const REGEX_QUALITY_AUGMENTED_MAJOR: &str = r"(?i)^(augmented\s*major)";
-const REGEX_QUALITY_AUGMENTED_MINOR: &str = r"(?i)^(augmented\s*minor)";
-const REGEX_QUALITY_HALF_DIMINISHED: &str = r"(?i)^(half\s*diminished)";
-const REGEX_QUALITY_MINOR_MAJOR: &str = r"(?i)^(minor\s*major)";
-const REGEX_QUALITY_DOMINANT: &str = r"(?i)^(dom\s+|dominant)";
+const REGEX_QUALITY_DIMINISHED: &str = r"(?i)^(diminished)";
+const REGEX_QUALITY_AUGMENTED: &str = r"(?i)^(augmented)";
+const REGEX_QUALITY_HALF_DIMINISHED: &str = r"(?i)^(half\s*diminished|halfdiminished)";
+const REGEX_QUALITY_DOMINANT: &str = r"(?i)^(dominant)";
 
 #[derive(Debug, PartialEq)]
 pub enum Quality {

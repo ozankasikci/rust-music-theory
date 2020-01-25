@@ -4,19 +4,17 @@ use crate::scale::mode::Mode::*;
 use regex::{Match, Regex};
 use strum_macros::{Display, EnumIter};
 
-const REGEX_MAJOR: &str = "(M|maj|Maj|Major|major|Ionian|ionian)";
-const REGEX_MINOR: &str = "(m|min|Min|Minor|minor|Aeolian|aeolian)";
-const REGEX_DORIAN: &str = "(dor|dorian)";
-const REGEX_PHRYGIAN: &str = "(phy|phr|phrygian)";
-const REGEX_LYDIAN: &str = "(lyd|lydian)";
-const REGEX_MIXOLYDIAN: &str = "(mix|mixolydian)";
-const REGEX_LOCRIAN: &str = "(loc|locrian)";
-const REGEX_MELODIC_MINOR: &str =
-    "(mel minor|melodicminor|melodic minor|Melodic Minor|MelodicMinor)";
-const REGEX_HARMONIC_MINOR: &str =
-    "(har minor|harmonicminor|harmonic minor|Harmonic Minor|HarmonicMinor)";
+const REGEX_MAJOR: &str = r"^(M\s+|M$|(?i)maj|major|ionian)";
+const REGEX_MINOR: &str = r"^(m\s+|m$|(?i)min|minor|aeolian)";
+const REGEX_DORIAN: &str = r"(?i)^(dorian)";
+const REGEX_PHRYGIAN: &str = r"(?i)^(phrygian)";
+const REGEX_LYDIAN: &str = r"(?i)^(lydian)";
+const REGEX_MIXOLYDIAN: &str = r"(?i)^(mixolydian)";
+const REGEX_LOCRIAN: &str = r"(?i)^(locrian)";
+const REGEX_MELODIC_MINOR: &str = r"(?i)(mel minor|melodicminor|melodic\s+minor)";
+const REGEX_HARMONIC_MINOR: &str = r"(?i)(har minor|harmonicminor|harmonic\s+minor)";
 
-#[derive(Debug, EnumIter, Display)]
+#[derive(Debug, EnumIter, Display, PartialEq)]
 pub enum Mode {
     Ionian,
     Dorian,
@@ -44,7 +42,7 @@ impl Mode {
         ];
 
         for (regex, mode_enum) in regexes {
-            let mode = regex?.find(string);
+            let mode = regex?.find(string.trim());
 
             match mode {
                 Some(mode_match) => return Ok((mode_enum, mode_match)),
