@@ -1,6 +1,7 @@
 ## Rust Music Theory
 
 [![Build Status](https://travis-ci.com/ozankasikci/rust-music-theory.svg?branch=master)](https://travis-ci.com/ozankasikci/rust-music-theory)
+[![Crates.io](https://img.shields.io/crates/v/rust-music-theory.svg?style=flat-square)](https://crates.io/crates/rust-music-theory)
 
 A library and executable that provides programmatic implementation of the basis of the music theory.
 ## Table of Contents
