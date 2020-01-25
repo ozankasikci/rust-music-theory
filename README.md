@@ -12,7 +12,7 @@ A library and executable that provides programmatic implementation of the basis 
 ## Overview
 
 `Rust Music Theory` is used to procedurally utilize music theory notions like Note, Chord, Scale,
-Interval and more.
+Interval and more. The main purpose of this library is to let music theory be used in other programs and produce music/audio in a programmatic way.
 
 ### Usage as a Library
 Add `rust_music_theory` as a dependency in your Cargo.toml.
