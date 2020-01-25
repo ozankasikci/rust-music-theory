@@ -15,7 +15,7 @@ A library and executable that provides programmatic implementation of the basis 
 Interval and more. The main purpose of this library is to let music theory be used in other programs and produce music/audio in a programmatic way.
 
 ### Usage as a Library
-Add `rust_music_theory` as a dependency in your Cargo.toml.
+Add `rust-music-theory` as a dependency in your Cargo.toml.
 ```toml
 [dependencies]
 rust_music_theory = "0.1"
