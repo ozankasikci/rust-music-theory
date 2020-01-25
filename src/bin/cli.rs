@@ -1,6 +1,6 @@
 use clap::{App, Arg, ArgMatches};
 use rust_music_theory::chord::Chord;
-use rust_music_theory::note::{Notes, PitchClass};
+use rust_music_theory::note::{Notes};
 use rust_music_theory::scale::Scale;
 
 const AVAILABLE_SCALES: [&str; 9] = [
@@ -91,7 +91,6 @@ fn main() {
             App::new("scale").subcommand(App::new("list")).arg(
                 Arg::with_name("args")
                     .help("scale args, examples:\nC melodic minor\nD# dorian")
-                    .required(true)
                     .multiple(true),
             ),
         )
@@ -99,7 +98,6 @@ fn main() {
             App::new("chord").subcommand(App::new("list")).arg(
                 Arg::with_name("args")
                     .help("chord args, examples:\nC minor\nAb augmented major seventh")
-                    .required(true)
                     .multiple(true),
             ),
         )
