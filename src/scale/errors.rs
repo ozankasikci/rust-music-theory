@@ -13,7 +13,9 @@ pub enum ScaleError {
 impl fmt::Display for ScaleError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match *self {
-            ScaleError::InvalidInterval => write!(f, "Can't determine the intervals for the scale scale!"),
+            ScaleError::InvalidInterval => {
+                write!(f, "Can't determine the intervals for the scale scale!")
+            }
             ScaleError::ModeFromRegex => write!(f, "Can't determine the mode!"),
             ScaleError::InvalidRegex => write!(f, "Invalid scale regex!"),
         }

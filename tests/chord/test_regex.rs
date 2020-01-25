@@ -1,5 +1,5 @@
 extern crate rust_music_theory as theory;
-use theory::chord::{Chord, Quality, Quality::*, Number, Number::*};
+use theory::chord::{Chord, Number, Number::*, Quality, Quality::*};
 use theory::note::{PitchClass, PitchClass::*};
 
 fn assert_chords(table: Vec<(&str, PitchClass, Quality, Number)>) {
@@ -104,7 +104,12 @@ mod chord_regex_tests {
             ("C HalfDiminished Seventh", C, HalfDiminished, Seventh),
             ("C HalfDiminished Ninth", C, HalfDiminished, Ninth),
             ("C# HalfDiminished Eleventh", Cs, HalfDiminished, Eleventh),
-            ("Ds HalfDiminished Thirteenth", Ds, HalfDiminished, Thirteenth),
+            (
+                "Ds HalfDiminished Thirteenth",
+                Ds,
+                HalfDiminished,
+                Thirteenth,
+            ),
         ];
 
         assert_chords(table);

@@ -1,6 +1,6 @@
 extern crate rust_music_theory as theory;
-use theory::scale::{Scale, Mode, ScaleType};
 use theory::note::PitchClass::*;
+use theory::scale::{Mode, Scale, ScaleType};
 
 #[cfg(test)]
 mod chord_regex_tests {
@@ -20,8 +20,18 @@ mod chord_regex_tests {
             ("Gb mixolydian", Fs, ScaleType::Diatonic, Mode::Mixolydian),
             ("B MAJOR", B, ScaleType::Diatonic, Mode::Ionian),
             ("Bb MAJOR", As, ScaleType::Diatonic, Mode::Ionian),
-            ("Bb Harmonic Minor", As, ScaleType::HarmonicMinor, Mode::HarmonicMinor),
-            ("Ds Melodic Minor", Ds, ScaleType::MelodicMinor, Mode::MelodicMinor),
+            (
+                "Bb Harmonic Minor",
+                As,
+                ScaleType::HarmonicMinor,
+                Mode::HarmonicMinor,
+            ),
+            (
+                "Ds Melodic Minor",
+                Ds,
+                ScaleType::MelodicMinor,
+                Mode::MelodicMinor,
+            ),
         ];
 
         for (string, pitch, scale_type, mode) in table {

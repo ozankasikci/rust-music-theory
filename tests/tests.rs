@@ -6,8 +6,8 @@ mod chord {
 }
 
 mod scale {
-    mod test_scale;
     mod test_regex;
+    mod test_scale;
 }
 
 mod note {
