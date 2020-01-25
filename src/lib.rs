@@ -37,7 +37,7 @@
 //! let chord = Chord::new(PitchClass::C, ChordQuality::Major, ChordNumber::Triad);
 //!
 //! // returns a Vector of the Notes of the chord
-//! let scale_notes = scale.notes();
+//! let chord_notes = chord.notes();
 //!
 
 extern crate strum;
