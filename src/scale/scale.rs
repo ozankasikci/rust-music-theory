@@ -51,15 +51,6 @@ impl Scale {
         let scale = Scale::new(scale_type, tonic, octave, Some(mode))?;
         Ok(scale)
     }
-
-    pub fn print_notes(&self) {
-        let notes = self.notes();
-
-        println!("Notes:");
-        for (i, note) in notes.iter().enumerate() {
-            println!("  {}: {}", i + 1, note.pitch_class)
-        }
-    }
 }
 
 impl Notes for Scale {

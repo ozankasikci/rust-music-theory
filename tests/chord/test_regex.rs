@@ -133,4 +133,17 @@ mod chord_regex_tests {
 
         assert_chords(table);
     }
+
+    #[test]
+    fn test_suspended() {
+        let table = vec![
+            ("C sus2", C, Suspended2, Triad),
+            ("E sus2 triad", E, Suspended2, Triad),
+            ("C sus4", C, Suspended4, Triad),
+            ("Cb suspended4", B, Suspended4, Triad),
+            ("Cb suspended2", B, Suspended2, Triad),
+        ];
+
+        assert_chords(table);
+    }
 }

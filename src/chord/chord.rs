@@ -20,6 +20,8 @@ impl Chord {
         let intervals = match (&quality, &number) {
             (Major, Triad) => Interval::from_semitones(&[4, 3]),
             (Minor, Triad) => Interval::from_semitones(&[3, 4]),
+            (Suspended2, Triad) => Interval::from_semitones(&[2, 5]),
+            (Suspended4, Triad) => Interval::from_semitones(&[5, 7]),
             (Augmented, Triad) => Interval::from_semitones(&[4, 4]),
             (Diminished, Triad) => Interval::from_semitones(&[3, 3]),
             (Major, Seventh) => Interval::from_semitones(&[4, 3, 4]),

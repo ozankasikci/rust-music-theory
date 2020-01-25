@@ -7,6 +7,8 @@ const REGEX_QUALITY_DIMINISHED: &str = r"(?i)^(diminished)";
 const REGEX_QUALITY_AUGMENTED: &str = r"(?i)^(augmented)";
 const REGEX_QUALITY_HALF_DIMINISHED: &str = r"(?i)^(half\s*diminished|halfdiminished)";
 const REGEX_QUALITY_DOMINANT: &str = r"(?i)^(dominant)";
+const REGEX_QUALITY_SUSPENDED_4: &str = r"(?i)^(sus4\s+|sus4$|suspended4)";
+const REGEX_QUALITY_SUSPENDED_2: &str = r"(?i)^(sus2\s+|sus2$|suspended2)";
 
 #[derive(Debug, PartialEq)]
 pub enum Quality {
@@ -16,6 +18,8 @@ pub enum Quality {
     Augmented,
     HalfDiminished,
     Dominant,
+    Suspended2,
+    Suspended4,
 }
 
 impl Quality {
@@ -28,6 +32,8 @@ impl Quality {
             (Regex::new(REGEX_QUALITY_AUGMENTED), Augmented),
             (Regex::new(REGEX_QUALITY_HALF_DIMINISHED), HalfDiminished),
             (Regex::new(REGEX_QUALITY_DOMINANT), Dominant),
+            (Regex::new(REGEX_QUALITY_SUSPENDED_2), Suspended2),
+            (Regex::new(REGEX_QUALITY_SUSPENDED_4), Suspended4),
         ];
 
         for (regex, quality_enum) in regexes {
