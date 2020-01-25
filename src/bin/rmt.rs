@@ -48,17 +48,18 @@ fn scale_command(scale_matches: &ArgMatches) {
                 println!(" - {}", scale);
             }
         }
-        _ => {}
+        _ => {
+            let scale_args = scale_matches
+                .values_of("args")
+                .unwrap()
+                .collect::<Vec<_>>()
+                .join(" ");
+
+            let scale = Scale::from_regex(&scale_args).unwrap();
+            scale.print_notes();
+        }
     }
 
-    let scale_args = scale_matches
-        .values_of("args")
-        .unwrap()
-        .collect::<Vec<_>>()
-        .join(" ");
-
-    let scale = Scale::from_regex(&scale_args).unwrap();
-    scale.print_notes();
 }
 
 fn chord_command(chord_matches: &ArgMatches) {
@@ -69,17 +70,18 @@ fn chord_command(chord_matches: &ArgMatches) {
                 println!(" - {}", chord);
             }
         }
-        _ => {}
+        _ => {
+            let chord_args = chord_matches
+                .values_of("args")
+                .unwrap()
+                .collect::<Vec<_>>()
+                .join(" ");
+
+            let chord = Chord::from_regex(&chord_args).unwrap();
+            chord.print_notes();
+        }
     }
 
-    let chord_args = chord_matches
-        .values_of("args")
-        .unwrap()
-        .collect::<Vec<_>>()
-        .join(" ");
-
-    let chord = Chord::from_regex(&chord_args).unwrap();
-    chord.print_notes();
 }
 
 fn main() {
