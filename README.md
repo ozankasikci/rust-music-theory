@@ -131,5 +131,6 @@ Available chords:
 ## Roadmap
 - [] Add missing modes for Melodic & Harmonic minor scales
 - [] Improve documentation in the codebase
+- [] Add inversion support for chords
 - [] Add support for [cadence][1]s
 - [] Add a mechanism to find the chord from the given notes
