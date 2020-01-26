@@ -1,17 +1,13 @@
 language: rust
 
-# Recommeneded caching strategy from https://levans.fr/rust_travis_cache.html
-# Need to cache the whole `.cargo` directory to keep .crates.toml for
-# cargo-update to work
 cache:
   directories:
     - /home/travis/.cargo
 
-# But don't cache the cargo registry
 before_cache:
   - rm -rf /home/travis/.cargo/registry
 
-env: # required for allow_failures
+env:
 os:
   - linux
   - osx
@@ -34,7 +30,7 @@ matrix:
         - cargo clippy
 
     - env: NAME='cargo-travis'
-      sudo: required # travis-ci/travis-ci#9061
+      sudo: required
       before_script:
         - cargo install cargo-update || echo "cargo-update already installed"
         - cargo install cargo-travis || echo "cargo-travis already installed"
