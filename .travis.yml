@@ -1,64 +1,35 @@
-dist: trusty
 language: rust
-sudo: true
-
+sudo: required
+dist: trusty
 addons:
     apt:
         packages:
-            - libcurl4-openssl-dev
-            - libelf-dev
-            - libdw-dev
-            - binutils-dev
-            - libiberty-dev
-            - g++
-
-# ignoring 32-bit targets until a proper 32-bit environment is provided.
-# see https://github.com/travis-ci/travis-ci/issues/986
-
+            - libssl-dev
+cache: cargo
+rust:
+  - stable
+  - beta
+  - nightly
 matrix:
-    include:
-        - os: linux
-          rust: 1.40.0
-          env: ARCH=x86_64
+  allow_failures:
+    - rust: nightly
 
-        - os: linux
-          rust: stable
-          env: ARCH=x86_64
-
-        - os: linux
-          rust: beta
-          env: ARCH=x86_64
-
-        - os: linux
-          rust: nightly
-          env: ARCH=x86_64
-
-        - os: osx
-          osx_image: xcode11.3
-          rust: stable
-          env: ARCH=x86_64
-
-install:
-    - rustc -vV
-    - cargo -vV
-
-    # Install kcov.
-    - mkdir -p ~/.cargo/bin
-    - sh src/install_kcov.sh
-    - export PATH=$HOME/.local/bin:$HOME/.cargo/bin:$HOME/Library/Python/2.7/bin:$PATH
-    - export RUSTFLAGS="-C link-dead-code"
-    - kcov --version
-
-    # See https://github.com/rust-lang/rust/issues/38380
-    - if [ $TRAVIS_OS_NAME = osx ]; then brew unlink python2 && brew unlink python3; fi
+before_cache: |
+  if [[ "$TRAVIS_RUST_VERSION" == stable ]]; then
+    cargo install cargo-tarpaulin
+  fi
 
 script:
-    - cargo build
-    - cargo test
+- cargo clean
+- cargo build
+- cargo test
 
-    # Note: we skip the `check-specimen` test in coverage because kcov cannot do recursive-ptrace.
-    # Track this file: https://github.com/SimonKagstrom/kcov/blob/master/tests/recursive-ptrace/main.cc
-    #
-    # Note: disable covering macOS, otherwise we will timeout.
-    # see https://travis-ci.org/kennytm/cargo-kcov/jobs/376598886
-    - if [ $TRAVIS_OS_NAME = linux ]; then cargo run -- kcov --verbose --no-clean-rebuild --lib --coveralls; fi
+after_success: |
+  if [[ "$TRAVIS_RUST_VERSION" == stable ]]; then
+    Uncomment the following line for coveralls.io
+    cargo tarpaulin --ciserver travis-ci --coveralls $TRAVIS_JOB_ID
+
+    # Uncomment the following two lines create and upload a report for codecov.io
+    # cargo tarpaulin --out Xml
+    # bash <(curl -s https://codecov.io/bash)
+  fi
