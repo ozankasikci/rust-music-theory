@@ -130,6 +130,7 @@ Available chords:
 [1]: https://en.wikipedia.org/wiki/Cadence
 ## Roadmap
 - [ ] Add missing modes for Melodic & Harmonic minor scales
+- [ ] Properly display enharmonic spelling
 - [ ] Improve documentation in the codebase
 - [ ] Add inversion support for chords
 - [ ] Add support for [cadence][1]s
