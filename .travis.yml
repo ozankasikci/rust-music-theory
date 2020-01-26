@@ -1,56 +1,64 @@
+dist: trusty
 language: rust
+sudo: true
 
-cache:
-  directories:
-    - /home/travis/.cargo
-
-before_cache:
-  - rm -rf /home/travis/.cargo/registry
-
-env:
-os:
-  - linux
-  - osx
-rust:
-  - stable
-  - beta
-  - nightly
-
-matrix:
-  fast_finish: true
-  allow_failures:
-  include:
-    - rust: stable
-      env: NAME='linting'
-      before_script:
-        - rustup component add rustfmt-preview
-        - rustup component add clippy-preview
-      script:
-        - cargo fmt --all -- --check
-        - cargo clippy
-
-    - env: NAME='cargo-travis'
-      sudo: required
-      before_script:
-        - cargo install cargo-update || echo "cargo-update already installed"
-        - cargo install cargo-travis || echo "cargo-travis already installed"
-        - cargo install-update -a
-      script:
-        - |
-          cargo build --verbose &&
-          cargo coverage --verbose &&
-          bash <(curl -s https://codecov.io/bash) -s target/kcov
-      addons: # required for kcov
-        apt:
-          packages:
+addons:
+    apt:
+        packages:
             - libcurl4-openssl-dev
             - libelf-dev
             - libdw-dev
             - binutils-dev
-            - cmake
+            - libiberty-dev
+            - g++
 
-script: |
-  export RUST_BACKTRACE=1 &&
-  cargo build --verbose &&
-  cargo test --verbose &&
-  cargo doc --no-deps --verbose
+# ignoring 32-bit targets until a proper 32-bit environment is provided.
+# see https://github.com/travis-ci/travis-ci/issues/986
+
+matrix:
+    include:
+        - os: linux
+          rust: 1.40.0
+          env: ARCH=x86_64
+
+        - os: linux
+          rust: stable
+          env: ARCH=x86_64
+
+        - os: linux
+          rust: beta
+          env: ARCH=x86_64
+
+        - os: linux
+          rust: nightly
+          env: ARCH=x86_64
+
+        - os: osx
+          osx_image: xcode11.3
+          rust: stable
+          env: ARCH=x86_64
+
+install:
+    - rustc -vV
+    - cargo -vV
+
+    # Install kcov.
+    - mkdir -p ~/.cargo/bin
+    - sh src/install_kcov.sh
+    - export PATH=$HOME/.local/bin:$HOME/.cargo/bin:$HOME/Library/Python/2.7/bin:$PATH
+    - export RUSTFLAGS="-C link-dead-code"
+    - kcov --version
+
+    # See https://github.com/rust-lang/rust/issues/38380
+    - if [ $TRAVIS_OS_NAME = osx ]; then brew unlink python2 && brew unlink python3; fi
+
+script:
+    - cargo build
+    - cargo test
+
+    # Note: we skip the `check-specimen` test in coverage because kcov cannot do recursive-ptrace.
+    # Track this file: https://github.com/SimonKagstrom/kcov/blob/master/tests/recursive-ptrace/main.cc
+    #
+    # Note: disable covering macOS, otherwise we will timeout.
+    # see https://travis-ci.org/kennytm/cargo-kcov/jobs/376598886
+    - if [ $TRAVIS_OS_NAME = linux ]; then cargo run -- kcov --verbose --no-clean-rebuild --lib --coveralls; fi
