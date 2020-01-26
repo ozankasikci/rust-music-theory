@@ -11,13 +11,14 @@ A library and executable that provides programmatic implementation of the basis 
 - [Overview](#overview)
 - [Usage as a Library](#usage-as-a-library)
 - [Usage as an Executable](#usage-as-an-executable)
+- [Roadmap](#roadmap)
 
 ## Overview
 
 `Rust Music Theory` is used to procedurally utilize music theory notions like Note, Chord, Scale,
 Interval and more. The main purpose of this library is to let music theory be used in other programs and produce music/audio in a programmatic way.
 
-### Usage as a Library
+## Usage as a Library
 Add `rust-music-theory` as a dependency in your Cargo.toml.
 ```toml
 [dependencies]
@@ -55,8 +56,7 @@ let chord_notes = chord.notes();
 
 This is the simplest form of the usage. For detailed examples, please see the tests folder.
 
-
-### Usage as an Executable
+## Usage as an Executable
 The binary is implemented as a regex parser cli that returns the notes of the given scale/chord.
 To quickly build and run the executable locally;
 
@@ -126,3 +126,10 @@ Available chords:
  - Major Thirteenth
  - Minor Thirteenth
 ```
+
+[1]: https://en.wikipedia.org/wiki/Cadence
+## Roadmap
+- [] Add missing modes for Melodic & Harmonic minor scales
+- [] Improve documentation in the codebase
+- [] Add support for [cadence][1]s
+- [] Add a mechanism to find the chord from the given notes
