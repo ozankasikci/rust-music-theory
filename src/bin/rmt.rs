@@ -1,6 +1,6 @@
 use clap::{App, Arg, ArgMatches};
 use rust_music_theory::chord::Chord;
-use rust_music_theory::note::{Notes};
+use rust_music_theory::note::Notes;
 use rust_music_theory::scale::Scale;
 
 const AVAILABLE_SCALES: [&str; 9] = [
@@ -59,7 +59,6 @@ fn scale_command(scale_matches: &ArgMatches) {
             scale.print_notes();
         }
     }
-
 }
 
 fn chord_command(chord_matches: &ArgMatches) {
@@ -81,7 +80,6 @@ fn chord_command(chord_matches: &ArgMatches) {
             chord.print_notes();
         }
     }
-
 }
 
 fn main() {
@@ -92,25 +90,21 @@ fn main() {
         .subcommand(
             App::new("scale")
                 .about("Provides information for the specified scale")
-                .subcommand(
-                    App::new("list").about("Prints out the available scales")
-                )
+                .subcommand(App::new("list").about("Prints out the available scales"))
                 .arg(
-                Arg::with_name("args")
-                    .help("scale args, examples:\nC melodic minor\nD# dorian")
-                    .multiple(true),
+                    Arg::with_name("args")
+                        .help("scale args, examples:\nC melodic minor\nD# dorian")
+                        .multiple(true),
                 ),
         )
         .subcommand(
             App::new("chord")
                 .about("Provides information for the specified chord")
-                .subcommand(
-                    App::new("list").about("Prints out the available chords")
-                )
+                .subcommand(App::new("list").about("Prints out the available chords"))
                 .arg(
-                Arg::with_name("args")
-                    .help("chord args, examples:\nC minor\nAb augmented major seventh")
-                    .multiple(true),
+                    Arg::with_name("args")
+                        .help("chord args, examples:\nC minor\nAb augmented major seventh")
+                        .multiple(true),
                 ),
         )
         .get_matches();

@@ -14,7 +14,7 @@
 //!
 //! ```no_run
 //! extern crate rust_music_theory as rmt;
-//! use rmt::note::{Note, Notes, PitchClass};
+//! use rmt::note::{Note, Notes, PitchClass, Accidental};
 //! use rmt::scale::{Scale, ScaleType, Mode};
 //! use rmt::chord::{Chord, Number as ChordNumber, Quality as ChordQuality};
 //!
@@ -28,6 +28,7 @@
 //!     PitchClass::C,          // tonic
 //!     4,                      // octave
 //!     Some(Mode::Ionian),     // scale mode
+//!     Some(vec![(Accidental::Sharp, 6)]) // accidentals that are out of the scale
 //! ).unwrap();
 //!
 //! // returns a Vector of the Notes of the scale
