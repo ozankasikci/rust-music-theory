@@ -130,6 +130,8 @@ Available chords:
 [1]: https://en.wikipedia.org/wiki/Cadence
 ## Roadmap
 - [ ] Add missing modes for Melodic & Harmonic minor scales
+    - [ ] Add support for arbitrary accidentals
+    - [ ] Add support for the alternative names of the modes to regex parser
 - [ ] Properly display enharmonic spelling
 - [ ] Improve documentation in the codebase
 - [ ] Add inversion support for chords
