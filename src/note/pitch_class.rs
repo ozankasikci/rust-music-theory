@@ -5,7 +5,7 @@ use std::fmt;
 use strum_macros::EnumIter;
 
 const REGEX_PITCH: &str = "^[ABCDEFGabcdefg]";
-const REGEX_PITCH_ACCIDENTAL: &str = "^[ABCDEFGabcdefg][b♯#s]";
+const REGEX_PITCH_ACCIDENTAL: &str = "^[ABCDEFGabcdefg][b♭♯#s]";
 
 #[derive(Debug, Copy, Clone, PartialEq, EnumIter)]
 pub enum PitchClass {
