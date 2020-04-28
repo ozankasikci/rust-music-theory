@@ -2,7 +2,7 @@ use crate::note::PitchClass;
 use std::fmt;
 use std::fmt::Formatter;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Note {
     pub pitch_class: PitchClass,
     pub octave: u8,

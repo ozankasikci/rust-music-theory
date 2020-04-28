@@ -4,7 +4,7 @@ use crate::chord::{Number, Quality};
 use crate::interval::Interval;
 use crate::note::{Note, Notes, PitchClass};
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Chord {
     pub root: PitchClass,
     pub octave: u8,

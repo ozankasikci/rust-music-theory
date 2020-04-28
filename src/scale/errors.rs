@@ -3,7 +3,7 @@ use crate::note::NoteError;
 use std::error;
 use std::fmt;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum ScaleError {
     InvalidInterval,
     ModeFromRegex,

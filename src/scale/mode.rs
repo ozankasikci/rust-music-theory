@@ -14,7 +14,7 @@ const REGEX_LOCRIAN: &str = r"(?i)^(locrian)";
 const REGEX_MELODIC_MINOR: &str = r"(?i)(mel minor|melodicminor|melodic\s+minor)";
 const REGEX_HARMONIC_MINOR: &str = r"(?i)(har minor|harmonicminor|harmonic\s+minor)";
 
-#[derive(Debug, EnumIter, Display, PartialEq)]
+#[derive(Display, Debug, Clone, Copy, EnumIter, PartialEq)]
 pub enum Mode {
     Ionian,
     Dorian,
