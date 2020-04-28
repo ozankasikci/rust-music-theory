@@ -2,14 +2,15 @@ use crate::interval::Interval;
 use crate::note::{Note, Notes, PitchClass};
 use crate::scale::errors::ScaleError;
 use crate::scale::{Mode, ScaleType};
+use strum_macros::Display;
 
-#[derive(Debug)]
+#[derive(Display, Debug, Clone, Copy)]
 pub enum Direction {
     Ascending,
     Descending,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Scale {
     pub tonic: PitchClass,
     pub octave: u8,

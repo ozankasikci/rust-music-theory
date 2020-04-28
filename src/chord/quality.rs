@@ -1,5 +1,6 @@
 use crate::chord::errors::ChordError;
 use regex::{Match, Regex};
+use strum_macros::Display;
 
 const REGEX_QUALITY_MAJOR: &str = r"^(M\s+|M$|(?i)maj|Maj|Major|major)";
 const REGEX_QUALITY_MINOR: &str = r"^(m\s+|m$|(?i)min|Min|Minor|minor)";
@@ -10,7 +11,7 @@ const REGEX_QUALITY_DOMINANT: &str = r"(?i)^(dominant)";
 const REGEX_QUALITY_SUSPENDED_4: &str = r"(?i)^(sus4\s+|sus4$|suspended4)";
 const REGEX_QUALITY_SUSPENDED_2: &str = r"(?i)^(sus2\s+|sus2$|suspended2)";
 
-#[derive(Debug, PartialEq)]
+#[derive(Display, Debug, Clone, Copy, PartialEq)]
 pub enum Quality {
     Major,
     Minor,

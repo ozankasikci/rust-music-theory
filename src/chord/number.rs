@@ -1,5 +1,6 @@
 use crate::chord::errors::ChordError;
 use regex::{Match, Regex};
+use strum_macros::Display;
 
 const REGEX_NUMBER_TRIAD: &str = "(?i)(triad)";
 const REGEX_NUMBER_SEVENTH: &str = "(?i)(seventh)";
@@ -8,7 +9,7 @@ const REGEX_NUMBER_NINTH: &str = "(?i)(ninth)";
 const REGEX_NUMBER_ELEVENTH: &str = "(?i)(eleventh)";
 const REGEX_NUMBER_THIRTEENTH: &str = "(?i)(thirteenth)";
 
-#[derive(Debug, PartialEq)]
+#[derive(Display, Debug, Clone, Copy, PartialEq)]
 pub enum Number {
     Triad,
     Seventh,
