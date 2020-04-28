@@ -101,6 +101,24 @@ impl PitchClass {
 
         Ok((pitch_class, pitch_match))
     }
+
+    pub fn into_u8(self) -> u8 {
+        use PitchClass::*;
+        match self {
+            C => 0,
+            Cs => 1,
+            D => 2,
+            Ds => 3,
+            E => 4,
+            F => 5,
+            Fs => 6,
+            G => 7,
+            Gs => 8,
+            A => 9,
+            As => 10,
+            B => 11,
+        }
+    }
 }
 
 impl fmt::Display for PitchClass {
