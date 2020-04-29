@@ -2,7 +2,7 @@ extern crate rust_music_theory as theory;
 use theory::note::{PitchClass::*, *};
 use theory::scale::{Mode::*, ScaleType::*, *};
 
-fn assert_notes(pitches: &Vec<PitchClass>, notes: Vec<Note>) {
+fn assert_notes(pitches: &[PitchClass], notes: Vec<Note>) {
     for (i, pitch) in pitches.iter().enumerate() {
         assert_eq!(*pitch, notes[i].pitch_class);
     }
