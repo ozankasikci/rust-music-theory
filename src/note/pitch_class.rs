@@ -45,9 +45,10 @@ impl PitchClass {
 
     pub fn from_str(string: &str) -> Option<Self> {
         use PitchClass::*;
-        let characters: Vec<char> = string.chars().collect();
+        let mut characters = string.chars();
 
-        let mut pitch = match characters[0] {
+        let first_char = characters.next()?;
+        let mut pitch = match first_char {
             'C' | 'c' => C,
             'D' | 'd' => D,
             'E' | 'e' => E,
@@ -58,8 +59,7 @@ impl PitchClass {
             _ => return None,
         };
 
-        if characters.len() > 1 {
-            let second_char = characters[1];
+        if let Some(second_char) = characters.next() {
             match second_char {
                 '#' | 's' | 'S' | '♯' => {
                     let interval = Interval::from_semitone(1);
