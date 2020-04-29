@@ -81,7 +81,7 @@ impl PitchClass {
     }
 
     pub fn from_interval(pitch: Self, interval: Interval) -> Self {
-        let current_pitch = pitch as u8;
+        let current_pitch = pitch.into_u8();
         let new_pitch = current_pitch + interval.semitone_count;
 
         Self::from_u8(new_pitch)
