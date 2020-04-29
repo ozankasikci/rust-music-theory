@@ -55,7 +55,7 @@ impl PitchClass {
             'G' | 'g' => G,
             'A' | 'a' => A,
             'B' | 'b' => B,
-            _ => C,
+            _ => return None,
         };
 
         if characters.len() > 1 {
