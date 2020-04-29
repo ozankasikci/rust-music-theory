@@ -44,9 +44,8 @@ impl Mode {
         for (regex, mode_enum) in regexes {
             let mode = regex?.find(string.trim());
 
-            match mode {
-                Some(mode_match) => return Ok((mode_enum, mode_match)),
-                _ => {}
+            if let Some(mode_match) = mode {
+                return Ok((mode_enum, mode_match))
             };
         }
 

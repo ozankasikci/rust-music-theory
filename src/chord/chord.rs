@@ -65,11 +65,11 @@ impl Chord {
                 let (number, _) =
                     Number::from_regex(&string[quality_match.end()..]).unwrap_or((Triad, None));
 
-                return Ok(Chord::new(pitch_class, quality, number));
+                Ok(Chord::new(pitch_class, quality, number))
             }
 
             // return a Triad by default
-            None => return Ok(Chord::new(pitch_class, quality, Triad)),
+            None => Ok(Chord::new(pitch_class, quality, Triad)),
         }
     }
 }

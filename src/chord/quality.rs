@@ -40,9 +40,8 @@ impl Quality {
         for (regex, quality_enum) in regexes {
             let mode = regex?.find(string.trim());
 
-            match mode {
-                Some(quality_match) => return Ok((quality_enum, Some(quality_match))),
-                _ => {}
+            if let Some(quality_match) = mode {
+                return Ok((quality_enum, Some(quality_match)))
             };
         }
 

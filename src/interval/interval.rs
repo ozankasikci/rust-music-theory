@@ -51,7 +51,7 @@ impl Interval {
     pub fn from_semitones(semi_tones: &[u8]) -> Result<Vec<Self>, IntervalError> {
         let mut intervals: Vec<Interval> = vec![];
 
-        if semi_tones.len() == 0 {
+        if semi_tones.is_empty() {
             return Err(IntervalError::InvalidInterval);
         }
 
@@ -136,8 +136,8 @@ impl Interval {
         })
     }
 
-    pub fn second_note_from(&self, first_note: Note) -> Note {
-        let pitch_class = PitchClass::from_interval(&first_note.pitch_class, self);
+    pub fn second_note_from(self, first_note: Note) -> Note {
+        let pitch_class = PitchClass::from_interval(first_note.pitch_class, self);
         let octave = first_note.octave;
         let excess_octave = (first_note.pitch_class as u8 + self.semitone_count - 1) / 12;
 
@@ -150,10 +150,10 @@ impl Interval {
     pub fn to_notes(root: Note, intervals: Vec<Interval>) -> Vec<Note> {
         let mut notes = vec![root];
 
-        for i in 0..intervals.len() {
+        for interval in intervals {
             let last_note = notes.last().unwrap();
             let interval_first_note = Note::new(last_note.pitch_class, last_note.octave);
-            let interval_second_note = intervals[i].second_note_from(interval_first_note);
+            let interval_second_note = interval.second_note_from(interval_first_note);
             notes.push(interval_second_note);
         }
 

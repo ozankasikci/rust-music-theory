@@ -47,7 +47,7 @@ impl Scale {
         let (tonic, tonic_match) = PitchClass::from_regex(&string.trim())?;
         let mode_string = &string[tonic_match.end()..].trim();
         let (mode, _) = Mode::from_regex(mode_string)?;
-        let scale_type = ScaleType::from_mode(&mode);
+        let scale_type = ScaleType::from_mode(mode);
         let octave = 4;
         let scale = Scale::new(scale_type, tonic, octave, Some(mode))?;
         Ok(scale)

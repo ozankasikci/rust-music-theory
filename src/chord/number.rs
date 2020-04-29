@@ -34,9 +34,8 @@ impl Number {
         for (regex, number_enum) in regexes {
             let mode = regex?.find(string);
 
-            match mode {
-                Some(number_match) => return Ok((number_enum, Some(number_match))),
-                _ => {}
+            if let Some(number_match) = mode {
+                return Ok((number_enum, Some(number_match)))
             };
         }
 

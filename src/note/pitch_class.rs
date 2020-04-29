@@ -63,14 +63,14 @@ impl PitchClass {
             match second_char {
                 '#' | 's' | 'S' | '♯' => {
                     let interval = Interval::from_semitone(1);
-                    if interval.is_ok() {
-                        pitch = Self::from_interval(&pitch, &interval.unwrap());
+                    if let Ok(interval) = interval {
+                        pitch = Self::from_interval(pitch, interval);
                     }
                 }
                 'b' | '♭' => {
                     let interval = Interval::from_semitone(11);
-                    if interval.is_ok() {
-                        pitch = Self::from_interval(&pitch, &interval.unwrap());
+                    if let Ok(interval) = interval {
+                        pitch = Self::from_interval(pitch, interval);
                     }
                 }
                 _ => return None,
@@ -80,8 +80,8 @@ impl PitchClass {
         Some(pitch)
     }
 
-    pub fn from_interval(pitch: &Self, interval: &Interval) -> Self {
-        let current_pitch = *pitch as u8;
+    pub fn from_interval(pitch: Self, interval: Interval) -> Self {
+        let current_pitch = pitch as u8;
         let new_pitch = current_pitch + interval.semitone_count;
 
         Self::from_u8(new_pitch)
