@@ -1,3 +1,5 @@
+//! Individual notes.
+
 mod errors;
 mod note;
 mod pitch_class;

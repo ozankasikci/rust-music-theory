@@ -11,6 +11,7 @@ const REGEX_QUALITY_DOMINANT: &str = r"(?i)^(dominant)";
 const REGEX_QUALITY_SUSPENDED_4: &str = r"(?i)^(sus4\s+|sus4$|suspended4)";
 const REGEX_QUALITY_SUSPENDED_2: &str = r"(?i)^(sus2\s+|sus2$|suspended2)";
 
+/// The quality of a chord.
 #[derive(Display, Debug, Clone, Copy, PartialEq)]
 pub enum Quality {
     Major,
@@ -24,6 +25,7 @@ pub enum Quality {
 }
 
 impl Quality {
+    /// Parse a quality from a regex.
     pub fn from_regex(string: &str) -> Result<(Self, Option<Match>), ChordError> {
         use Quality::*;
         let regexes = vec![
@@ -41,7 +43,7 @@ impl Quality {
             let mode = regex?.find(string.trim());
 
             if let Some(quality_match) = mode {
-                return Ok((quality_enum, Some(quality_match)))
+                return Ok((quality_enum, Some(quality_match)));
             };
         }
 

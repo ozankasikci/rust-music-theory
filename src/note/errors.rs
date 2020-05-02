@@ -1,6 +1,7 @@
 use std::error;
 use std::fmt;
 
+/// An error caused when parsing a note.
 #[derive(Debug, Clone)]
 pub enum NoteError {
     InvalidPitch,
@@ -12,12 +13,7 @@ impl fmt::Display for NoteError {
     }
 }
 
-impl error::Error for NoteError {
-    fn source(&self) -> Option<&(dyn error::Error + 'static)> {
-        // Generic error, underlying cause isn't tracked.
-        None
-    }
-}
+impl error::Error for NoteError {}
 
 impl From<regex::Error> for NoteError {
     fn from(e: regex::Error) -> Self {

@@ -4,23 +4,32 @@ use crate::scale::errors::ScaleError;
 use crate::scale::{Mode, ScaleType};
 use strum_macros::Display;
 
-#[derive(Display, Debug, Clone, Copy)]
+/// The direction of the scale; up or down.
+#[derive(Display, Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Direction {
     Ascending,
     Descending,
 }
 
+/// A scale.
 #[derive(Debug, Clone)]
 pub struct Scale {
+    /// The root note of the scale.
     pub tonic: PitchClass,
+    /// The octave of the root note of the scale.
     pub octave: u8,
+    /// The type of scale (diatonic, melodic minor, harmonic minor).
     pub scale_type: ScaleType,
+    /// The mode of the scale.
     pub mode: Option<Mode>,
+    /// The list of intervals in the scale.
     pub intervals: Vec<Interval>,
+    /// The direction of the scale, ascending or descending.
     pub direction: Direction,
 }
 
 impl Scale {
+    /// Create a new scale.
     pub fn new(
         scale_type: ScaleType,
         tonic: PitchClass,
@@ -43,6 +52,7 @@ impl Scale {
         })
     }
 
+    /// Parse a scale from a regex.
     pub fn from_regex(string: &str) -> Result<Self, ScaleError> {
         let (tonic, tonic_match) = PitchClass::from_regex(&string.trim())?;
         let mode_string = &string[tonic_match.end()..].trim();

@@ -1,3 +1,5 @@
+//! Chords.
+
 mod chord;
 mod errors;
 mod number;

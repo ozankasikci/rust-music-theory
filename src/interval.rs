@@ -1,3 +1,5 @@
+//! Intervals between notes.
+
 mod errors;
 mod interval;
 

@@ -1,6 +1,7 @@
 use std::error;
 use std::fmt;
 
+/// An error caused while creating an interval.
 #[derive(Debug, Clone)]
 pub enum IntervalError {
     InvalidInterval,
@@ -12,9 +13,4 @@ impl fmt::Display for IntervalError {
     }
 }
 
-impl error::Error for IntervalError {
-    fn source(&self) -> Option<&(dyn error::Error + 'static)> {
-        // Generic error, underlying cause isn't tracked.
-        None
-    }
-}
+impl error::Error for IntervalError {}

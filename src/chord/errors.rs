@@ -2,6 +2,7 @@ use crate::note::NoteError;
 use std::error;
 use std::fmt;
 
+/// An error while parsing a chord.
 #[derive(Debug, Clone)]
 pub enum ChordError {
     InvalidRegex,
@@ -13,12 +14,7 @@ impl fmt::Display for ChordError {
     }
 }
 
-impl error::Error for ChordError {
-    fn source(&self) -> Option<&(dyn error::Error + 'static)> {
-        // Generic error, underlying cause isn't tracked.
-        None
-    }
-}
+impl error::Error for ChordError {}
 
 impl From<NoteError> for ChordError {
     fn from(e: NoteError) -> Self {
