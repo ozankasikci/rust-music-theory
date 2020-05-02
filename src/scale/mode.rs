@@ -14,20 +14,31 @@ const REGEX_LOCRIAN: &str = r"(?i)^(locrian)";
 const REGEX_MELODIC_MINOR: &str = r"(?i)(mel minor|melodicminor|melodic\s+minor)";
 const REGEX_HARMONIC_MINOR: &str = r"(?i)(har minor|harmonicminor|harmonic\s+minor)";
 
-#[derive(Display, Debug, Clone, Copy, EnumIter, PartialEq)]
+/// The mode of a scale.
+#[derive(Display, Debug, Clone, Copy, EnumIter, PartialEq, Eq)]
 pub enum Mode {
+    /// An Ionian/Major scale.
     Ionian,
+    /// A Dorian scale.
     Dorian,
+    /// A Phygian scale.
     Phrygian,
+    /// A lydian scale.
     Lydian,
+    /// A mixolydian scale.
     Mixolydian,
+    /// An aelian/natural minor scale.
     Aeolian,
+    /// A locrian scale.
     Locrian,
+    /// A harmonic minor scale.
     HarmonicMinor,
+    /// A melodic minor scale.
     MelodicMinor,
 }
 
 impl Mode {
+    /// Parse a mode using a regex.
     pub fn from_regex(string: &str) -> Result<(Self, Match), ScaleError> {
         let regexes = vec![
             (Regex::new(REGEX_MAJOR), Ionian),
@@ -45,10 +56,15 @@ impl Mode {
             let mode = regex?.find(string.trim());
 
             if let Some(mode_match) = mode {
-                return Ok((mode_enum, mode_match))
+                return Ok((mode_enum, mode_match));
             };
         }
 
         Err(ModeFromRegex)
+    }
+
+    /// Get whether the mode is diatonic (not harmonic or melodic minor).
+    pub fn is_diatonic(self) -> bool {
+        !matches!(self, Self::HarmonicMinor | Self::MelodicMinor)
     }
 }

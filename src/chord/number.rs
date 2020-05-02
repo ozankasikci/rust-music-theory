@@ -9,17 +9,25 @@ const REGEX_NUMBER_NINTH: &str = "(?i)(ninth)";
 const REGEX_NUMBER_ELEVENTH: &str = "(?i)(eleventh)";
 const REGEX_NUMBER_THIRTEENTH: &str = "(?i)(thirteenth)";
 
+/// The superscript number after a chord.
 #[derive(Display, Debug, Clone, Copy, PartialEq)]
 pub enum Number {
+    /// A triad chord.
     Triad,
+    /// A seventh chord.
     Seventh,
+    /// A major seventh chord.
     MajorSeventh,
+    /// A ninth chord.
     Ninth,
+    /// An eleventh chord.
     Eleventh,
+    /// A thirteenth chord.
     Thirteenth,
 }
 
 impl Number {
+    /// Parse the number using a regex.
     pub fn from_regex(string: &str) -> Result<(Self, Option<Match>), ChordError> {
         use Number::*;
         let regexes = vec![
@@ -35,7 +43,7 @@ impl Number {
             let mode = regex?.find(string);
 
             if let Some(number_match) = mode {
-                return Ok((number_enum, Some(number_match)))
+                return Ok((number_enum, Some(number_match)));
             };
         }
 

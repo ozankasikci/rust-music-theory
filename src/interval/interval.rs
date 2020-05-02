@@ -2,43 +2,68 @@ use crate::interval::errors::IntervalError;
 use crate::note::{Note, PitchClass};
 use strum_macros::Display;
 
+/// The quality of an interval; major, minor, etc.
 #[derive(Display, Debug, Copy, Clone)]
 pub enum Quality {
+    /// A perfect interval; unisons, fourths, fifths, and octaves.
     Perfect,
+    /// A major interval.
     Major,
+    /// A minor interval.
     Minor,
+    /// An augmented interval.
     Augmented,
+    /// A diminished interval.
     Diminished,
 }
 
+/// The number of an interval.
 #[derive(Display, Debug, Copy, Clone)]
 pub enum Number {
+    /// The unison interval (the same note).
     Unison,
+    /// The second interval.
     Second,
+    /// The third interval.
     Third,
+    /// The fourth interval.
     Fourth,
+    /// The fifth interval.
     Fifth,
+    /// The sixth interval.
     Sixth,
+    /// The seventh interval.
     Seventh,
+    /// The octave interval (the same note, but one octave above).
     Octave,
 }
 
+/// A step between notes.
 #[derive(Display, Debug, Copy, Clone)]
 pub enum Step {
+    /// A semitone step.
     Half,
+    /// A tone step.
     Whole,
+    /// A tritone step.
     Tritone,
 }
 
+/// An interval between two notes.
 #[derive(Debug, Copy, Clone)]
 pub struct Interval {
+    /// The number of semitones between the notes.
     pub semitone_count: u8,
+    /// The quality of the interval.
     pub quality: Quality,
+    /// The number of the interval.
     pub number: Number,
+    /// The step of the interval.
     pub step: Option<Step>,
 }
 
 impl Interval {
+    /// Create a new interval.
     pub fn new(semitone_count: u8, quality: Quality, number: Number, step: Option<Step>) -> Self {
         Interval {
             semitone_count,
@@ -48,6 +73,11 @@ impl Interval {
         }
     }
 
+    /// Creates multiple intervals each based on the number of semitones from the root.
+    ///
+    /// # Errors
+    ///
+    /// Fails if `sc` is greater than 12.
     pub fn from_semitones(semi_tones: &[u8]) -> Result<Vec<Self>, IntervalError> {
         let mut intervals: Vec<Interval> = vec![];
 
@@ -63,6 +93,11 @@ impl Interval {
         Ok(intervals)
     }
 
+    /// Create an interval based on the number of semitones from the root.
+    ///
+    /// # Errors
+    ///
+    /// Fails if `sc` is greater than 12.
     pub fn from_semitone(sc: u8) -> Result<Self, IntervalError> {
         let (number, quality, mut step): (Number, Quality, Option<Step>);
         step = None;
@@ -136,6 +171,7 @@ impl Interval {
         })
     }
 
+    /// Move the given note up by this interval.
     pub fn second_note_from(self, first_note: Note) -> Note {
         let pitch_class = PitchClass::from_interval(first_note.pitch_class, self);
         let octave = first_note.octave;
@@ -147,7 +183,8 @@ impl Interval {
         }
     }
 
-    pub fn to_notes(root: Note, intervals: Vec<Interval>) -> Vec<Note> {
+    /// Produce the list of notes that have had each interval applied in order.
+    pub fn to_notes(root: Note, intervals: impl IntoIterator<Item = Interval>) -> Vec<Note> {
         let mut notes = vec![root];
 
         for interval in intervals {

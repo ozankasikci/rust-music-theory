@@ -38,7 +38,7 @@
 //!
 //! // returns a Vector of the Notes of the chord
 //! let chord_notes = chord.notes();
-//!
+#![warn(missing_docs)]
 
 extern crate strum;
 pub mod chord;

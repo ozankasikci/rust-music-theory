@@ -1,3 +1,5 @@
+//! Scales.
+
 mod errors;
 mod mode;
 mod scale;
