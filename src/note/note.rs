@@ -36,7 +36,7 @@ pub trait Notes {
     ///
     /// By default this function will print out each notes' index and its pitch class. For example,
     /// printing out C major would look like:
-    /// ```
+    /// ```text
     /// Notes:
     ///   1: C
     ///   2: E
