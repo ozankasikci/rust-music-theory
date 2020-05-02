@@ -17,23 +17,16 @@ const REGEX_HARMONIC_MINOR: &str = r"(?i)(har minor|harmonicminor|harmonic\s+min
 /// The mode of a scale.
 #[derive(Display, Debug, Clone, Copy, EnumIter, PartialEq, Eq)]
 pub enum Mode {
-    /// An Ionian/Major scale.
+    /// Also known as a major scale.
     Ionian,
-    /// A Dorian scale.
     Dorian,
-    /// A Phygian scale.
     Phrygian,
-    /// A lydian scale.
     Lydian,
-    /// A mixolydian scale.
     Mixolydian,
-    /// An aelian/natural minor scale.
+    /// Also known as a natural minor scale.
     Aeolian,
-    /// A locrian scale.
     Locrian,
-    /// A harmonic minor scale.
     HarmonicMinor,
-    /// A melodic minor scale.
     MelodicMinor,
 }
 

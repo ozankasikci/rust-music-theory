@@ -4,7 +4,6 @@ use std::fmt;
 /// An error caused when parsing a note.
 #[derive(Debug, Clone)]
 pub enum NoteError {
-    /// The note's pitch was invalid.
     InvalidPitch,
 }
 

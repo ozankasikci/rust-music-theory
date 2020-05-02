@@ -14,21 +14,13 @@ const REGEX_QUALITY_SUSPENDED_2: &str = r"(?i)^(sus2\s+|sus2$|suspended2)";
 /// The quality of a chord.
 #[derive(Display, Debug, Clone, Copy, PartialEq)]
 pub enum Quality {
-    /// A major chord.
     Major,
-    /// A minor chord.
     Minor,
-    /// A dimished chord.
     Diminished,
-    /// An augmented chord.
     Augmented,
-    /// A half dimished chord.
     HalfDiminished,
-    /// A dominant chord.
     Dominant,
-    /// A suspended 2nd chord.
     Suspended2,
-    /// A suspended 4th chord.
     Suspended4,
 }
 

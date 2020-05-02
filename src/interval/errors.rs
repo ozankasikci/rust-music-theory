@@ -4,7 +4,6 @@ use std::fmt;
 /// An error caused while creating an interval.
 #[derive(Debug, Clone)]
 pub enum IntervalError {
-    /// The interval is invalid.
     InvalidInterval,
 }
 

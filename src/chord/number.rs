@@ -12,17 +12,11 @@ const REGEX_NUMBER_THIRTEENTH: &str = "(?i)(thirteenth)";
 /// The superscript number after a chord.
 #[derive(Display, Debug, Clone, Copy, PartialEq)]
 pub enum Number {
-    /// A triad chord.
     Triad,
-    /// A seventh chord.
     Seventh,
-    /// A major seventh chord.
     MajorSeventh,
-    /// A ninth chord.
     Ninth,
-    /// An eleventh chord.
     Eleventh,
-    /// A thirteenth chord.
     Thirteenth,
 }
 

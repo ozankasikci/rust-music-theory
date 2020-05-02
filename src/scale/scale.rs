@@ -7,9 +7,7 @@ use strum_macros::Display;
 /// The direction of the scale; up or down.
 #[derive(Display, Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Direction {
-    /// An ascending scale.
     Ascending,
-    /// A descending scale.
     Descending,
 }
 

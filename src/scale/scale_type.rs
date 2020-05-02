@@ -4,11 +4,8 @@ use strum_macros::{Display, EnumIter};
 /// The type of a scale.
 #[derive(Display, Debug, Clone, Copy, EnumIter, PartialEq, Eq)]
 pub enum ScaleType {
-    /// A diatonic scale.
     Diatonic,
-    /// A melodic minor scale.
     MelodicMinor,
-    /// A harmonic minor scale.
     HarmonicMinor,
 }
 

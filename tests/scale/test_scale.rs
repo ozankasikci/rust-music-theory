@@ -60,6 +60,12 @@ mod scale_tests {
         for scale_tuple in scale_tuples.iter() {
             let (scale, pitches) = scale_tuple;
             assert_notes(pitches, scale.notes());
+
+            if scale.scale_type == Diatonic {
+                if let Some(mode) = scale.mode {
+                    assert!(mode.is_diatonic());
+                }
+            }
         }
     }
 }

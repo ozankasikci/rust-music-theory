@@ -10,29 +10,17 @@ const REGEX_PITCH: &str = "^[ABCDEFGabcdefg][b♭♯#s]?";
 /// A pitch class (A, B, C#, etc).
 #[derive(Debug, Copy, Clone, PartialEq, Eq, EnumIter)]
 pub enum PitchClass {
-    /// C
     C,
-    /// C#
     Cs,
-    /// D
     D,
-    /// D#
     Ds,
-    /// E
     E,
-    /// F
     F,
-    /// F#
     Fs,
-    /// G
     G,
-    /// G#
     Gs,
-    /// A
     A,
-    /// A#
     As,
-    /// B
     B,
 }
 

@@ -35,6 +35,7 @@ mod test_note {
         for (string, pitch_class) in table {
             let p = PitchClass::from_str(string).unwrap();
             assert_eq!(p, pitch_class);
+            assert_eq!(string.parse::<PitchClass>().unwrap(), pitch_class);
         }
     }
 

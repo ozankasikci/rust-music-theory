@@ -7,34 +7,22 @@ use strum_macros::Display;
 pub enum Quality {
     /// A perfect interval; unisons, fourths, fifths, and octaves.
     Perfect,
-    /// A major interval.
     Major,
-    /// A minor interval.
     Minor,
-    /// An augmented interval.
     Augmented,
-    /// A diminished interval.
     Diminished,
 }
 
 /// The number of an interval.
 #[derive(Display, Debug, Copy, Clone)]
 pub enum Number {
-    /// The unison interval (the same note).
     Unison,
-    /// The second interval.
     Second,
-    /// The third interval.
     Third,
-    /// The fourth interval.
     Fourth,
-    /// The fifth interval.
     Fifth,
-    /// The sixth interval.
     Sixth,
-    /// The seventh interval.
     Seventh,
-    /// The octave interval (the same note, but one octave above).
     Octave,
 }
 
