@@ -1,10 +1,10 @@
 use crate::interval::Interval;
 use crate::note::errors::NoteError;
+use lazy_static::lazy_static;
 use regex::{Match, Regex};
 use std::fmt;
 use std::str::FromStr;
 use strum_macros::EnumIter;
-use lazy_static::lazy_static;
 
 lazy_static! {
     static ref REGEX_PITCH: Regex = Regex::new("^[ABCDEFGabcdefg][b♭♯#s]?").unwrap();

@@ -1,16 +1,28 @@
 use crate::scale::errors::ScaleError;
 use crate::scale::errors::ScaleError::ModeFromRegex;
 use crate::scale::mode::Mode::*;
+use lazy_static::lazy_static;
 use regex::{Match, Regex};
 use strum_macros::{Display, EnumIter};
-use lazy_static::lazy_static;
 
 lazy_static! {
     static ref MODE_REGEXES: Vec<(Regex, Mode)> = vec![
-        (Regex::new(r"^(M\s+|M$|(?i)maj|major|ionian)").unwrap(), Ionian),
-        (Regex::new(r"(?i)(har minor|harmonicminor|harmonic\s+minor)").unwrap(), HarmonicMinor),
-        (Regex::new(r"(?i)(mel minor|melodicminor|melodic\s+minor)").unwrap(), MelodicMinor),
-        (Regex::new(r"^(m\s+|m$|(?i)min|minor|aeolian)").unwrap(), Aeolian),
+        (
+            Regex::new(r"^(M\s+|M$|(?i)maj|major|ionian)").unwrap(),
+            Ionian
+        ),
+        (
+            Regex::new(r"(?i)(har minor|harmonicminor|harmonic\s+minor)").unwrap(),
+            HarmonicMinor
+        ),
+        (
+            Regex::new(r"(?i)(mel minor|melodicminor|melodic\s+minor)").unwrap(),
+            MelodicMinor
+        ),
+        (
+            Regex::new(r"^(m\s+|m$|(?i)min|minor|aeolian)").unwrap(),
+            Aeolian
+        ),
         (Regex::new(r"(?i)^(dorian)").unwrap(), Dorian),
         (Regex::new(r"(?i)^(locrian)").unwrap(), Locrian),
         (Regex::new(r"(?i)^(mixolydian)").unwrap(), Mixolydian),

@@ -1,7 +1,7 @@
 use crate::chord::errors::ChordError;
+use lazy_static::lazy_static;
 use regex::{Match, Regex};
 use strum_macros::Display;
-use lazy_static::lazy_static;
 
 lazy_static! {
     static ref NUMBER_REGEXES: Vec<(Regex, Number)> = {
