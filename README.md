@@ -57,12 +57,12 @@ let chord_notes = chord.notes();
 This is the simplest form of the usage. For detailed examples, please see the tests folder.
 
 ## Usage as an Executable
-The binary is implemented as a regex parser cli that returns the notes of the given scale/chord.
-To quickly build and run the executable locally;
 
-`git clone http://github.com/ozankasikci/rust-music-theory && cd rust-music-theory`
+`cargo install --git https://github.com/ozankasikci/rust-music-theory`
 
-`cargo run scale D Locrian`
+This lets cargo install the library as an executable called `rustmt`. Some usage examples;
+
+`rustmt scale D Locrian`
 ```yaml
 Notes:
   1: D
@@ -74,7 +74,7 @@ Notes:
   7: C
   8: D
 ```
-`cargo run chord C# Dominant Eleventh`
+`rustmt chord C# Dominant Eleventh`
 ```yaml
 Notes:
   1: C#
@@ -85,7 +85,7 @@ Notes:
   6: G
 ```
 
-`cargo run scale list`
+`rustmt scale list`
 ```yaml
 Available Scales:
  - Major|Ionian
@@ -100,7 +100,7 @@ Available Scales:
 ```
 
 
-`cargo run chord list`
+`rustmt chord list`
 ```yaml
 Available chords:
  - Major Triad
@@ -125,6 +125,28 @@ Available chords:
  - Dominant Thirteenth
  - Major Thirteenth
  - Minor Thirteenth
+```
+
+## Building From Source
+
+The binary is implemented as a regex parser cli that returns the notes of the given scale/chord.
+To quickly build and run the executable locally;
+
+`git clone http://github.com/ozankasikci/rust-music-theory && cd rust-music-theory`
+
+Then you can directly compile using cargo. An example;
+
+`cargo run scale D Locrian`
+```yaml
+Notes:
+  1: D
+  2: D#
+  3: F
+  4: G
+  5: G#
+  6: A#
+  7: C
+  8: D
 ```
 
 [1]: https://en.wikipedia.org/wiki/Cadence
