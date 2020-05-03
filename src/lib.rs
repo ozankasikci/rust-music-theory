@@ -13,10 +13,10 @@
 //! Please see the tests folder for detailed examples of the modules.
 //!
 //! ```no_run
-//! extern crate rust_music_theory as rmt;
-//! use rmt::note::{Note, Notes, PitchClass};
-//! use rmt::scale::{Scale, ScaleType, Mode};
-//! use rmt::chord::{Chord, Number as ChordNumber, Quality as ChordQuality};
+//! extern crate rust_music_theory as rustmt;
+//! use rustmt::note::{Note, Notes, PitchClass};
+//! use rustmt::scale::{Scale, ScaleType, Mode};
+//! use rustmt::chord::{Chord, Number as ChordNumber, Quality as ChordQuality};
 //!
 //! // to create a Note, specify a pitch class and an octave;
 //! let note = Note::new(PitchClass::As, 4);
