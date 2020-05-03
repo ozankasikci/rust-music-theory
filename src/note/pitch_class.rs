@@ -4,8 +4,11 @@ use regex::{Match, Regex};
 use std::fmt;
 use std::str::FromStr;
 use strum_macros::EnumIter;
+use lazy_static::lazy_static;
 
-const REGEX_PITCH: &str = "^[ABCDEFGabcdefg][b♭♯#s]?";
+lazy_static! {
+    static ref REGEX_PITCH: Regex = Regex::new("^[ABCDEFGabcdefg][b♭♯#s]?").unwrap();
+}
 
 /// A pitch class (A, B, C#, etc).
 #[derive(Debug, Copy, Clone, PartialEq, Eq, EnumIter)]
@@ -100,9 +103,7 @@ impl PitchClass {
 
     /// Parse the note using a regex, with the same algorithm as described in `from_str`.
     pub fn from_regex(string: &str) -> Result<(Self, Match), NoteError> {
-        let r_pitch = Regex::new(REGEX_PITCH)?;
-
-        let pitch_match = r_pitch.find(&string).ok_or(NoteError::InvalidPitch)?;
+        let pitch_match = REGEX_PITCH.find(&string).ok_or(NoteError::InvalidPitch)?;
 
         let pitch_class = Self::from_str(&string[pitch_match.start()..pitch_match.end()])
             .ok_or(NoteError::InvalidPitch)?;
