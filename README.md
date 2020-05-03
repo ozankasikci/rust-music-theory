@@ -11,6 +11,7 @@ A library and executable that provides programmatic implementation of the basis 
 - [Overview](#overview)
 - [Usage as a Library](#usage-as-a-library)
 - [Usage as an Executable](#usage-as-an-executable)
+- [Building From Source](#building-from-source)
 - [Roadmap](#roadmap)
 
 ## Overview
