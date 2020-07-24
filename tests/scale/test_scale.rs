@@ -68,4 +68,18 @@ mod scale_tests {
             }
         }
     }
+
+    #[test]
+    fn test_octave_increment() {
+        let scale = Scale::new(
+            ScaleType::Diatonic,
+            PitchClass::G,
+            5,
+            Some(Mode::Mixolydian)
+        ).unwrap();
+
+        for (i, note) in scale.notes().iter().enumerate() {
+            assert_eq!(note.octave, if i <= 2 { 5 } else { 6 });
+        }
+    }
 }
