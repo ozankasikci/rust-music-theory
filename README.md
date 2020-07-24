@@ -156,7 +156,6 @@ Notes:
     - [ ] Add support for arbitrary accidentals
     - [ ] Add support for the alternative names of the modes to regex parser
 - [ ] Properly display enharmonic spelling
-- [ ] Improve documentation in the codebase
 - [ ] Add inversion support for chords
 - [ ] Add support for [cadence][1]s
 - [ ] Add a mechanism to find the chord from the given notes
