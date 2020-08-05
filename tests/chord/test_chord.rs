@@ -1,6 +1,6 @@
 extern crate rust_music_theory as theory;
 use theory::chord::{Number::*, Quality::*, *};
-use theory::note::{PitchClass::*, *};
+use theory::note::{PitchSymbol::*, *};
 
 fn assert_notes(pitches: &[PitchClass], notes: Vec<Note>) {
     for (i, pitch) in pitches.iter().enumerate() {
@@ -15,18 +15,18 @@ mod chord_tests {
     #[test]
     fn test_all_chords_in_c() {
         let chord_tuples = [
-            (Chord::new(C, Major, Triad), vec![C, E, G]),
-            (Chord::new(C, Minor, Triad), vec![C, Ds, G]),
-            (Chord::new(C, Augmented, Triad), vec![C, E, Gs]),
-            (Chord::new(C, Diminished, Triad), vec![C, Ds, Fs]),
-            (Chord::new(C, Major, Seventh), vec![C, E, G, B]),
-            (Chord::new(C, Minor, Seventh), vec![C, Ds, G, As]),
-            (Chord::new(C, Augmented, Seventh), vec![C, E, Gs, As]),
-            (Chord::new(C, Augmented, MajorSeventh), vec![C, E, Gs, B]),
-            (Chord::new(C, Diminished, Seventh), vec![C, Ds, Fs, A]),
-            (Chord::new(C, HalfDiminished, Seventh), vec![C, Ds, Fs, As]),
-            (Chord::new(C, Minor, MajorSeventh), vec![C, Ds, G, B]),
-            (Chord::new(C, Dominant, Seventh), vec![C, E, G, As]),
+            (Chord::new(pclass(C,0), Major, Triad), vec![pclass(C,0), pclass(E,0), pclass(G,0)]),
+            (Chord::new(pclass(C,0), Minor, Triad), vec![pclass(C,0), pclass(D,1), pclass(G,0)]),
+            (Chord::new(pclass(C,0), Augmented, Triad), vec![pclass(C,0), pclass(E,0), pclass(G,1)]),
+            (Chord::new(pclass(C,0), Diminished, Triad), vec![pclass(C,0), pclass(D,1), pclass(F,1)]),
+            (Chord::new(pclass(C,0), Major, Seventh), vec![pclass(C,0), pclass(E,0), pclass(G,0), pclass(B,0)]),
+            (Chord::new(pclass(C,0), Minor, Seventh), vec![pclass(C,0), pclass(D,1), pclass(G,0), pclass(A,1)]),
+            (Chord::new(pclass(C,0), Augmented, Seventh), vec![pclass(C,0), pclass(E,0), pclass(G,1), pclass(A,1)]),
+            (Chord::new(pclass(C,0), Augmented, MajorSeventh), vec![pclass(C,0), pclass(E,0), pclass(G,1), pclass(B,0)]),
+            (Chord::new(pclass(C,0), Diminished, Seventh), vec![pclass(C,0), pclass(D,1), pclass(F,1), pclass(A,0)]),
+            (Chord::new(pclass(C,0), HalfDiminished, Seventh), vec![pclass(C,0), pclass(D,1), pclass(F,1), pclass(A,1)]),
+            (Chord::new(pclass(C,0), Minor, MajorSeventh), vec![pclass(C,0), pclass(D,1), pclass(G,0), pclass(B,0)]),
+            (Chord::new(pclass(C,0), Dominant, Seventh), vec![pclass(C,0), pclass(E,0), pclass(G,0), pclass(A,1)]),
         ];
 
         for chord_tuple in chord_tuples.iter() {

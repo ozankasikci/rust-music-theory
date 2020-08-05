@@ -12,52 +12,57 @@ lazy_static! {
 
 /// A pitch class (A, B, C#, etc).
 #[derive(Debug, Copy, Clone, PartialEq, Eq, EnumIter)]
-pub enum PitchClass {
+pub enum PitchSymbol {
     C,
-    Cs,
     D,
-    Ds,
     E,
     F,
-    Fs,
     G,
-    Gs,
     A,
-    As,
     B,
+}
+
+pub fn pclass(symbol: PitchSymbol, accidental: i8) -> PitchClass {
+    PitchClass { symbol, accidental }
+}
+
+#[derive(Debug, Copy, Clone, PartialEq, Eq)]
+pub struct PitchClass {
+    pub symbol: PitchSymbol,
+    pub accidental: i8,
 }
 
 impl PitchClass {
     /// Create a pitch class from an integer, where 0 is C and everything climbs up from there,
     /// looping back around once it reaches 12.
     pub fn from_u8(val: u8) -> Self {
-        use PitchClass::*;
-        match val {
-            0 => C,
-            1 => Cs,
-            2 => D,
-            3 => Ds,
-            4 => E,
-            5 => F,
-            6 => Fs,
-            7 => G,
-            8 => Gs,
-            9 => A,
-            10 => As,
-            11 => B,
-            _ => Self::from_u8(val % 12),
-        }
+        use PitchSymbol::*;
+        return match val % 12 {
+            0 => { pclass(C,0) }
+            1 => { pclass(C,1) }
+            2 => { pclass(D,0) }
+            3 => { pclass(D,1) }
+            4 => { pclass(E,0) }
+            5 => { pclass(F,0) }
+            6 => { pclass(F,1) }
+            7 => { pclass(G,0) }
+            8 => { pclass(G,1) }
+            9 => { pclass(A,0) }
+            10 => { pclass(A,1) }
+            11 => { pclass(B,0) }
+            _ => panic!("impossible")
+        };
     }
 
     /// Attempt to parse this note from a string. It should contain the name of the note in either
     /// uppercase or lowercase, followed by `#`, `s`, `S`, or `♯` for sharps and `b` or `♭` for
     /// flats.
     pub fn from_str(string: &str) -> Option<Self> {
-        use PitchClass::*;
+        use PitchSymbol::*;
         let mut characters = string.chars();
 
         let first_char = characters.next()?;
-        let mut pitch = match first_char {
+        let symbol = match first_char {
             'C' | 'c' => C,
             'D' | 'd' => D,
             'E' | 'e' => E,
@@ -71,16 +76,10 @@ impl PitchClass {
         if let Some(second_char) = characters.next() {
             match second_char {
                 '#' | 's' | 'S' | '♯' => {
-                    let interval = Interval::from_semitone(1);
-                    if let Ok(interval) = interval {
-                        pitch = Self::from_interval(pitch, interval);
-                    }
+                    return Some (PitchClass { symbol , accidental: 1 })
                 }
                 'b' | '♭' => {
-                    let interval = Interval::from_semitone(11);
-                    if let Ok(interval) = interval {
-                        pitch = Self::from_interval(pitch, interval);
-                    }
+                    return Some (PitchClass { symbol, accidental: -1 })
                 }
                 _ => return None,
             }
@@ -90,7 +89,7 @@ impl PitchClass {
             return None;
         }
 
-        Some(pitch)
+        return Some(PitchClass { symbol, accidental: 0 })
     }
 
     /// Create a note by moving up the given note by an interval.
@@ -113,39 +112,30 @@ impl PitchClass {
 
     /// Convert the pitch class into its corresponding integer, where 0 is C and 11 is B.
     pub fn into_u8(self) -> u8 {
-        use PitchClass::*;
-        match self {
+        use PitchSymbol::*;
+        ((match self.symbol {
             C => 0,
-            Cs => 1,
             D => 2,
-            Ds => 3,
             E => 4,
             F => 5,
-            Fs => 6,
             G => 7,
-            Gs => 8,
             A => 9,
-            As => 10,
             B => 11,
-        }
+        } + self.accidental) % 12) as u8
+        
     }
 }
 
 impl fmt::Display for PitchClass {
     fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
-        use PitchClass::*;
-        match *self {
+        use PitchSymbol::*;
+        match self.symbol {
             C => write!(fmt, "C"),
-            Cs => write!(fmt, "C#"),
             D => write!(fmt, "D"),
-            Ds => write!(fmt, "D#"),
             E => write!(fmt, "E"),
             F => write!(fmt, "F"),
-            Fs => write!(fmt, "F#"),
             G => write!(fmt, "G"),
-            Gs => write!(fmt, "G#"),
             A => write!(fmt, "A"),
-            As => write!(fmt, "A#"),
             B => write!(fmt, "B"),
         }
     }

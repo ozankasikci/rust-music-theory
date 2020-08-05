@@ -1,5 +1,5 @@
 extern crate rust_music_theory as theory;
-use theory::note::PitchClass::*;
+use theory::note::{PitchSymbol::*, pclass};
 use theory::scale::{Mode, Scale, ScaleType};
 
 #[cfg(test)]
@@ -9,26 +9,26 @@ mod chord_regex_tests {
     #[test]
     fn test_all_scales() {
         let table = vec![
-            ("C Major", C, ScaleType::Diatonic, Mode::Ionian),
-            ("CM", C, ScaleType::Diatonic, Mode::Ionian),
-            ("C Maj", C, ScaleType::Diatonic, Mode::Ionian),
-            ("C MAJOR", C, ScaleType::Diatonic, Mode::Ionian),
-            ("As locrian", As, ScaleType::Diatonic, Mode::Locrian),
-            ("Bs phrygian", C, ScaleType::Diatonic, Mode::Phrygian),
-            ("E lydian", E, ScaleType::Diatonic, Mode::Lydian),
-            ("F dorian", F, ScaleType::Diatonic, Mode::Dorian),
-            ("Gb mixolydian", Fs, ScaleType::Diatonic, Mode::Mixolydian),
-            ("B MAJOR", B, ScaleType::Diatonic, Mode::Ionian),
-            ("Bb MAJOR", As, ScaleType::Diatonic, Mode::Ionian),
+            ("C Major", pclass(C,0), ScaleType::Diatonic, Mode::Ionian),
+            ("CM", pclass(C,0), ScaleType::Diatonic, Mode::Ionian),
+            ("C Maj", pclass(C,0), ScaleType::Diatonic, Mode::Ionian),
+            ("C MAJOR", pclass(C,0), ScaleType::Diatonic, Mode::Ionian),
+            ("As locrian", pclass(A,1), ScaleType::Diatonic, Mode::Locrian),
+            ("Bs phrygian", pclass(B,1), ScaleType::Diatonic, Mode::Phrygian),
+            ("E lydian", pclass(E,0), ScaleType::Diatonic, Mode::Lydian),
+            ("F dorian", pclass(F,0), ScaleType::Diatonic, Mode::Dorian),
+            ("Gb mixolydian", pclass(G,-1), ScaleType::Diatonic, Mode::Mixolydian),
+            ("B MAJOR", pclass(B,0), ScaleType::Diatonic, Mode::Ionian),
+            ("Bb MAJOR", pclass(B,-1), ScaleType::Diatonic, Mode::Ionian),
             (
                 "Bb Harmonic Minor",
-                As,
+                pclass(B,-1),
                 ScaleType::HarmonicMinor,
                 Mode::HarmonicMinor,
             ),
             (
                 "Ds Melodic Minor",
-                Ds,
+                pclass(D,1),
                 ScaleType::MelodicMinor,
                 Mode::MelodicMinor,
             ),

@@ -1,5 +1,5 @@
 extern crate rust_music_theory as theory;
-use theory::note::{PitchClass::*, *};
+use theory::note::{PitchSymbol::*, *};
 use theory::scale::{Mode::*, ScaleType::*, *};
 
 fn assert_notes(pitches: &[PitchClass], notes: Vec<Note>) {
@@ -16,44 +16,44 @@ mod scale_tests {
     fn test_all_scales_in_c() {
         let scale_tuples = [
             (
-                Scale::new(Diatonic, C, 4, Some(Ionian)).unwrap(),
-                vec![C, D, E, F, G, A, B, C],
+                Scale::new(Diatonic, pclass(C,0), 4, Some(Ionian)).unwrap(),
+                vec![pclass(C,0), pclass(D,0), pclass(E,0), pclass(F,0), pclass(G,0), pclass(A,0), pclass(B,0), pclass(C,0)],
             ),
             (
-                Scale::new(Diatonic, C, 4, Some(Locrian)).unwrap(),
-                vec![C, Cs, Ds, F, Fs, Gs, As, C],
+                Scale::new(Diatonic, pclass(C,0), 4, Some(Locrian)).unwrap(),
+                vec![pclass(C,0), pclass(C,1), pclass(D,1), pclass(F,0), pclass(F,1), pclass(G,1), pclass(A,1), pclass(C,0)],
             ),
             (
-                Scale::new(Diatonic, B, 4, Some(Locrian)).unwrap(),
-                vec![B, C, D, E, F, G, A, B],
+                Scale::new(Diatonic, pclass(B,0), 4, Some(Locrian)).unwrap(),
+                vec![pclass(B,0), pclass(C,0), pclass(D,0), pclass(E,0), pclass(F,0), pclass(G,0), pclass(A,0), pclass(B,0)],
             ),
             (
-                Scale::new(Diatonic, C, 4, Some(Dorian)).unwrap(),
-                vec![C, D, Ds, F, G, A, As, C],
+                Scale::new(Diatonic, pclass(C,0), 4, Some(Dorian)).unwrap(),
+                vec![pclass(C,0), pclass(D,0), pclass(D,1), pclass(F,0), pclass(G,0), pclass(A,0), pclass(A,1), pclass(C,0)],
             ),
             (
-                Scale::new(Diatonic, A, 4, Some(Aeolian)).unwrap(),
-                vec![A, B, C, D, E, F, G, A],
+                Scale::new(Diatonic, pclass(A,0), 4, Some(Aeolian)).unwrap(),
+                vec![pclass(A,0), pclass(B,0), pclass(C,0), pclass(D,0), pclass(E,0), pclass(F,0), pclass(G,0), pclass(A,0)],
             ),
             (
-                Scale::new(Diatonic, C, 4, Some(Lydian)).unwrap(),
-                vec![C, D, E, Fs, G, A, B, C],
+                Scale::new(Diatonic, pclass(C,0), 4, Some(Lydian)).unwrap(),
+                vec![pclass(C,0), pclass(D,0), pclass(E,0), pclass(F,1), pclass(G,0), pclass(A,0), pclass(B,0), pclass(C,0)],
             ),
             (
-                Scale::new(Diatonic, C, 4, Some(Mixolydian)).unwrap(),
-                vec![C, D, E, F, G, A, As, C],
+                Scale::new(Diatonic, pclass(C,0), 4, Some(Mixolydian)).unwrap(),
+                vec![pclass(C,0), pclass(D,0), pclass(E,0), pclass(F,0), pclass(G,0), pclass(A,0), pclass(A,1), pclass(C,0)],
             ),
             (
-                Scale::new(Diatonic, C, 4, Some(Phrygian)).unwrap(),
-                vec![C, Cs, Ds, F, G, Gs, As, C],
+                Scale::new(Diatonic, pclass(C,0), 4, Some(Phrygian)).unwrap(),
+                vec![pclass(C,0), pclass(C,1), pclass(D,1), pclass(F,0), pclass(G,0), pclass(G,1), pclass(A,1), pclass(C,0)],
             ),
             (
-                Scale::new(ScaleType::HarmonicMinor, C, 4, None).unwrap(),
-                vec![C, D, Ds, F, G, Gs, B, C],
+                Scale::new(ScaleType::HarmonicMinor, pclass(C,0), 4, None).unwrap(),
+                vec![pclass(C,0), pclass(D,0), pclass(D,1), pclass(F,0), pclass(G,0), pclass(G,1), pclass(B,0), pclass(C,0)],
             ),
             (
-                Scale::new(ScaleType::MelodicMinor, C, 4, None).unwrap(),
-                vec![C, D, Ds, F, G, A, B, C],
+                Scale::new(ScaleType::MelodicMinor, pclass(C,0), 4, None).unwrap(),
+                vec![pclass(C,0), pclass(D,0), pclass(D,1), pclass(F,0), pclass(G,0), pclass(A,0), pclass(B,0), pclass(C,0)],
             ),
         ];
 
@@ -73,7 +73,7 @@ mod scale_tests {
     fn test_octave_increment() {
         let scale = Scale::new(
             ScaleType::Diatonic,
-            PitchClass::G,
+            pclass(PitchSymbol::G,0),
             5,
             Some(Mode::Mixolydian)
         ).unwrap();
