@@ -129,15 +129,18 @@ impl PitchClass {
 impl fmt::Display for PitchClass {
     fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
         use PitchSymbol::*;
-        match self.symbol {
-            C => write!(fmt, "C"),
-            D => write!(fmt, "D"),
-            E => write!(fmt, "E"),
-            F => write!(fmt, "F"),
-            G => write!(fmt, "G"),
-            A => write!(fmt, "A"),
-            B => write!(fmt, "B"),
-        }
+        let sym = match self.symbol {
+            C => "C",
+            D => "D",
+            E => "E",
+            F => "F",
+            G => "G",
+            A => "A",
+            B => "B",
+        };
+
+        let flat = if self.accidental < 0 { "b" } else { "#" };
+        write!(fmt, "{}", sym.to_owned() + &(0..self.accidental.abs()).map(|_| flat).collect::<String>())
     }
 }
 
