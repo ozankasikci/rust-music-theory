@@ -2,7 +2,7 @@ use crate::chord::errors::ChordError;
 use crate::chord::number::Number::Triad;
 use crate::chord::{Number, Quality};
 use crate::interval::Interval;
-use crate::note::{Note, Notes, PitchClass, PitchSymbol};
+use crate::note::{Note, Notes, PitchClass, PitchSymbol, pclass};
 
 /// A chord.
 #[derive(Debug, Clone)]
@@ -95,7 +95,7 @@ impl Notes for Chord {
 impl Default for Chord {
     fn default() -> Self {
         Chord {
-            root: PitchClass { symbol: PitchSymbol::C, accidental: 0 },
+            root: pclass(PitchSymbol::C,0),
             octave: 4,
             intervals: vec![],
             quality: Quality::Major,

@@ -12,15 +12,7 @@ lazy_static! {
 
 /// A pitch class (A, B, C#, etc).
 #[derive(Debug, Copy, Clone, PartialEq, Eq, EnumIter)]
-pub enum PitchSymbol {
-    C,
-    D,
-    E,
-    F,
-    G,
-    A,
-    B,
-}
+pub enum PitchSymbol { C, D, E, F, G, A, B }
 
 pub fn pclass(symbol: PitchSymbol, accidental: i8) -> PitchClass {
     PitchClass { symbol, accidental }
@@ -139,8 +131,8 @@ impl fmt::Display for PitchClass {
             B => "B",
         };
 
-        let flat = if self.accidental < 0 { "b" } else { "#" };
-        write!(fmt, "{}", sym.to_owned() + &(0..self.accidental.abs()).map(|_| flat).collect::<String>())
+        let acc = if self.accidental < 0 { "b" } else { "#" };
+        write!(fmt, "{}", sym.to_owned() + &(0..self.accidental.abs()).map(|_| acc).collect::<String>())
     }
 }
 
