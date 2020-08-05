@@ -88,14 +88,14 @@ impl Pitch {
         };
 
         if let Some(second_char) = characters.next() {
-            match second_char {
+            return match second_char {
                 '#' | 's' | 'S' | '♯' => {
-                    return Some (Pitch { letter: symbol, accidental: 1 })
+                    Some(Pitch { letter: symbol, accidental: 1 })
                 }
                 'b' | '♭' => {
-                    return Some (Pitch { letter: symbol, accidental: -1 })
+                    Some(Pitch { letter: symbol, accidental: -1 })
                 }
-                _ => return None,
+                _ => None,
             }
         }
 
@@ -136,7 +136,7 @@ impl Pitch {
 impl fmt::Display for Pitch {
     fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
         use NoteLetter::*;
-        let letter = match self.symbol {
+        let letter = match self.letter {
             C => "C",
             D => "D",
             E => "E",
@@ -146,8 +146,8 @@ impl fmt::Display for Pitch {
             B => "B",
         };
 
-        let flat = if self.accidental < 0 { "b" } else { "#" };
-        write!(fmt, "{}", letter.to_owned() + &(0..self.accidental.abs()).map(|_| flat).collect::<String>())
+        let acc = if self.accidental < 0 { "b" } else { "#" };
+        write!(fmt, "{}", letter.to_owned() + &(0..self.accidental.abs()).map(|_| acc).collect::<String>())
     }
 }
 
