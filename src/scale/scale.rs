@@ -66,6 +66,7 @@ impl Scale {
 
 impl Notes for Scale {
     fn notes(&self) -> Vec<Note> {
+        use Direction::*;
         use Mode::*;
         let root_note = Note {
             octave: self.octave,
@@ -91,7 +92,10 @@ impl Notes for Scale {
             }
         };
 
-        Interval::to_notes(root_note, intervals_clone)
+        match &self.direction {
+            Ascending => Interval::to_notes(root_note, intervals_clone),
+            Descending => Interval::to_notes_reverse(root_note, intervals_clone),
+        }
     }
 }
 

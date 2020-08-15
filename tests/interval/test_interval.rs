@@ -67,4 +67,26 @@ mod test_interval {
             assert_eq!(next_note.octave, note.octave - 1);
         }
     }
+
+    #[test]
+    fn test_invert_unison() {
+        let unison = Interval::from_semitone(0).unwrap();
+        assert_eq!(
+            unison.semitone_count,
+            Interval::invert(&unison).semitone_count
+        )
+    }
+
+    #[test]
+    fn test_invert() {
+        let list = vec![12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+
+        for i in 0..list.len() {
+            let interval = Interval::from_semitone(list[i]).unwrap();
+            assert_eq!(
+                Interval::invert(&interval).semitone_count,
+                list[list.len() - i - 1]
+            );
+        }
+    }
 }

@@ -159,6 +159,15 @@ impl Interval {
         })
     }
 
+    pub fn invert(interval: &Self) -> Interval {
+        if interval.semitone_count == 12 {
+            Self::from_semitone(12).unwrap()
+        } else {
+            let adjusted = (12 + (12i16 - interval.semitone_count as i16)) % 12;
+            Self::from_semitone(adjusted as u8).unwrap()
+        }
+    }
+
     /// Move the given note up by this interval.
     pub fn second_note_from(self, first_note: Note) -> Note {
         let pitch_class = PitchClass::from_interval(first_note.pitch_class, self);
@@ -192,6 +201,28 @@ impl Interval {
             let last_note = notes.last().unwrap();
             let interval_first_note = Note::new(last_note.pitch_class, last_note.octave);
             let interval_second_note = interval.second_note_from(interval_first_note);
+            notes.push(interval_second_note);
+        }
+
+        notes
+    }
+
+    /// Produce the list of notes that have had each interval applied in order.
+    pub fn to_notes_reverse(
+        root: Note,
+        intervals: impl IntoIterator<Item = Interval>,
+    ) -> Vec<Note> {
+        let mut notes = vec![root];
+
+        let reversed = intervals
+            .into_iter()
+            .collect::<Vec<Interval>>()
+            .into_iter()
+            .rev();
+        for interval in reversed {
+            let last_note = notes.last().unwrap();
+            let interval_first_note = Note::new(last_note.pitch_class, last_note.octave);
+            let interval_second_note = interval.second_note_down_from(interval_first_note);
             notes.push(interval_second_note);
         }
 

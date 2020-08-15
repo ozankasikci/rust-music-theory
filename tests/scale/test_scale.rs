@@ -61,6 +61,12 @@ mod scale_tests {
             let (scale, pitches) = scale_tuple;
             assert_notes(pitches, scale.notes());
 
+            let mut scale_descending = scale.clone();
+            scale_descending.direction = Direction::Descending;
+            let mut pitches_descending = pitches.clone();
+            pitches_descending.reverse();
+            assert_notes(&pitches_descending, scale_descending.notes());
+
             if scale.scale_type == Diatonic {
                 if let Some(mode) = scale.mode {
                     assert!(mode.is_diatonic());
@@ -75,8 +81,9 @@ mod scale_tests {
             ScaleType::Diatonic,
             PitchClass::G,
             5,
-            Some(Mode::Mixolydian)
-        ).unwrap();
+            Some(Mode::Mixolydian),
+        )
+        .unwrap();
 
         for (i, note) in scale.notes().iter().enumerate() {
             assert_eq!(note.octave, if i <= 2 { 5 } else { 6 });
