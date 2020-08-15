@@ -41,4 +41,30 @@ mod test_interval {
             assert_eq!(next_note.octave, notes[i + 1].octave);
         }
     }
+
+    #[test]
+    fn test_octave_jump() {
+        let octave_interval = Interval::from_semitone(12).unwrap();
+        for octave in 0..=8 {
+            let note = Note {
+                pitch_class: C,
+                octave,
+            };
+            let next_note = octave_interval.second_note_from(note.clone());
+            assert_eq!(next_note.octave, note.octave + 1);
+        }
+    }
+
+    #[test]
+    fn test_octave_jump_down() {
+        let octave_interval = Interval::from_semitone(12).unwrap();
+        for octave in 8..=0 {
+            let note = Note {
+                pitch_class: C,
+                octave,
+            };
+            let next_note = octave_interval.second_note_down_from(note.clone());
+            assert_eq!(next_note.octave, note.octave - 1);
+        }
+    }
 }
