@@ -15,60 +15,37 @@ mod scale_tests {
     #[test]
     fn test_all_scales_in_c() {
         let scale_tuples = [
+            ((Diatonic, Some(Ionian)), vec![C, D, E, F, G, A, B, C]),
+            ((Diatonic, Some(Dorian)), vec![C, D, Ds, F, G, A, As, C]),
+            ((Diatonic, Some(Phrygian)), vec![C, Cs, Ds, F, G, Gs, As, C]),
+            ((Diatonic, Some(Lydian)), vec![C, D, E, Fs, G, A, B, C]),
+            ((Diatonic, Some(Mixolydian)), vec![C, D, E, F, G, A, As, C]),
+            ((Diatonic, Some(Aeolian)), vec![C, D, Ds, F, G, Gs, As, C]),
+            ((Diatonic, Some(Locrian)), vec![C, Cs, Ds, F, Fs, Gs, As, C]),
             (
-                Scale::new(Diatonic, C, 4, Some(Ionian)).unwrap(),
-                vec![C, D, E, F, G, A, B, C],
-            ),
-            (
-                Scale::new(Diatonic, C, 4, Some(Locrian)).unwrap(),
-                vec![C, Cs, Ds, F, Fs, Gs, As, C],
-            ),
-            (
-                Scale::new(Diatonic, B, 4, Some(Locrian)).unwrap(),
-                vec![B, C, D, E, F, G, A, B],
-            ),
-            (
-                Scale::new(Diatonic, C, 4, Some(Dorian)).unwrap(),
-                vec![C, D, Ds, F, G, A, As, C],
-            ),
-            (
-                Scale::new(Diatonic, A, 4, Some(Aeolian)).unwrap(),
-                vec![A, B, C, D, E, F, G, A],
-            ),
-            (
-                Scale::new(Diatonic, C, 4, Some(Lydian)).unwrap(),
-                vec![C, D, E, Fs, G, A, B, C],
-            ),
-            (
-                Scale::new(Diatonic, C, 4, Some(Mixolydian)).unwrap(),
-                vec![C, D, E, F, G, A, As, C],
-            ),
-            (
-                Scale::new(Diatonic, C, 4, Some(Phrygian)).unwrap(),
-                vec![C, Cs, Ds, F, G, Gs, As, C],
-            ),
-            (
-                Scale::new(ScaleType::HarmonicMinor, C, 4, None).unwrap(),
+                (ScaleType::HarmonicMinor, None),
                 vec![C, D, Ds, F, G, Gs, B, C],
             ),
             (
-                Scale::new(ScaleType::MelodicMinor, C, 4, None).unwrap(),
+                (ScaleType::MelodicMinor, None),
                 vec![C, D, Ds, F, G, A, B, C],
             ),
         ];
 
-        for scale_tuple in scale_tuples.iter() {
-            let (scale, pitches) = scale_tuple;
-            assert_notes(pitches, scale.notes());
+        for (scale_tuple, pitches) in scale_tuples.iter() {
+            let (scale_type, mode) = scale_tuple;
+            let scale_ascending =
+                Scale::new_in_direction(*scale_type, C, 4, *mode, Direction::Ascending).unwrap();
+            assert_notes(pitches, scale_ascending.notes());
 
-            let mut scale_descending = scale.clone();
-            scale_descending.direction = Direction::Descending;
+            let scale_descending =
+                Scale::new_in_direction(*scale_type, C, 4, *mode, Direction::Descending).unwrap();
             let mut pitches_descending = pitches.clone();
             pitches_descending.reverse();
             assert_notes(&pitches_descending, scale_descending.notes());
 
-            if scale.scale_type == Diatonic {
-                if let Some(mode) = scale.mode {
+            if scale_ascending.scale_type == Diatonic {
+                if let Some(mode) = scale_ascending.mode {
                     assert!(mode.is_diatonic());
                 }
             }

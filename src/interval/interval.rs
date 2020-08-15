@@ -159,6 +159,8 @@ impl Interval {
         })
     }
 
+    /// Creates an interval by inverting the given interval
+    /// e.g. Perfect fifth (C to G) becomes a perfect fourth (G to C)
     pub fn invert(interval: &Self) -> Interval {
         if interval.semitone_count == 12 {
             Self::from_semitone(12).unwrap()
