@@ -171,6 +171,19 @@ impl Interval {
         }
     }
 
+    /// Move the given note down by this interval.
+    pub fn second_note_down_from(self, first_note: Note) -> Note {
+        let pitch_class = PitchClass::from_interval_down(first_note.pitch_class, self);
+        let octave = first_note.octave;
+        let raw_diff = first_note.pitch_class as i16 - self.semitone_count as i16;
+        let excess_octave = (raw_diff / -12) + if raw_diff < 0 { 1 } else { 0 };
+
+        Note {
+            octave: octave - excess_octave as u8,
+            pitch_class,
+        }
+    }
+
     /// Produce the list of notes that have had each interval applied in order.
     pub fn to_notes(root: Note, intervals: impl IntoIterator<Item = Interval>) -> Vec<Note> {
         let mut notes = vec![root];
