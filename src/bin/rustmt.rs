@@ -83,6 +83,28 @@ fn chord_command(chord_matches: &ArgMatches) {
 }
 
 fn main() {
+    {
+        use rust_music_theory::{
+            chord::{Number::*, Quality::*, *},
+            note::PitchClass::*,
+        };
+        println!("{:?}", Chord::with_inversion(C, Major, Triad, 0).notes());
+        println!("{:?}", Chord::with_inversion(C, Major, Triad, 1).notes());
+        println!("{:?}", Chord::with_inversion(C, Major, Triad, 2).notes());
+        println!("{:?}", Chord::with_inversion(C, Major, Triad, 3).notes());
+        println!("{:?}", Chord::with_inversion(C, Major, Triad, 4).notes());
+        println!();
+        println!("{:?}", Chord::with_inversion(C, Major, Seventh, 0).notes());
+        println!("{:?}", Chord::with_inversion(C, Major, Seventh, 1).notes());
+        println!("{:?}", Chord::with_inversion(C, Major, Seventh, 2).notes());
+        println!("{:?}", Chord::with_inversion(C, Major, Seventh, 3).notes());
+        println!();
+        println!("{:?}", Chord::with_inversion(G, Major, Seventh, 0).notes());
+        println!("{:?}", Chord::with_inversion(G, Major, Seventh, 1).notes());
+        println!("{:?}", Chord::with_inversion(G, Major, Seventh, 2).notes());
+        println!("{:?}", Chord::with_inversion(G, Major, Seventh, 3).notes());
+    }
+
     let matches = App::new("RustMusicTheory")
         .version("0.1")
         .author("Ozan Kaşıkçı")

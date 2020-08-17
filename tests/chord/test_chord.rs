@@ -34,4 +34,17 @@ mod chord_tests {
             assert_notes(pitches, chord.notes());
         }
     }
+
+    #[test]
+    fn test_c_major_triad_inversions() {
+        let mut classes = vec![C, E, G];
+
+        for i in 0..classes.len() {
+            assert_notes(
+                &classes,
+                Chord::with_inversion(C, Major, Triad, i as u8).notes(),
+            );
+            classes.rotate_left(1);
+        }
+    }
 }

@@ -13,15 +13,27 @@ pub struct Chord {
     pub octave: u8,
     /// The intervals within the chord.
     pub intervals: Vec<Interval>,
-    /// The quiality of the chord; major, minor, diminished, etc.
+    /// The quality of the chord: major, minor, diminished, etc.
     pub quality: Quality,
-    /// The superscript number of the chord (3, 7, maj7, etc).
+    /// The superscript number of the chord: 3, 7, maj7, etc.
     pub number: Number,
+    /// The inversion of the chord: 0=root position, 1=first inversion, etc.
+    pub inversion: u8,
 }
 
 impl Chord {
     /// Create a new chord.
     pub fn new(root: PitchClass, quality: Quality, number: Number) -> Self {
+        Self::with_inversion(root, quality, number, 0)
+    }
+
+    /// Create a new chord with a given inversion.
+    pub fn with_inversion(
+        root: PitchClass,
+        quality: Quality,
+        number: Number,
+        inversion: u8,
+    ) -> Self {
         use Number::*;
         use Quality::*;
         let intervals = match (&quality, &number) {
@@ -51,12 +63,14 @@ impl Chord {
         }
         .unwrap();
 
+        let inversion = inversion % (intervals.len() + 1) as u8;
         Chord {
             root,
             octave: 4,
             intervals,
             quality,
             number,
+            inversion,
         }
     }
 
@@ -67,13 +81,15 @@ impl Chord {
         let (quality, quality_match_option) =
             Quality::from_regex(&string[pitch_match.end()..].trim())?;
 
+        let inversion = 0; // TODO: Regex: Optional slash-note like `C Major/E`
+
         Ok(match quality_match_option {
             // there is
             Some(quality_match) => {
                 let (number, _) =
                     Number::from_regex(&string[quality_match.end()..]).unwrap_or((Triad, None));
 
-                Chord::new(pitch_class, quality, number)
+                Chord::with_inversion(pitch_class, quality, number, inversion)
             }
 
             // return a Triad by default
@@ -88,7 +104,24 @@ impl Notes for Chord {
             octave: self.octave,
             pitch_class: self.root,
         };
-        Interval::to_notes(root_note, self.intervals.clone())
+        let mut notes = Interval::to_notes(root_note, self.intervals.clone());
+        notes.rotate_left(self.inversion as usize);
+
+        // Normalize to the correct octave
+        if notes[0].octave > self.octave {
+            let diff = notes[0].octave - self.octave;
+            notes.iter_mut().for_each(|note| note.octave -= diff);
+        }
+
+        // Ensure that octave increments at the right notes
+        for i in 1..notes.len() {
+            if notes[i].pitch_class as u8 <= notes[i - 1].pitch_class as u8 {
+                notes[i].octave = notes[i - 1].octave + 1;
+            } else if notes[i].octave < notes[i - 1].octave {
+                notes[i].octave = notes[i - 1].octave;
+            }
+        }
+        notes
     }
 }
 
@@ -100,6 +133,7 @@ impl Default for Chord {
             intervals: vec![],
             quality: Quality::Major,
             number: Number::Triad,
+            inversion: 0,
         }
     }
 }
