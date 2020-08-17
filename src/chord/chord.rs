@@ -2,7 +2,9 @@ use crate::chord::errors::ChordError;
 use crate::chord::number::Number::Triad;
 use crate::chord::{Number, Quality};
 use crate::interval::Interval;
-use crate::note::{Note, Notes, PitchClass};
+use crate::note::{Note, NoteError, Notes, PitchClass};
+
+use regex::{Match, Regex};
 
 /// A chord.
 #[derive(Debug, Clone)]
@@ -34,9 +36,22 @@ impl Chord {
         number: Number,
         inversion: u8,
     ) -> Self {
+        let intervals = Self::chord_intervals(&quality, &number);
+        let inversion = inversion % (intervals.len() + 1) as u8;
+        Chord {
+            root,
+            octave: 4,
+            intervals,
+            quality,
+            number,
+            inversion,
+        }
+    }
+
+    pub fn chord_intervals(quality: &Quality, number: &Number) -> Vec<Interval> {
         use Number::*;
         use Quality::*;
-        let intervals = match (&quality, &number) {
+        match (&quality, &number) {
             (Major, Triad) => Interval::from_semitones(&[4, 3]),
             (Minor, Triad) => Interval::from_semitones(&[3, 4]),
             (Suspended2, Triad) => Interval::from_semitones(&[2, 5]),
@@ -61,40 +76,51 @@ impl Chord {
             (Minor, Thirteenth) => Interval::from_semitones(&[3, 4, 3, 4, 3, 4]),
             _ => Interval::from_semitones(&[4, 3]),
         }
-        .unwrap();
-
-        let inversion = inversion % (intervals.len() + 1) as u8;
-        Chord {
-            root,
-            octave: 4,
-            intervals,
-            quality,
-            number,
-            inversion,
-        }
+        .unwrap()
     }
 
     /// Parse a chord using a regex.
     pub fn from_regex(string: &str) -> Result<Self, ChordError> {
         let (pitch_class, pitch_match) = PitchClass::from_regex(&string)?;
 
-        let (quality, quality_match_option) =
-            Quality::from_regex(&string[pitch_match.end()..].trim())?;
+        let slash_option = string.find('/');
+        let bass_note_result = if let Some(slash) = slash_option {
+            PitchClass::from_regex(&string[slash + 1..].trim())
+        } else {
+            Err(NoteError::InvalidPitch)
+        };
 
-        let inversion = 0; // TODO: Regex: Optional slash-note like `C Major/E`
+        let (quality, quality_match_option) = Quality::from_regex(
+            &string[pitch_match.end()..slash_option.unwrap_or(string.len())].trim(),
+        )?;
 
-        Ok(match quality_match_option {
-            // there is
-            Some(quality_match) => {
-                let (number, _) =
-                    Number::from_regex(&string[quality_match.end()..]).unwrap_or((Triad, None));
+        let number = if let Some(quality_match) = quality_match_option {
+            Number::from_regex(&string[quality_match.end()..])
+                .unwrap_or((Triad, None))
+                .0
+        } else {
+            Triad
+        };
+        let chord = Chord::new(pitch_class, quality, number);
 
-                Chord::with_inversion(pitch_class, quality, number, inversion)
+        if let Ok((bass_note, _)) = bass_note_result {
+            let inversion = chord
+                .notes()
+                .iter()
+                .position(|note| note.pitch_class == bass_note)
+                .unwrap_or(0);
+
+            if inversion != 0 {
+                return Ok(Chord::with_inversion(
+                    pitch_class,
+                    quality,
+                    number,
+                    inversion as u8,
+                ));
             }
+        }
 
-            // return a Triad by default
-            None => Chord::new(pitch_class, quality, Triad),
-        })
+        Ok(chord)
     }
 }
 
