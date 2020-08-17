@@ -35,11 +35,11 @@ mod scale_tests {
         for (scale_tuple, pitches) in scale_tuples.iter() {
             let (scale_type, mode) = scale_tuple;
             let scale_ascending =
-                Scale::new_in_direction(*scale_type, C, 4, *mode, Direction::Ascending).unwrap();
+                Scale::new(*scale_type, C, 4, *mode, Direction::Ascending).unwrap();
             assert_notes(pitches, scale_ascending.notes());
 
             let scale_descending =
-                Scale::new_in_direction(*scale_type, C, 4, *mode, Direction::Descending).unwrap();
+                Scale::new(*scale_type, C, 4, *mode, Direction::Descending).unwrap();
             let mut pitches_descending = pitches.clone();
             pitches_descending.reverse();
             assert_notes(&pitches_descending, scale_descending.notes());
@@ -59,6 +59,7 @@ mod scale_tests {
             PitchClass::G,
             5,
             Some(Mode::Mixolydian),
+            Direction::Ascending,
         )
         .unwrap();
 

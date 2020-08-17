@@ -29,18 +29,8 @@ pub struct Scale {
 }
 
 impl Scale {
-    /// Create a new ascending scale.
-    pub fn new(
-        scale_type: ScaleType,
-        tonic: PitchClass,
-        octave: u8,
-        mode: Option<Mode>,
-    ) -> Result<Self, ScaleError> {
-        Self::new_in_direction(scale_type, tonic, octave, mode, Direction::Ascending)
-    }
-
     /// Create a new scale with a given direction.
-    pub fn new_in_direction(
+    pub fn new(
         scale_type: ScaleType,
         tonic: PitchClass,
         octave: u8,
@@ -70,7 +60,7 @@ impl Scale {
         let (mode, _) = Mode::from_regex(mode_string)?;
         let scale_type = ScaleType::from_mode(mode);
         let octave = 4;
-        let scale = Scale::new_in_direction(scale_type, tonic, octave, Some(mode), direction)?;
+        let scale = Scale::new(scale_type, tonic, octave, Some(mode), direction)?;
         Ok(scale)
     }
 
