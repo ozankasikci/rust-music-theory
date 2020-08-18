@@ -4,8 +4,6 @@ use crate::chord::{Number, Quality};
 use crate::interval::Interval;
 use crate::note::{Note, NoteError, Notes, PitchClass};
 
-use regex::{Match, Regex};
-
 /// A chord.
 #[derive(Debug, Clone)]
 pub struct Chord {
@@ -91,7 +89,7 @@ impl Chord {
         };
 
         let (quality, quality_match_option) = Quality::from_regex(
-            &string[pitch_match.end()..slash_option.unwrap_or(string.len())].trim(),
+            &string[pitch_match.end()..slash_option.unwrap_or_else(|| string.len())].trim(),
         )?;
 
         let number = if let Some(quality_match) = quality_match_option {

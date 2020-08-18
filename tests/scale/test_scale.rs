@@ -75,8 +75,9 @@ mod scale_tests {
             ScaleType::Diatonic,
             PitchClass::G,
             5,
-            Some(Mode::Mixolydian)
-        ).unwrap();
+            Some(Mode::Mixolydian),
+        )
+        .unwrap();
 
         for (i, note) in scale.notes().iter().enumerate() {
             assert_eq!(note.octave, if i <= 2 { 5 } else { 6 });
