@@ -23,14 +23,14 @@ Interval and more. The main purpose of this library is to let music theory be us
 Add `rust-music-theory` as a dependency in your Cargo.toml.
 ```toml
 [dependencies]
-rust-music-theory = "0.1"
+rust-music-theory = "0.2"
 ```
 
 After installing the dependencies, you can use the library as follows.
 ```rust
 extern crate rust_music_theory as rustmt;
 use rustmt::note::{Note, Notes, PitchClass};
-use rustmt::scale::{Scale, ScaleType, Mode};
+use rustmt::scale::{Scale, ScaleType, Mode, Direction};
 use rustmt::chord::{Chord, Number as ChordNumber, Quality as ChordQuality};
 
 // to create a Note, specify a pitch class and an octave;
@@ -42,6 +42,7 @@ let scale = Scale::new(
     PitchClass::C,          // tonic
     4,                      // octave
     Some(Mode::Ionian),     // scale mode
+    Direction::Ascending,   // scale direction
 ).unwrap();
 
 // returns a Vector of the Notes of the scale

@@ -1,3 +1,13 @@
+## v0.2.0 - 2020-08-19
+
+### Features
+- Add support for inversion of intervals (by @henryksloan)
+- Add support for descending scales (by @henryksloan)
+- Add support for descending a note by a given interval (by @henryksloan)
+
+### Breaking Changes
+- `Scale::new` method now expects an additional Direction argument
+
 ## v0.1.7 - 2020-05-03
 
 ### Improvements
