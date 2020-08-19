@@ -4,6 +4,9 @@
 - Add support for inversion of intervals (by @henryksloan)
 - Add support for descending scales (by @henryksloan)
 
+### Breaking Changes
+- `Scale::new` method now expects an additional Direction argument.
+
 ## v0.1.7 - 2020-05-03
 
 ### Improvements
