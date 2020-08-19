@@ -101,6 +101,14 @@ impl PitchClass {
         Self::from_u8(new_pitch)
     }
 
+    /// Create a note by moving down the given note by an interval.
+    pub fn from_interval_down(pitch: Self, interval: Interval) -> Self {
+        let current_pitch = pitch.into_u8();
+        let new_pitch = (12 + (current_pitch as i16 - interval.semitone_count as i16)) % 12;
+
+        Self::from_u8(new_pitch as u8)
+    }
+
     /// Parse the note using a regex, with the same algorithm as described in `from_str`.
     pub fn from_regex(string: &str) -> Result<(Self, Match), NoteError> {
         let pitch_match = REGEX_PITCH.find(&string).ok_or(NoteError::InvalidPitch)?;

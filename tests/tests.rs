@@ -13,3 +13,7 @@ mod scale {
 mod note {
     mod test_pitch_class;
 }
+
+mod interval {
+    mod test_interval;
+}

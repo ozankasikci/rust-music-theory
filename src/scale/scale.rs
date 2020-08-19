@@ -29,12 +29,13 @@ pub struct Scale {
 }
 
 impl Scale {
-    /// Create a new scale.
+    /// Create a new scale with a given direction.
     pub fn new(
         scale_type: ScaleType,
         tonic: PitchClass,
         octave: u8,
         mode: Option<Mode>,
+        direction: Direction,
     ) -> Result<Self, ScaleError> {
         let intervals = match scale_type {
             ScaleType::Diatonic => Interval::from_semitones(&[2, 2, 1, 2, 2, 2, 1]),
@@ -48,24 +49,29 @@ impl Scale {
             scale_type,
             mode,
             intervals,
-            ..Default::default()
+            direction,
         })
     }
 
     /// Parse a scale from a regex.
-    pub fn from_regex(string: &str) -> Result<Self, ScaleError> {
+    pub fn from_regex_in_direction(string: &str, direction: Direction) -> Result<Self, ScaleError> {
         let (tonic, tonic_match) = PitchClass::from_regex(&string.trim())?;
         let mode_string = &string[tonic_match.end()..].trim();
         let (mode, _) = Mode::from_regex(mode_string)?;
         let scale_type = ScaleType::from_mode(mode);
         let octave = 4;
-        let scale = Scale::new(scale_type, tonic, octave, Some(mode))?;
+        let scale = Scale::new(scale_type, tonic, octave, Some(mode), direction)?;
         Ok(scale)
+    }
+
+    pub fn from_regex(string: &str) -> Result<Self, ScaleError> {
+        Self::from_regex_in_direction(string, Direction::Ascending)
     }
 }
 
 impl Notes for Scale {
     fn notes(&self) -> Vec<Note> {
+        use Direction::*;
         use Mode::*;
         let root_note = Note {
             octave: self.octave,
@@ -91,7 +97,10 @@ impl Notes for Scale {
             }
         };
 
-        Interval::to_notes(root_note, intervals_clone)
+        match &self.direction {
+            Ascending => Interval::to_notes(root_note, intervals_clone),
+            Descending => Interval::to_notes_reverse(root_note, intervals_clone),
+        }
     }
 }
 
