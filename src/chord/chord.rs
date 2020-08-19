@@ -34,7 +34,7 @@ impl Chord {
         number: Number,
         inversion: u8,
     ) -> Self {
-        let intervals = Self::chord_intervals(&quality, &number);
+        let intervals = Self::chord_intervals(quality, number);
         let inversion = inversion % (intervals.len() + 1) as u8;
         Chord {
             root,
@@ -46,7 +46,7 @@ impl Chord {
         }
     }
 
-    pub fn chord_intervals(quality: &Quality, number: &Number) -> Vec<Interval> {
+    pub fn chord_intervals(quality: Quality, number: Number) -> Vec<Interval> {
         use Number::*;
         use Quality::*;
         match (&quality, &number) {
