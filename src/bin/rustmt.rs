@@ -113,7 +113,7 @@ fn main() {
                 .subcommand(App::new("list").about("Prints out the available chords"))
                 .arg(
                     Arg::with_name("args")
-                        .help("chord args, examples:\nC minor\nAb augmented major seventh\nF# dominant seventh / C#")
+                        .help("chord args, examples:\nC minor\nAb augmented major seventh\nF# dominant seventh / C#\nC/1")
                         .multiple(true),
                 ),
         )

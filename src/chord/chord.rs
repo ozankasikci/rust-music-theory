@@ -87,6 +87,11 @@ impl Chord {
         } else {
             Err(NoteError::InvalidPitch)
         };
+        let inversion_num_option = if let Some(slash) = slash_option {
+            string[slash + 1..].trim().parse::<u8>().ok()
+        } else {
+            None
+        };
 
         let (quality, quality_match_option) = Quality::from_regex(
             &string[pitch_match.end()..slash_option.unwrap_or_else(|| string.len())].trim(),
@@ -99,7 +104,13 @@ impl Chord {
         } else {
             Triad
         };
-        let chord = Chord::new(pitch_class, quality, number);
+
+        let chord = Chord::with_inversion(
+            pitch_class,
+            quality,
+            number,
+            inversion_num_option.unwrap_or(0),
+        );
 
         if let Ok((bass_note, _)) = bass_note_result {
             let inversion = chord
