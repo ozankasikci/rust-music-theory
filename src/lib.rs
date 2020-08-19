@@ -15,7 +15,7 @@
 //! ```no_run
 //! extern crate rust_music_theory as rustmt;
 //! use rustmt::note::{Note, Notes, PitchClass};
-//! use rustmt::scale::{Scale, ScaleType, Mode};
+//! use rustmt::scale::{Direction, Scale, ScaleType, Mode};
 //! use rustmt::chord::{Chord, Number as ChordNumber, Quality as ChordQuality};
 //!
 //! // to create a Note, specify a pitch class and an octave;
@@ -28,6 +28,7 @@
 //!     PitchClass::C,          // tonic
 //!     4,                      // octave
 //!     Some(Mode::Ionian),     // scale mode
+//!     Direction::Ascending,   // direction
 //! ).unwrap();
 //!
 //! // returns a Vector of the Notes of the scale

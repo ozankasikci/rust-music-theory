@@ -159,6 +159,17 @@ impl Interval {
         })
     }
 
+    /// Creates an interval by inverting the given interval
+    /// e.g. Perfect fifth (C to G) becomes a perfect fourth (G to C)
+    pub fn invert(interval: &Self) -> Result<Self, IntervalError> {
+        if interval.semitone_count == 12 {
+            Self::from_semitone(12)
+        } else {
+            let adjusted = (12 + (12i16 - interval.semitone_count as i16)) % 12;
+            Self::from_semitone(adjusted as u8)
+        }
+    }
+
     /// Move the given note up by this interval.
     pub fn second_note_from(self, first_note: Note) -> Note {
         let pitch_class = PitchClass::from_interval(first_note.pitch_class, self);
@@ -171,6 +182,19 @@ impl Interval {
         }
     }
 
+    /// Move the given note down by this interval.
+    pub fn second_note_down_from(self, first_note: Note) -> Note {
+        let pitch_class = PitchClass::from_interval_down(first_note.pitch_class, self);
+        let octave = first_note.octave;
+        let raw_diff = first_note.pitch_class as i16 - self.semitone_count as i16;
+        let excess_octave = (raw_diff / -12) + if raw_diff < 0 { 1 } else { 0 };
+
+        Note {
+            octave: octave - excess_octave as u8,
+            pitch_class,
+        }
+    }
+
     /// Produce the list of notes that have had each interval applied in order.
     pub fn to_notes(root: Note, intervals: impl IntoIterator<Item = Interval>) -> Vec<Note> {
         let mut notes = vec![root];
@@ -179,6 +203,28 @@ impl Interval {
             let last_note = notes.last().unwrap();
             let interval_first_note = Note::new(last_note.pitch_class, last_note.octave);
             let interval_second_note = interval.second_note_from(interval_first_note);
+            notes.push(interval_second_note);
+        }
+
+        notes
+    }
+
+    /// Produce the list of notes that have had each interval applied in order.
+    pub fn to_notes_reverse(
+        root: Note,
+        intervals: impl IntoIterator<Item = Interval>,
+    ) -> Vec<Note> {
+        let mut notes = vec![root];
+
+        let reversed = intervals
+            .into_iter()
+            .collect::<Vec<Interval>>()
+            .into_iter()
+            .rev();
+        for interval in reversed {
+            let last_note = notes.last().unwrap();
+            let interval_first_note = Note::new(last_note.pitch_class, last_note.octave);
+            let interval_second_note = interval.second_note_down_from(interval_first_note);
             notes.push(interval_second_note);
         }
 

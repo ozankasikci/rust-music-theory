@@ -1,7 +1,7 @@
 use clap::{App, Arg, ArgMatches};
 use rust_music_theory::chord::Chord;
 use rust_music_theory::note::Notes;
-use rust_music_theory::scale::Scale;
+use rust_music_theory::scale::{Direction, Scale};
 
 const AVAILABLE_SCALES: [&str; 9] = [
     "Major|Ionian",
@@ -41,6 +41,7 @@ const AVAILABLE_CHORDS: [&str; 22] = [
 ];
 
 fn scale_command(scale_matches: &ArgMatches) {
+    use Direction::*;
     match scale_matches.subcommand() {
         ("list", _) => {
             println!("Available Scales:");
@@ -55,7 +56,10 @@ fn scale_command(scale_matches: &ArgMatches) {
                 .collect::<Vec<_>>()
                 .join(" ");
 
-            let scale = Scale::from_regex(&scale_args).unwrap();
+            let descending = scale_matches.is_present("descending");
+            let direction = if descending { Descending } else { Ascending };
+
+            let scale = Scale::from_regex_in_direction(&scale_args, direction).unwrap();
             scale.print_notes();
         }
     }
@@ -95,6 +99,12 @@ fn main() {
                     Arg::with_name("args")
                         .help("scale args, examples:\nC melodic minor\nD# dorian")
                         .multiple(true),
+                )
+                .arg(
+                    Arg::with_name("descending")
+                        .help("list scale in descending order")
+                        .short("d")
+                        .long("descending"),
                 ),
         )
         .subcommand(
