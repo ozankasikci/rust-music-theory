@@ -6,7 +6,7 @@ mod test_note {
     use super::*;
 
     #[test]
-    fn test_pitch_class_from_str() {
+    fn test_pitch_from_str() {
         let table = vec![
             ("Cb", pitch(C, -1)),
             ("C#", pitch(C, 1)),
@@ -31,15 +31,15 @@ mod test_note {
             ("Bb", pitch(B, -1)),
         ];
 
-        for (string, pitch_class) in table {
+        for (string, pitch) in table {
             let p = Pitch::from_str(string).unwrap();
-            assert_eq!(p, pitch_class);
-            assert_eq!(string.parse::<Pitch>().unwrap(), pitch_class);
+            assert_eq!(p, pitch);
+            assert_eq!(string.parse::<Pitch>().unwrap(), pitch);
         }
     }
 
     #[test]
-    fn test_pitch_class_into_u8() {
+    fn test_pitch_into_u8() {
         let table = vec![
             (pitch(C, 0), 0),
             (pitch(C, 1), 1),
@@ -55,8 +55,8 @@ mod test_note {
             (pitch(B, 0), 11),
         ];
 
-        for (pitch_class, number) in table {
-            let n = pitch_class.into_u8();
+        for (pitch, number) in table {
+            let n = pitch.into_u8();
             assert_eq!(n, number);
         }
     }

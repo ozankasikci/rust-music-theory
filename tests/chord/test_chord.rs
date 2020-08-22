@@ -36,7 +36,7 @@ mod chord_tests {
                     &symbols,
                     Chord::with_inversion(Pitch::from(chord.0), chord.1, chord.2, inversion as u8).notes(),
                 );
-                classes.rotate_left(1);
+                symbols.rotate_left(1);
             }
         }
     }
@@ -53,7 +53,7 @@ mod chord_tests {
         ];
         for inversion in 0..octaves[0].len() {
             let notes =
-                Chord::with_inversion(chord_desc.0, chord_desc.1, chord_desc.2, inversion as u8)
+                Chord::with_inversion(Pitch::from(chord_desc.0), chord_desc.1, chord_desc.2, inversion as u8)
                     .notes();
             assert_eq!(
                 notes

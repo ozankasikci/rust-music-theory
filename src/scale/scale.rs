@@ -75,7 +75,7 @@ impl Notes for Scale {
         use Mode::*;
         let root_note = Note {
             octave: self.octave,
-            pitch_class: self.tonic,
+            pitch: self.tonic,
         };
 
         let mut intervals_clone = self.intervals.clone();

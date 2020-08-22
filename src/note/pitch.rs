@@ -126,10 +126,10 @@ impl Pitch {
     pub fn from_regex(string: &str) -> Result<(Self, Match), NoteError> {
         let pitch_match = REGEX_PITCH.find(&string).ok_or(NoteError::InvalidPitch)?;
 
-        let pitch_class = Self::from_str(&string[pitch_match.start()..pitch_match.end()])
+        let pitch = Self::from_str(&string[pitch_match.start()..pitch_match.end()])
             .ok_or(NoteError::InvalidPitch)?;
 
-        Ok((pitch_class, pitch_match))
+        Ok((pitch, pitch_match))
     }
 }
 

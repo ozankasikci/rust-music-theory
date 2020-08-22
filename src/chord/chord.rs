@@ -150,7 +150,7 @@ impl Notes for Chord {
 
         // Ensure that octave increments at the right notes
         for i in 1..notes.len() {
-            if notes[i].pitch as u8 <= notes[i - 1].pitch as u8 {
+            if notes[i].pitch.into_u8() <= notes[i - 1].pitch.into_u8() {
                 notes[i].octave = notes[i - 1].octave + 1;
             } else if notes[i].octave < notes[i - 1].octave {
                 notes[i].octave = notes[i - 1].octave;

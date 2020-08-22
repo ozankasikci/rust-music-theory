@@ -1,4 +1,4 @@
-use crate::note::{Pitch, pitch};
+use crate::note::{Pitch, pitch, NoteLetter};
 
 /// All possible pitches with accidentals.
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
@@ -21,25 +21,25 @@ impl From<PitchSymbol> for Pitch {
     fn from(symbol: PitchSymbol) -> Self {
         use PitchSymbol::*;
         match symbol {
-            Bs => pitch(NoteSymbol::B, 1),
-            C => pitch(NoteSymbol::C, 0),
-            Cs => pitch(NoteSymbol:C, 1),
-            Db => pitch(NoteSymbol::D, -1),
-            D => pitch(NoteSymbol::D, 0),
-            Ds => pitch(NoteSymbol::D, 1),
-            Eb => pitch(NoteSymbol::E, -1),
-            E => pitch(NoteSymbol::E, 0),
-            Es => pitch(NoteSymbol::E, -1),
-            F => pitch(NoteSymbol::F, 0),
-            Fs => pitch(NoteSymbol::F, 1),
-            Gb => pitch(NoteSymbol::G, -1),
-            G => pitch(NoteSymbol::G, 0),
-            Gs => pitch(NoteSymbol::G, 1),
-            Ab => pitch(NoteSymbol::A, -1),
-            A => pitch(NoteSymbol::A, 0),
-            As => pitch(NoteSymbol::A, 1),
-            Bb => pitch(NoteSymbol::B, -1),
-            B => pitch(NoteSymbol::B, 0),
+            Bs => pitch(NoteLetter::B, 1),
+            C => pitch(NoteLetter::C, 0),
+            Cs => pitch(NoteLetter::C, 1),
+            Db => pitch(NoteLetter::D, -1),
+            D => pitch(NoteLetter::D, 0),
+            Ds => pitch(NoteLetter::D, 1),
+            Eb => pitch(NoteLetter::E, -1),
+            E => pitch(NoteLetter::E, 0),
+            Es => pitch(NoteLetter::E, -1),
+            F => pitch(NoteLetter::F, 0),
+            Fs => pitch(NoteLetter::F, 1),
+            Gb => pitch(NoteLetter::G, -1),
+            G => pitch(NoteLetter::G, 0),
+            Gs => pitch(NoteLetter::G, 1),
+            Ab => pitch(NoteLetter::A, -1),
+            A => pitch(NoteLetter::A, 0),
+            As => pitch(NoteLetter::A, 1),
+            Bb => pitch(NoteLetter::B, -1),
+            B => pitch(NoteLetter::B, 0),
         }
     }
 }
