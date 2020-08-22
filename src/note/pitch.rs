@@ -136,21 +136,18 @@ impl Pitch {
 impl fmt::Display for Pitch {
     fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
         use NoteLetter::*;
-        match self.letter {
-            C => write!(fmt, "C"),
-            D => write!(fmt, "D"),
-            E => write!(fmt, "E"),
-            F => write!(fmt, "F"),
-            G => write!(fmt, "G"),
-            A => write!(fmt, "A"),
-            B => write!(fmt, "B"),
-        }?;
+        let letter = match self.symbol {
+            C => "C",
+            D => "D",
+            E => "E",
+            F => "F",
+            G => "G",
+            A => "A",
+            B => "B",
+        };
 
-        match self.accidental {
-            1 => write!(fmt, "#"),
-            -1 => write!(fmt, "b"),
-            _ => Ok(()),
-        }
+        let flat = if self.accidental < 0 { "b" } else { "#" };
+        write!(fmt, "{}", letter.to_owned() + &(0..self.accidental.abs()).map(|_| flat).collect::<String>())
     }
 }
 

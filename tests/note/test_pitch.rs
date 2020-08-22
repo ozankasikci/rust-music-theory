@@ -60,4 +60,11 @@ mod test_note {
             assert_eq!(n, number);
         }
     }
+
+    #[test]
+    fn test_pitch_format() {
+        assert_eq!(format!("{}", pitch(C,2)), "C##");
+        assert_eq!(format!("{}", pitch(C,-2)), "Cbb");
+        assert_eq!(format!("{}", pitch(C,0)), "C");
+    }
 }
