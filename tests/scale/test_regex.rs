@@ -1,5 +1,5 @@
 extern crate rust_music_theory as theory;
-use theory::note::PitchClass::*;
+use theory::note::{NoteLetter::*, pitch};
 use theory::scale::{Mode, Scale, ScaleType};
 
 #[cfg(test)]
@@ -9,26 +9,26 @@ mod chord_regex_tests {
     #[test]
     fn test_all_scales() {
         let table = vec![
-            ("C Major", C, ScaleType::Diatonic, Mode::Ionian),
-            ("CM", C, ScaleType::Diatonic, Mode::Ionian),
-            ("C Maj", C, ScaleType::Diatonic, Mode::Ionian),
-            ("C MAJOR", C, ScaleType::Diatonic, Mode::Ionian),
-            ("As locrian", As, ScaleType::Diatonic, Mode::Locrian),
-            ("Bs phrygian", C, ScaleType::Diatonic, Mode::Phrygian),
-            ("E lydian", E, ScaleType::Diatonic, Mode::Lydian),
-            ("F dorian", F, ScaleType::Diatonic, Mode::Dorian),
-            ("Gb mixolydian", Fs, ScaleType::Diatonic, Mode::Mixolydian),
-            ("B MAJOR", B, ScaleType::Diatonic, Mode::Ionian),
-            ("Bb MAJOR", As, ScaleType::Diatonic, Mode::Ionian),
+            ("C Major", pitch(C, 0), ScaleType::Diatonic, Mode::Ionian),
+            ("CM", pitch(C, 0), ScaleType::Diatonic, Mode::Ionian),
+            ("C Maj", pitch(C, 0), ScaleType::Diatonic, Mode::Ionian),
+            ("C MAJOR", pitch(C, 0), ScaleType::Diatonic, Mode::Ionian),
+            ("As locrian", pitch(A, 1), ScaleType::Diatonic, Mode::Locrian),
+            ("Bs phrygian", pitch(B, 1), ScaleType::Diatonic, Mode::Phrygian),
+            ("E lydian", pitch(E, 0), ScaleType::Diatonic, Mode::Lydian),
+            ("F dorian", pitch(F, 0), ScaleType::Diatonic, Mode::Dorian),
+            ("Gb mixolydian", pitch(G, -1), ScaleType::Diatonic, Mode::Mixolydian),
+            ("B MAJOR", pitch(B, 0), ScaleType::Diatonic, Mode::Ionian),
+            ("Bb MAJOR", pitch(B, -1), ScaleType::Diatonic, Mode::Ionian),
             (
                 "Bb Harmonic Minor",
-                As,
+                pitch(B, -1),
                 ScaleType::HarmonicMinor,
                 Mode::HarmonicMinor,
             ),
             (
                 "Ds Melodic Minor",
-                Ds,
+                pitch(D, 1),
                 ScaleType::MelodicMinor,
                 Mode::MelodicMinor,
             ),

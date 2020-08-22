@@ -1,6 +1,6 @@
 extern crate rust_music_theory as theory;
 use theory::interval::Interval;
-use theory::note::{Note, PitchClass::*};
+use theory::note::{Note, Pitch::*};
 
 #[cfg(test)]
 mod test_interval {

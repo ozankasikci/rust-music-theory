@@ -1,5 +1,5 @@
 use crate::interval::errors::IntervalError;
-use crate::note::{Note, PitchClass};
+use crate::note::{Note, Pitch};
 use strum_macros::Display;
 
 /// The quality of an interval; major, minor, etc.
@@ -172,9 +172,9 @@ impl Interval {
 
     /// Move the given note up by this interval.
     pub fn second_note_from(self, first_note: Note) -> Note {
-        let pitch_class = PitchClass::from_interval(first_note.pitch_class, self);
+        let pitch_class = Pitch::from_interval(first_note.pitch_class, self);
         let octave = first_note.octave;
-        let excess_octave = (first_note.pitch_class as u8 + self.semitone_count) / 12;
+        let excess_octave = (first_note.pitch_class.into_u8() + self.semitone_count) / 12;
 
         Note {
             octave: octave + excess_octave,
@@ -184,7 +184,7 @@ impl Interval {
 
     /// Move the given note down by this interval.
     pub fn second_note_down_from(self, first_note: Note) -> Note {
-        let pitch_class = PitchClass::from_interval_down(first_note.pitch_class, self);
+        let pitch_class = Pitch::from_interval_down(first_note.pitch_class, self);
         let octave = first_note.octave;
         let raw_diff = first_note.pitch_class as i16 - self.semitone_count as i16;
         let excess_octave = (raw_diff / -12) + if raw_diff < 0 { 1 } else { 0 };

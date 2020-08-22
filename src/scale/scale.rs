@@ -1,5 +1,5 @@
 use crate::interval::Interval;
-use crate::note::{Note, Notes, PitchClass};
+use crate::note::{Note, Notes, Pitch, NoteLetter};
 use crate::scale::errors::ScaleError;
 use crate::scale::{Mode, ScaleType};
 use strum_macros::Display;
@@ -15,7 +15,7 @@ pub enum Direction {
 #[derive(Debug, Clone)]
 pub struct Scale {
     /// The root note of the scale.
-    pub tonic: PitchClass,
+    pub tonic: Pitch,
     /// The octave of the root note of the scale.
     pub octave: u8,
     /// The type of scale (diatonic, melodic minor, harmonic minor).
@@ -32,7 +32,7 @@ impl Scale {
     /// Create a new scale with a given direction.
     pub fn new(
         scale_type: ScaleType,
-        tonic: PitchClass,
+        tonic: Pitch,
         octave: u8,
         mode: Option<Mode>,
         direction: Direction,
@@ -55,7 +55,7 @@ impl Scale {
 
     /// Parse a scale from a regex.
     pub fn from_regex_in_direction(string: &str, direction: Direction) -> Result<Self, ScaleError> {
-        let (tonic, tonic_match) = PitchClass::from_regex(&string.trim())?;
+        let (tonic, tonic_match) = Pitch::from_regex(&string.trim())?;
         let mode_string = &string[tonic_match.end()..].trim();
         let (mode, _) = Mode::from_regex(mode_string)?;
         let scale_type = ScaleType::from_mode(mode);
@@ -107,7 +107,7 @@ impl Notes for Scale {
 impl Default for Scale {
     fn default() -> Self {
         Scale {
-            tonic: PitchClass::C,
+            tonic: Pitch { letter: NoteLetter::C, accidental: 0 },
             octave: 0,
             scale_type: ScaleType::Diatonic,
             mode: Some(Mode::Ionian),

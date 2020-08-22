@@ -2,13 +2,13 @@ use crate::chord::errors::ChordError;
 use crate::chord::number::Number::Triad;
 use crate::chord::{Number, Quality};
 use crate::interval::Interval;
-use crate::note::{Note, NoteError, Notes, PitchClass};
+use crate::note::{Note, NoteError, Notes, Pitch, NoteLetter};
 
 /// A chord.
 #[derive(Debug, Clone)]
 pub struct Chord {
     /// The root note of the chord.
-    pub root: PitchClass,
+    pub root: Pitch,
     /// The octave of the root note of the chord.
     pub octave: u8,
     /// The intervals within the chord.
@@ -23,13 +23,13 @@ pub struct Chord {
 
 impl Chord {
     /// Create a new chord.
-    pub fn new(root: PitchClass, quality: Quality, number: Number) -> Self {
+    pub fn new(root: Pitch, quality: Quality, number: Number) -> Self {
         Self::with_inversion(root, quality, number, 0)
     }
 
     /// Create a new chord with a given inversion.
     pub fn with_inversion(
-        root: PitchClass,
+        root: Pitch,
         quality: Quality,
         number: Number,
         inversion: u8,
@@ -79,11 +79,11 @@ impl Chord {
 
     /// Parse a chord using a regex.
     pub fn from_regex(string: &str) -> Result<Self, ChordError> {
-        let (pitch_class, pitch_match) = PitchClass::from_regex(&string)?;
+        let (pitch, pitch_match) = Pitch::from_regex(&string)?;
 
         let slash_option = string.find('/');
         let bass_note_result = if let Some(slash) = slash_option {
-            PitchClass::from_regex(&string[slash + 1..].trim())
+            Pitch::from_regex(&string[slash + 1..].trim())
         } else {
             Err(NoteError::InvalidPitch)
         };
@@ -106,7 +106,7 @@ impl Chord {
         };
 
         let chord = Chord::with_inversion(
-            pitch_class,
+            pitch,
             quality,
             number,
             inversion_num_option.unwrap_or(0),
@@ -116,12 +116,12 @@ impl Chord {
             let inversion = chord
                 .notes()
                 .iter()
-                .position(|note| note.pitch_class == bass_note)
+                .position(|note| note.pitch == bass_note)
                 .unwrap_or(0);
 
             if inversion != 0 {
                 return Ok(Chord::with_inversion(
-                    pitch_class,
+                    pitch,
                     quality,
                     number,
                     inversion as u8,
@@ -136,8 +136,8 @@ impl Chord {
 impl Notes for Chord {
     fn notes(&self) -> Vec<Note> {
         let root_note = Note {
+            pitch: self.root,
             octave: self.octave,
-            pitch_class: self.root,
         };
         let mut notes = Interval::to_notes(root_note, self.intervals.clone());
         notes.rotate_left(self.inversion as usize);
@@ -150,7 +150,7 @@ impl Notes for Chord {
 
         // Ensure that octave increments at the right notes
         for i in 1..notes.len() {
-            if notes[i].pitch_class as u8 <= notes[i - 1].pitch_class as u8 {
+            if notes[i].pitch as u8 <= notes[i - 1].pitch as u8 {
                 notes[i].octave = notes[i - 1].octave + 1;
             } else if notes[i].octave < notes[i - 1].octave {
                 notes[i].octave = notes[i - 1].octave;
@@ -163,7 +163,7 @@ impl Notes for Chord {
 impl Default for Chord {
     fn default() -> Self {
         Chord {
-            root: PitchClass::C,
+            root: Pitch { letter: NoteLetter::C, accidental: 0 },
             octave: 4,
             intervals: vec![],
             quality: Quality::Major,

@@ -1,10 +1,10 @@
 extern crate rust_music_theory as theory;
 use theory::chord::{Number::*, Quality::*, *};
-use theory::note::{PitchClass::*, *};
+use theory::note::{PitchSymbol::*, *};
 
-fn assert_notes(pitches: &[PitchClass], notes: Vec<Note>) {
-    for (i, pitch) in pitches.iter().enumerate() {
-        assert_eq!(*pitch, notes[i].pitch_class);
+fn assert_notes(symbols: &[PitchSymbol], notes: Vec<Note>) {
+    for (i, symbol) in symbols.iter().enumerate() {
+        assert_eq!(Pitch::from(*symbol), notes[i].pitch);
     }
 }
 
@@ -30,11 +30,11 @@ mod chord_tests {
         ];
 
         for (chord, pitches) in chord_tuples.iter() {
-            let classes = &mut pitches.clone();
+            let symbols = &mut pitches.clone();
             for inversion in 0..pitches.len() {
                 assert_notes(
-                    &classes,
-                    Chord::with_inversion(chord.0, chord.1, chord.2, inversion as u8).notes(),
+                    &symbols,
+                    Chord::with_inversion(Pitch::from(chord.0), chord.1, chord.2, inversion as u8).notes(),
                 );
                 classes.rotate_left(1);
             }
