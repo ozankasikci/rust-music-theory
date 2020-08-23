@@ -8,7 +8,7 @@ use strum_macros::EnumIter;
 use std::collections::HashMap;
 
 lazy_static! {
-    static ref REGEX_PITCH: Regex = Regex::new("^[ABCDEFGabcdefg][b♭♯#s]*").unwrap();
+    static ref REGEX_PITCH: Regex = Regex::new("^[ABCDEFGabcdefg][b♭♯#s𝄪x]*").unwrap();
 }
 
 /// A note letter without an accidental.
