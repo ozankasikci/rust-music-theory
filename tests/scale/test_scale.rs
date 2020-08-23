@@ -56,7 +56,7 @@ mod scale_tests {
     fn test_octave_increment() {
         let scale = Scale::new(
             ScaleType::Diatonic,
-            pitch(NoteLetter::G, 0),
+            Pitch::new(NoteLetter::G, 0),
             5,
             Some(Mode::Mixolydian),
             Direction::Ascending,

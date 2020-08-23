@@ -20,7 +20,7 @@
 //!
 //! // to create a Note, specify a pitch class and an octave;
 //! let note = Note::new(Pitch::from(As), 4);
-//! // Note { pitch(NoteLetter::A, 1), octave: 4 }
+//! // Note { Pitch::new(NoteLetter::A, 1), octave: 4 }
 //!
 //! // Scale Example;
 //! let scale = Scale::new(

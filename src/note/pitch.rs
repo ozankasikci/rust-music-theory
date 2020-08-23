@@ -5,6 +5,7 @@ use regex::{Match, Regex};
 use std::fmt;
 use std::str::FromStr;
 use strum_macros::EnumIter;
+use std::collections::HashMap;
 
 lazy_static! {
     static ref REGEX_PITCH: Regex = Regex::new("^[ABCDEFGabcdefg][b♭♯#s]?").unwrap();
@@ -22,10 +23,6 @@ pub enum NoteLetter {
     B,
 }
 
-pub fn pitch(letter: NoteLetter, accidental: i8) -> Pitch {
-    Pitch { letter, accidental }
-}
-
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
 pub struct Pitch {
     pub letter: NoteLetter,
@@ -33,23 +30,28 @@ pub struct Pitch {
 }
 
 impl Pitch {
+    /// Create a pitch with a given note letter and accidental
+    pub fn new(letter: NoteLetter, accidental: i8) -> Self {
+        Self { letter, accidental }
+    }
+
     /// Create a pitch from an integer, where 0 is C and everything climbs up from there,
     /// looping back around once it reaches 12.
     pub fn from_u8(val: u8) -> Self {
         use NoteLetter::*;
         return match val % 12 {
-            0 => { pitch(C, 0) }
-            1 => { pitch(C, 1) }
-            2 => { pitch(D, 0) }
-            3 => { pitch(D, 1) }
-            4 => { pitch(E, 0) }
-            5 => { pitch(F, 0) }
-            6 => { pitch(F, 1) }
-            7 => { pitch(G, 0) }
-            8 => { pitch(G, 1) }
-            9 => { pitch(A, 0) }
-            10 => { pitch(A, 1) }
-            11 => { pitch(B, 0) }
+            0 => { Pitch::new(C, 0) }
+            1 => { Pitch::new(C, 1) }
+            2 => { Pitch::new(D, 0) }
+            3 => { Pitch::new(D, 1) }
+            4 => { Pitch::new(E, 0) }
+            5 => { Pitch::new(F, 0) }
+            6 => { Pitch::new(F, 1) }
+            7 => { Pitch::new(G, 0) }
+            8 => { Pitch::new(G, 1) }
+            9 => { Pitch::new(A, 0) }
+            10 => { Pitch::new(A, 1) }
+            11 => { Pitch::new(B, 0) }
             _ => panic!("impossible")
         };
     }
@@ -76,7 +78,7 @@ impl Pitch {
         let mut characters = string.chars();
 
         let first_char = characters.next()?;
-        let symbol = match first_char {
+        let letter = match first_char {
             'C' | 'c' => C,
             'D' | 'd' => D,
             'E' | 'e' => E,
@@ -87,23 +89,40 @@ impl Pitch {
             _ => return None,
         };
 
-        if let Some(second_char) = characters.next() {
-            return match second_char {
-                '#' | 's' | 'S' | '♯' => {
-                    Some(Pitch { letter: symbol, accidental: 1 })
+        let mut accidental = 0;
+        let sharps: HashMap<char, i8> =
+            [('#', 1),
+             ('s', 1),
+             ('S', 1),
+             ('♯', 1),
+             ('𝄪', 2),
+             ('x', 2)]
+             .iter().cloned().collect();
+        let flats: HashMap<char, i8> =
+            [('b', -1),
+             ('♭', -1)]
+             .iter().cloned().collect();
+        let mut active_map: Option<&HashMap<char, i8>> = None;
+        for ch in characters {
+            if let Some(map) = active_map {
+                if !map.contains_key(&ch) {
+                    return None;
                 }
-                'b' | '♭' => {
-                    Some(Pitch { letter: symbol, accidental: -1 })
+                accidental += map.get(&ch).unwrap();
+            } else {
+                if sharps.contains_key(&ch) {
+                    active_map = Some(&sharps);
+                    accidental += sharps.get(&ch).unwrap();
+                } else if flats.contains_key(&ch) {
+                    active_map = Some(&flats);
+                    accidental += flats.get(&ch).unwrap();
+                } else {
+                    return None;
                 }
-                _ => None,
             }
         }
 
-        if characters.next().is_some() {
-            return None;
-        }
-
-        return Some(Pitch { letter: symbol, accidental: 0 })
+        return Some(Pitch { letter, accidental })
     }
 
     /// Create a pitch by moving up the given pitch by an interval.

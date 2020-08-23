@@ -1,5 +1,5 @@
 extern crate rust_music_theory as theory;
-use theory::note::{Pitch, NoteLetter::*, pitch};
+use theory::note::{Pitch, NoteLetter::*};
 
 #[cfg(test)]
 mod test_note {
@@ -8,27 +8,31 @@ mod test_note {
     #[test]
     fn test_pitch_from_str() {
         let table = vec![
-            ("Cb", pitch(C, -1)),
-            ("C#", pitch(C, 1)),
-            ("C♯", pitch(C, 1)),
-            ("D", pitch(D, 0)),
-            ("Db", pitch(D, -1)),
-            ("Ds", pitch(D, 1)),
-            ("E", pitch(E, 0)),
-            ("Es", pitch(E, 1)),
-            ("Eb", pitch(E, -1)),
-            ("F", pitch(F, 0)),
-            ("f", pitch(F, 0)),
-            ("Fb", pitch(F, -1)),
-            ("G", pitch(G, 0)),
-            ("Gb", pitch(G, -1)),
-            ("Gs", pitch(G, 1)),
-            ("A", pitch(A, 0)),
-            ("As", pitch(A, 1)),
-            ("Ab", pitch(A, -1)),
-            ("B", pitch(B, 0)),
-            ("B♯", pitch(B, 1)),
-            ("Bb", pitch(B, -1)),
+            ("Cb", Pitch::new(C, -1)),
+            ("C#", Pitch::new(C, 1)),
+            ("C♯#", Pitch::new(C, 2)),
+            ("D", Pitch::new(D, 0)),
+            ("Db", Pitch::new(D, -1)),
+            ("Dbb", Pitch::new(D, -2)),
+            ("Ds", Pitch::new(D, 1)),
+            ("E", Pitch::new(E, 0)),
+            ("Es", Pitch::new(E, 1)),
+            ("Eb", Pitch::new(E, -1)),
+            ("F", Pitch::new(F, 0)),
+            ("f", Pitch::new(F, 0)),
+            ("Fb", Pitch::new(F, -1)),
+            ("G", Pitch::new(G, 0)),
+            ("Gb", Pitch::new(G, -1)),
+            ("G♭b♭", Pitch::new(G, -3)),
+            ("Gs", Pitch::new(G, 1)),
+            ("Gs##s𝄪", Pitch::new(G, 6)),
+            ("Gs#♯", Pitch::new(G, 3)),
+            ("A", Pitch::new(A, 0)),
+            ("As", Pitch::new(A, 1)),
+            ("Ab", Pitch::new(A, -1)),
+            ("B", Pitch::new(B, 0)),
+            ("B♯", Pitch::new(B, 1)),
+            ("Bb", Pitch::new(B, -1)),
         ];
 
         for (string, pitch) in table {
@@ -39,20 +43,27 @@ mod test_note {
     }
 
     #[test]
+    fn test_pitch_from_str_err() {
+        for string in vec!["Ca", "Q", "Cb#", "B♯b#"] {
+            assert!(Pitch::from_str(string).is_none());
+        }
+    }
+
+    #[test]
     fn test_pitch_into_u8() {
         let table = vec![
-            (pitch(C, 0), 0),
-            (pitch(C, 1), 1),
-            (pitch(D, 0), 2),
-            (pitch(D, 1), 3),
-            (pitch(E, 0), 4),
-            (pitch(F, 0), 5),
-            (pitch(F, 1), 6),
-            (pitch(G, 0), 7),
-            (pitch(G, 1), 8),
-            (pitch(A, 0), 9),
-            (pitch(A, 1), 10),
-            (pitch(B, 0), 11),
+            (Pitch::new(C, 0), 0),
+            (Pitch::new(C, 1), 1),
+            (Pitch::new(D, 0), 2),
+            (Pitch::new(D, 1), 3),
+            (Pitch::new(E, 0), 4),
+            (Pitch::new(F, 0), 5),
+            (Pitch::new(F, 1), 6),
+            (Pitch::new(G, 0), 7),
+            (Pitch::new(G, 1), 8),
+            (Pitch::new(A, 0), 9),
+            (Pitch::new(A, 1), 10),
+            (Pitch::new(B, 0), 11),
         ];
 
         for (pitch, number) in table {
@@ -63,8 +74,8 @@ mod test_note {
 
     #[test]
     fn test_pitch_format() {
-        assert_eq!(format!("{}", pitch(C,2)), "C##");
-        assert_eq!(format!("{}", pitch(C,-2)), "Cbb");
-        assert_eq!(format!("{}", pitch(C,0)), "C");
+        assert_eq!(format!("{}", Pitch::new(C,2)), "C##");
+        assert_eq!(format!("{}", Pitch::new(C,-2)), "Cbb");
+        assert_eq!(format!("{}", Pitch::new(C,0)), "C");
     }
 }
