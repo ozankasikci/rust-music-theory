@@ -1,10 +1,10 @@
 extern crate rust_music_theory as theory;
-use theory::note::{PitchClass::*, *};
+use theory::note::{PitchSymbol::*, *};
 use theory::scale::{Mode::*, ScaleType::*, *};
 
-fn assert_notes(pitches: &[PitchClass], notes: Vec<Note>) {
-    for (i, pitch) in pitches.iter().enumerate() {
-        assert_eq!(*pitch, notes[i].pitch_class);
+fn assert_notes(symbols: &[PitchSymbol], notes: Vec<Note>) {
+    for (i, symbol) in symbols.iter().enumerate() {
+        assert_eq!(Pitch::from(*symbol), notes[i].pitch);
     }
 }
 
@@ -29,17 +29,17 @@ mod scale_tests {
             (
                 (ScaleType::MelodicMinor, None),
                 vec![C, D, Ds, F, G, A, B, C],
-            ),
+            )
         ];
 
         for (scale_tuple, pitches) in scale_tuples.iter() {
             let (scale_type, mode) = scale_tuple;
             let scale_ascending =
-                Scale::new(*scale_type, C, 4, *mode, Direction::Ascending).unwrap();
+                Scale::new(*scale_type, Pitch::from(C), 4, *mode, Direction::Ascending).unwrap();
             assert_notes(pitches, scale_ascending.notes());
 
             let scale_descending =
-                Scale::new(*scale_type, C, 4, *mode, Direction::Descending).unwrap();
+                Scale::new(*scale_type, Pitch::from(C), 4, *mode, Direction::Descending).unwrap();
             let mut pitches_descending = pitches.clone();
             pitches_descending.reverse();
             assert_notes(&pitches_descending, scale_descending.notes());
@@ -56,7 +56,7 @@ mod scale_tests {
     fn test_octave_increment() {
         let scale = Scale::new(
             ScaleType::Diatonic,
-            PitchClass::G,
+            Pitch::new(NoteLetter::G, 0),
             5,
             Some(Mode::Mixolydian),
             Direction::Ascending,

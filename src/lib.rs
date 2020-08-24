@@ -14,18 +14,18 @@
 //!
 //! ```no_run
 //! extern crate rust_music_theory as rustmt;
-//! use rustmt::note::{Note, Notes, PitchClass};
+//! use rustmt::note::{Note, Notes, Pitch, PitchSymbol::*};
 //! use rustmt::scale::{Direction, Scale, ScaleType, Mode};
 //! use rustmt::chord::{Chord, Number as ChordNumber, Quality as ChordQuality};
 //!
 //! // to create a Note, specify a pitch class and an octave;
-//! let note = Note::new(PitchClass::As, 4);
-//! // Note { pitch_class: A, octave: 4 }
+//! let note = Note::new(Pitch::from(As), 4);
+//! // Note { Pitch::new(NoteLetter::A, 1), octave: 4 }
 //!
 //! // Scale Example;
 //! let scale = Scale::new(
 //!     ScaleType::Diatonic,    // scale type
-//!     PitchClass::C,          // tonic
+//!     Pitch::from(C),                      // tonic
 //!     4,                      // octave
 //!     Some(Mode::Ionian),     // scale mode
 //!     Direction::Ascending,   // direction
@@ -35,7 +35,7 @@
 //! let scale_notes = scale.notes();
 //!
 //! // Chord Example;
-//! let chord = Chord::new(PitchClass::C, ChordQuality::Major, ChordNumber::Triad);
+//! let chord = Chord::new(Pitch::from(C), ChordQuality::Major, ChordNumber::Triad);
 //!
 //! // returns a Vector of the Notes of the chord
 //! let chord_notes = chord.notes();

@@ -1,21 +1,21 @@
-use crate::note::PitchClass;
+use crate::note::Pitch;
 use std::fmt;
 use std::fmt::Formatter;
 
 /// A note.
 #[derive(Debug, Clone)]
 pub struct Note {
-    /// The pitch class of the note (A, B, C#, etc).
-    pub pitch_class: PitchClass,
+    /// The pitch of the note (A, B, C#, etc).
+    pub pitch: Pitch,
     /// The octave of the note in standard notation.
     pub octave: u8,
 }
 
 impl Note {
     /// Create a new note.
-    pub fn new(pitch_class: PitchClass, octave: u8) -> Self {
+    pub fn new(pitch: Pitch, octave: u8) -> Self {
         Note {
-            pitch_class,
+            pitch,
             octave,
         }
     }
@@ -23,7 +23,7 @@ impl Note {
 
 impl fmt::Display for Note {
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
-        write!(f, "{}", self.pitch_class)
+        write!(f, "{}", self.pitch)
     }
 }
 
@@ -47,7 +47,7 @@ pub trait Notes {
 
         println!("Notes:");
         for (i, note) in notes.iter().enumerate() {
-            println!("  {}: {}", i + 1, note.pitch_class)
+            println!("  {}: {}", i + 1, note.pitch)
         }
     }
 }
