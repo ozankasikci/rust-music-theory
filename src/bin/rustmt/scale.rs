@@ -46,30 +46,21 @@ impl ListCommand {
 }
 
 #[derive(StructOpt, Debug)]
-#[structopt(alias = "n", about = "Examples:\nC MelodicMinor\nD# Dorian\nF# Lydian -d")]
+#[structopt(alias = "n", about = "Prints out the notes of the <scale>", help = "Examples:\n- C melodic minor\n- D# dorian")]
 pub struct NotesCommand {
-    tonic: PitchClass,
-    mode: Mode,
-    #[structopt(long, short, conflicts_with = "descending")]
-    _ascending: bool,
-    #[structopt(long, short)]
-    descending: bool,
+    #[structopt(name = "scale", required = true)]
+    scale_strings: Vec<String>,
 }
 
 impl NotesCommand {
     pub fn execute(self) {
-        let scale = Scale::new(
-            ScaleType::from(self.mode),
-            self.tonic,
-            4,
-            Some(self.mode),
-            if self.descending {
-                Direction::Ascending
-            } else {
-                Direction::Descending
-            },
-        )
-        .unwrap();
-        scale.print_notes();
+        let scale_string = self.scale_strings.join(" ");
+        let scale = Scale::from_regex(&scale_string); //TODO: reintegrate direction (directly into from_str/regex)
+        if let Ok(scale) = scale {
+            scale.print_notes();
+        } else {
+            use structopt::clap::*;
+            Error::with_description("Couldn't parse scale", ErrorKind::ValueValidation).exit(); //TODO: Better Errors
+        }
     }
 }

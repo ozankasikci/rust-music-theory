@@ -61,60 +61,21 @@ impl ListCommand {
 }
 
 #[derive(StructOpt, Debug)]
-#[structopt(alias = "n", about = "Examples:\nC minor\nAb augmented major seventh\nF# dominant seventh / C#\nC/1")]
+#[structopt(alias = "n", about = "Prints out the notes of the <chord>", help = "Examples:\n- C minor\n- Ab augmented major seventh\n- F# dominant seventh / C#\n- C/1", help = "test")]
 pub struct NotesCommand {
-    pitch_class: PitchClass,
-    quality: Quality,
-    number: Number,
-    inversion: Option<Inversion>,
-}
-
-#[derive(Debug)]
-enum Inversion {
-    Number(u8),
-    BassNote(PitchClass),
-}
-
-impl FromStr for Inversion {
-    type Err = InversionError;
-
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        if let Ok(num) = s.parse() {
-            Ok(Inversion::Number(num))
-        } else if let Ok(bass_note) = s.parse(){
-            Ok(Inversion::BassNote(bass_note))
-        } else {
-            Err(InversionError)
-        }
-    }
-}
-
-#[derive(Debug)]
-struct InversionError;
-
-impl fmt::Display for InversionError {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "Invalid Inversion!")
-    }
+    #[structopt(name = "chord", required = true)]
+    chord_strings: Vec<String>,
 }
 
 impl NotesCommand {
     pub fn execute(self) {
-        let mut chord = Chord::new(self.pitch_class, self.quality, self.number);
-        if let Some(inversion) = self.inversion {
-            match inversion {
-                Inversion::BassNote(bass_note) => {
-                    if let Some(num) = chord
-                        .notes()
-                        .iter()
-                        .position(|note| note.pitch_class == bass_note) {
-                        chord.inversion = num as u8;
-                    }
-                }
-                Inversion::Number(num) => { chord.inversion = num; }
-                _ => {}
-            };
+        let chord_string = self.chord_strings.join(" ");
+        let chord = Chord::from_regex(&chord_string);
+        if let Ok(chord) = chord {
+            chord.print_notes();
+        } else {
+            use structopt::clap::*;
+            Error::with_description("Couldn't parse chord", ErrorKind::ValueValidation).exit(); //TODO: Better Errors
         }
-        chord.print_notes();
     }
 }
