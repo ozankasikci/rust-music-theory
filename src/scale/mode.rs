@@ -3,7 +3,6 @@ use crate::scale::errors::ScaleError::ModeFromRegex;
 use crate::scale::mode::Mode::*;
 use lazy_static::lazy_static;
 use regex::{Match, Regex};
-use std::str::FromStr;
 use strum_macros::{Display, EnumIter};
 
 lazy_static! {
@@ -65,13 +64,5 @@ impl Mode {
     /// Get whether the mode is diatonic (not harmonic or melodic minor).
     pub fn is_diatonic(self) -> bool {
         !matches!(self, Self::HarmonicMinor | Self::MelodicMinor)
-    }
-}
-
-impl FromStr for Mode {
-    type Err = ScaleError;
-
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        Self::from_regex(s).map(|(mode, mat)| mode)
     }
 }

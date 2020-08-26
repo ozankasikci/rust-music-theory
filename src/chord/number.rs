@@ -1,7 +1,6 @@
 use crate::chord::errors::ChordError;
 use lazy_static::lazy_static;
 use regex::{Match, Regex};
-use std::str::FromStr;
 use strum_macros::Display;
 
 lazy_static! {
@@ -41,13 +40,5 @@ impl Number {
         }
 
         Err(ChordError::InvalidRegex)
-    }
-}
-
-impl FromStr for Number {
-    type Err = ChordError;
-
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        Self::from_regex(s).map(|(mode, mat)| mode)
     }
 }

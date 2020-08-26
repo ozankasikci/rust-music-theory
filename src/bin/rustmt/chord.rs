@@ -1,10 +1,8 @@
 use rust_music_theory::{
-    chord::{Chord, Number, Quality},
-    note::{Notes, PitchClass},
+    chord::Chord,
+    note::Notes,
 };
 use structopt::StructOpt;
-use std::fmt;
-use std::str::FromStr;
 
 const AVAILABLE_CHORDS: [&str; 22] = [
     "Major Triad",

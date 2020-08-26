@@ -1,6 +1,6 @@
 use rust_music_theory::{
-    note::{Notes, PitchClass},
-    scale::{Direction, Mode, Scale, ScaleType},
+    note::Notes,
+    scale::Scale,
 };
 use structopt::StructOpt;
 
