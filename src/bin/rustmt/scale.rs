@@ -12,16 +12,14 @@ const AVAILABLE_SCALES: [&str; 9] = [
     "Lydian",
     "Mixolydian",
     "Locrian",
-    "Harmonic Minor",
-    "Melodic Minor",
+    "HarmonicMinor",
+    "MelodicMinor",
 ];
 
 #[derive(StructOpt, Debug)]
 #[structopt(about = "Provides information for the specified scale")]
 pub enum Command {
-    #[structopt(alias = "l")]
     List(ListCommand),
-    #[structopt(alias = "n")]
     Notes(NotesCommand),
 }
 
@@ -35,6 +33,7 @@ impl Command {
 }
 
 #[derive(StructOpt, Debug)]
+#[structopt(alias = "l", about = "Prints out the available scales")]
 pub struct ListCommand {}
 
 impl ListCommand {
@@ -47,6 +46,7 @@ impl ListCommand {
 }
 
 #[derive(StructOpt, Debug)]
+#[structopt(alias = "n", about = "Examples:\nC MelodicMinor\nD# Dorian\nF# Lydian -d")]
 pub struct NotesCommand {
     tonic: PitchClass,
     mode: Mode,

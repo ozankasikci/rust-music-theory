@@ -3,6 +3,8 @@ use rust_music_theory::{
     note::{Notes, PitchClass},
 };
 use structopt::StructOpt;
+use std::fmt;
+use std::str::FromStr;
 
 const AVAILABLE_CHORDS: [&str; 22] = [
     "Major Triad",
@@ -32,9 +34,7 @@ const AVAILABLE_CHORDS: [&str; 22] = [
 #[derive(StructOpt, Debug)]
 #[structopt(about = "Provides information for the specified chord")]
 pub enum Command {
-    #[structopt(alias = "l")]
     List(ListCommand),
-    #[structopt(alias = "n")]
     Notes(NotesCommand),
 }
 
@@ -48,6 +48,7 @@ impl Command {
 }
 
 #[derive(StructOpt, Debug)]
+#[structopt(alias = "l", about = "Prints out the available chords")]
 pub struct ListCommand {}
 
 impl ListCommand {
@@ -60,15 +61,60 @@ impl ListCommand {
 }
 
 #[derive(StructOpt, Debug)]
+#[structopt(alias = "n", about = "Examples:\nC minor\nAb augmented major seventh\nF# dominant seventh / C#\nC/1")]
 pub struct NotesCommand {
     pitch_class: PitchClass,
     quality: Quality,
     number: Number,
+    inversion: Option<Inversion>,
+}
+
+#[derive(Debug)]
+enum Inversion {
+    Number(u8),
+    BassNote(PitchClass),
+}
+
+impl FromStr for Inversion {
+    type Err = InversionError;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        if let Ok(num) = s.parse() {
+            Ok(Inversion::Number(num))
+        } else if let Ok(bass_note) = s.parse(){
+            Ok(Inversion::BassNote(bass_note))
+        } else {
+            Err(InversionError)
+        }
+    }
+}
+
+#[derive(Debug)]
+struct InversionError;
+
+impl fmt::Display for InversionError {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "Invalid Inversion!")
+    }
 }
 
 impl NotesCommand {
     pub fn execute(self) {
-        let chord = Chord::new(self.pitch_class, self.quality, self.number);
+        let mut chord = Chord::new(self.pitch_class, self.quality, self.number);
+        if let Some(inversion) = self.inversion {
+            match inversion {
+                Inversion::BassNote(bass_note) => {
+                    if let Some(num) = chord
+                        .notes()
+                        .iter()
+                        .position(|note| note.pitch_class == bass_note) {
+                        chord.inversion = num as u8;
+                    }
+                }
+                Inversion::Number(num) => { chord.inversion = num; }
+                _ => {}
+            };
+        }
         chord.print_notes();
     }
 }

@@ -3,6 +3,7 @@ use crate::note::{Note, Notes, Pitch, NoteLetter};
 use crate::scale::errors::ScaleError;
 use crate::scale::{Mode, ScaleType};
 use strum_macros::Display;
+use std::str::FromStr;
 
 /// The direction of the scale; up or down.
 #[derive(Display, Debug, Clone, Copy, PartialEq, Eq)]
@@ -114,5 +115,13 @@ impl Default for Scale {
             intervals: vec![],
             direction: Direction::Ascending,
         }
+    }
+}
+
+impl FromStr for Scale {
+    type Err = ScaleError;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        Scale::from_regex(s)
     }
 }
