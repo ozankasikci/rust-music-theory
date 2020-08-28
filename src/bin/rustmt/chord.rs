@@ -59,7 +59,7 @@ impl ListCommand {
 }
 
 #[derive(StructOpt, Debug)]
-#[structopt(alias = "n", about = "Prints out the notes of the <chord>", help = "Examples:\n- C minor\n- Ab augmented major seventh\n- F# dominant seventh / C#\n- C/1", help = "test")]
+#[structopt(alias = "n", about = "Prints out the notes of the <chord>", help = "Examples:\n- C minor\n- Ab augmented major seventh\n- F# dominant seventh / C#\n- C/1")]
 pub struct NotesCommand {
     #[structopt(name = "chord", required = true)]
     chord_strings: Vec<String>,
