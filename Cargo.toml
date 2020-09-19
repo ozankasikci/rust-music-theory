@@ -14,5 +14,5 @@ keywords = ["music", "music-theory"]
 strum = "0.17.1"
 strum_macros = "0.17.1"
 regex = "1"
-structopt = "0.3.16"
+clap = "2.31"
 lazy_static = "1.4.0"
