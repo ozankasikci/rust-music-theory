@@ -87,4 +87,29 @@ mod chord_tests {
         assert_eq!(chord.inversion, 2);
         assert_eq!(chord_num.inversion, 2);
     }
+
+    #[test]
+    fn test_chord_from_string() {
+        let c = Pitch::from_str("C").unwrap();
+        let chord_tuples = [
+            ((c, Major, Triad), "C E G"),
+            ((c, Minor, Triad), "C Ds G"),
+            ((c, Augmented, Triad), "C E Gs"),
+            ((c, Diminished, Triad), "C Ds Fs"),
+            ((c, Major, Seventh), "C E G B"),
+            ((c, Minor, Seventh), "C Ds G As"),
+            ((c, Augmented, Seventh), "C E Gs As"),
+            ((c, Augmented, MajorSeventh), "C, E, Gs, B"),
+            ((c, Diminished, Seventh), "C, Ds, Fs, A"),
+            ((c, HalfDiminished, Seventh), "C, Ds, Fs, As"),
+            ((c, Minor, MajorSeventh), "C, Ds, G, B"),
+            ((c, Dominant, Seventh), "C, E, G, As"),
+        ];
+
+        for chord_pair in chord_tuples.iter() {
+            let chord = Chord::from_string(chord_pair.1);
+            let (root, quality, number) = (chord.root, chord.quality, chord.number);
+            assert_eq!((root, quality, number), (chord_pair.0));
+        }
+    }
 }
