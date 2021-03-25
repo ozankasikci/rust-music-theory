@@ -46,6 +46,54 @@ impl Chord {
         }
     }
 
+    pub fn from_string(string: &str) -> Self {
+        let notes: Vec<Pitch> = string.to_string()
+                    .replace(",", "")
+                    .split_whitespace()
+                    .into_iter()
+                    .map(|x| Pitch::from_str(x).expect(&format!("Invalid note {:?}.", x)))
+                    .collect();
+
+        let intervals: Vec<u8> = notes.iter()
+                    .map(|&x| Pitch::into_u8(x) % 12)
+                    .zip(notes[1..].iter().map(|&x| Pitch::into_u8(x)))
+                    .map(|(x, y)| if x < y {y - x} else {y + 12 - x})
+                    .collect();
+
+        Chord::from_interval(notes[0], &intervals)
+    }
+
+    pub fn from_interval(root: Pitch, interval: &[u8]) -> Self {
+        use Number::*;
+        use Quality::*;
+        let (quality, number) = match interval {
+            &[4, 3] => (Major, Triad),
+            &[3, 4] => (Minor, Triad),
+            &[2, 5] => (Suspended2, Triad),
+            &[5, 2] => (Suspended4, Triad),
+            &[4, 4] => (Augmented, Triad),
+            &[3, 3] => (Diminished, Triad),
+            &[4, 3, 4] => (Major, Seventh),
+            &[3, 4, 3] => (Minor, Seventh),
+            &[4, 4, 2] => (Augmented, Seventh),
+            &[4, 4, 3] => (Augmented, MajorSeventh),
+            &[3, 3, 3] => (Diminished, Seventh),
+            &[3, 3, 4] => (HalfDiminished, Seventh),
+            &[3, 4, 4] => (Minor, MajorSeventh),
+            &[4, 3, 3] => (Dominant, Seventh),
+            &[4, 3, 3, 4] => (Dominant, Ninth),
+            &[4, 3, 4, 3] => (Major, Ninth),
+            &[4, 3, 3, 4, 4] => (Dominant, Eleventh),
+            &[4, 3, 4, 3, 3] => (Major, Eleventh),
+            &[3, 4, 3, 4, 3] => (Minor, Eleventh),
+            &[4, 3, 3, 4, 3, 4] => (Dominant, Thirteenth),
+            &[4, 3, 4, 3, 3, 4] => (Major, Thirteenth),
+            &[3, 4, 3, 4, 3, 4] => (Minor, Thirteenth),
+            _ => panic!(format!("Couldn't create chord! {:?}", interval))
+        };
+        Self::new(root, quality, number)
+    }
+
     pub fn chord_intervals(quality: Quality, number: Number) -> Vec<Interval> {
         use Number::*;
         use Quality::*;
@@ -53,7 +101,7 @@ impl Chord {
             (Major, Triad) => Interval::from_semitones(&[4, 3]),
             (Minor, Triad) => Interval::from_semitones(&[3, 4]),
             (Suspended2, Triad) => Interval::from_semitones(&[2, 5]),
-            (Suspended4, Triad) => Interval::from_semitones(&[5, 7]),
+            (Suspended4, Triad) => Interval::from_semitones(&[5, 2]),
             (Augmented, Triad) => Interval::from_semitones(&[4, 4]),
             (Diminished, Triad) => Interval::from_semitones(&[3, 3]),
             (Major, Seventh) => Interval::from_semitones(&[4, 3, 4]),
