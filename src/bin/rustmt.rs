@@ -74,14 +74,23 @@ fn chord_command(chord_matches: &ArgMatches) {
             }
         }
         _ => {
-            let chord_args = chord_matches
-                .values_of("args")
-                .unwrap()
-                .collect::<Vec<_>>()
-                .join(" ");
+            let chord_args_vec = chord_matches.values_of("args").unwrap().collect::<Vec<_>>();
+            for &arg in &chord_args_vec {
+                // User entered chord name, is asking for notes
+                if arg.len() > 2 {
+                    let chord_args = chord_args_vec.join(" ");
 
-            let chord = Chord::from_regex(&chord_args).unwrap();
-            chord.print_notes();
+                    let chord = Chord::from_regex(&chord_args).unwrap();
+                    return chord.print_notes();
+                }
+            }
+
+            // User entered notes, is asking for chord name
+            let chord_args = chord_args_vec.join(" ");
+            match Chord::from_string(&chord_args) {
+                Ok(chord) => println!("{}", chord.to_string()),
+                Err(e) => println!("{}", e.to_string()),
+            }
         }
     }
 }

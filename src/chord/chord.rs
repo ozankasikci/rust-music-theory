@@ -1,3 +1,5 @@
+use std::fmt;
+
 use crate::chord::errors::ChordError;
 use crate::chord::number::Number::Triad;
 use crate::chord::{Number, Quality};
@@ -197,6 +199,20 @@ impl Default for Chord {
             quality: Quality::Major,
             number: Number::Triad,
             inversion: 0,
+        }
+    }
+}
+
+impl fmt::Display for Chord {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let summary = format!("{} {} {}", self.root, self.quality, self.number);
+
+        match self.inversion {
+            0 => write!(f, "{}", summary),
+            1 => write!(f, "{}, 1st Inversion", summary),
+            2 => write!(f, "{}, 2nd Inversion", summary),
+            3 => write!(f, "{}, 3rd Inversion", summary),
+            n => write!(f, "{}, {}th Inversion", summary, n),
         }
     }
 }
