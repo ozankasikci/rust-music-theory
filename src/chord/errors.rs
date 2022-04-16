@@ -6,11 +6,15 @@ use std::fmt;
 #[derive(Debug, Clone)]
 pub enum ChordError {
     InvalidRegex,
+    InvalidUnknownChord,
 }
 
 impl fmt::Display for ChordError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "Invalid Regex!")
+        match self {
+            ChordError::InvalidRegex => write!(f, "Invalid Regex!"),
+            ChordError::InvalidUnknownChord => write!(f, "Invalid/Unknown Chord!"),
+        }
     }
 }
 
