@@ -1,8 +1,10 @@
+use std::fmt;
+
 use crate::chord::errors::ChordError;
 use crate::chord::number::Number::Triad;
 use crate::chord::{Number, Quality};
 use crate::interval::Interval;
-use crate::note::{Note, NoteError, Notes, Pitch, NoteLetter};
+use crate::note::{Note, NoteError, NoteLetter, Notes, Pitch};
 
 /// A chord.
 #[derive(Debug, Clone)]
@@ -28,12 +30,7 @@ impl Chord {
     }
 
     /// Create a new chord with a given inversion.
-    pub fn with_inversion(
-        root: Pitch,
-        quality: Quality,
-        number: Number,
-        inversion: u8,
-    ) -> Self {
+    pub fn with_inversion(root: Pitch, quality: Quality, number: Number, inversion: u8) -> Self {
         let intervals = Self::chord_intervals(quality, number);
         let inversion = inversion % (intervals.len() + 1) as u8;
         Chord {
@@ -46,51 +43,37 @@ impl Chord {
         }
     }
 
-    pub fn from_string(string: &str) -> Self {
-        let notes: Vec<Pitch> = string.to_string()
-                    .replace(",", "")
-                    .split_whitespace()
-                    .into_iter()
-                    .map(|x| Pitch::from_str(x).expect(&format!("Invalid note {:?}.", x)))
-                    .collect();
+    pub fn from_string(string: &str) -> Result<Self, ChordError> {
+        let notes: Vec<Pitch> = string
+            .to_string()
+            .replace(",", "")
+            .split_whitespace()
+            .into_iter()
+            .map(|x| Pitch::from_str(x).expect(&format!("Invalid note {:?}.", x)))
+            .collect();
 
-        let intervals: Vec<u8> = notes.iter()
-                    .map(|&x| Pitch::into_u8(x) % 12)
-                    .zip(notes[1..].iter().map(|&x| Pitch::into_u8(x)))
-                    .map(|(x, y)| if x < y {y - x} else {y + 12 - x})
-                    .collect();
+        let intervals: Vec<u8> = notes
+            .iter()
+            .map(|&x| Pitch::into_u8(x) % 12)
+            .zip(notes[1..].iter().map(|&x| Pitch::into_u8(x)))
+            .map(|(x, y)| if x < y { y - x } else { y + 12 - x })
+            .collect();
 
-        Chord::from_interval(notes[0], &intervals)
+        match unknown_position_interval(&intervals) {
+            Some(info) => Ok(Self::with_inversion(
+                notes[info.root_note_index],
+                info.quality,
+                info.number,
+                info.inversion,
+            )),
+            None => Err(ChordError::InvalidUnknownChord),
+        }
     }
 
     pub fn from_interval(root: Pitch, interval: &[u8]) -> Self {
-        use Number::*;
-        use Quality::*;
-        let (quality, number) = match interval {
-            &[4, 3] => (Major, Triad),
-            &[3, 4] => (Minor, Triad),
-            &[2, 5] => (Suspended2, Triad),
-            &[5, 2] => (Suspended4, Triad),
-            &[4, 4] => (Augmented, Triad),
-            &[3, 3] => (Diminished, Triad),
-            &[4, 3, 4] => (Major, Seventh),
-            &[3, 4, 3] => (Minor, Seventh),
-            &[4, 4, 2] => (Augmented, Seventh),
-            &[4, 4, 3] => (Augmented, MajorSeventh),
-            &[3, 3, 3] => (Diminished, Seventh),
-            &[3, 3, 4] => (HalfDiminished, Seventh),
-            &[3, 4, 4] => (Minor, MajorSeventh),
-            &[4, 3, 3] => (Dominant, Seventh),
-            &[4, 3, 3, 4] => (Dominant, Ninth),
-            &[4, 3, 4, 3] => (Major, Ninth),
-            &[4, 3, 3, 4, 4] => (Dominant, Eleventh),
-            &[4, 3, 4, 3, 3] => (Major, Eleventh),
-            &[3, 4, 3, 4, 3] => (Minor, Eleventh),
-            &[4, 3, 3, 4, 3, 4] => (Dominant, Thirteenth),
-            &[4, 3, 4, 3, 3, 4] => (Major, Thirteenth),
-            &[3, 4, 3, 4, 3, 4] => (Minor, Thirteenth),
-            _ => panic!(format!("Couldn't create chord! {:?}", interval))
-        };
+        let (quality, number) = assume_root_position_interval(interval)
+            .expect(&format!("Couldn't create chord! {:?}", interval));
+
         Self::new(root, quality, number)
     }
 
@@ -153,12 +136,8 @@ impl Chord {
             Triad
         };
 
-        let chord = Chord::with_inversion(
-            pitch,
-            quality,
-            number,
-            inversion_num_option.unwrap_or(0),
-        );
+        let chord =
+            Chord::with_inversion(pitch, quality, number, inversion_num_option.unwrap_or(0));
 
         if let Ok((bass_note, _)) = bass_note_result {
             let inversion = chord
@@ -211,12 +190,113 @@ impl Notes for Chord {
 impl Default for Chord {
     fn default() -> Self {
         Chord {
-            root: Pitch { letter: NoteLetter::C, accidental: 0 },
+            root: Pitch {
+                letter: NoteLetter::C,
+                accidental: 0,
+            },
             octave: 4,
             intervals: vec![],
             quality: Quality::Major,
             number: Number::Triad,
             inversion: 0,
         }
+    }
+}
+
+impl fmt::Display for Chord {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let summary = format!("{} {} {}", self.root, self.quality, self.number);
+
+        match self.inversion {
+            0 => write!(f, "{}", summary),
+            1 => write!(f, "{}, 1st Inversion", summary),
+            2 => write!(f, "{}, 2nd Inversion", summary),
+            3 => write!(f, "{}, 3rd Inversion", summary),
+            n => write!(f, "{}, {}th Inversion", summary, n),
+        }
+    }
+}
+
+struct UnknownPositionInterval {
+    quality: Quality,
+    number: Number,
+    root_note_index: usize,
+    inversion: u8,
+}
+
+impl UnknownPositionInterval {
+    fn new(quality: Quality, number: Number, root_note_index: usize, inversion: u8) -> Self {
+        Self {
+            quality,
+            number,
+            root_note_index,
+            inversion,
+        }
+    }
+}
+
+/// # Purpose
+/// Given a slice of intervals, return the:
+/// - Chord Quality
+/// - Chord Number
+/// - Root Note Index (for the array of notes used to find the input intervals)
+/// - Inversion Position
+///
+/// Returns `None` if the intervals are not a chord
+///
+/// # Implementation
+/// In order, match intervals against known patterns for:
+/// - Root position chords
+/// - Inverted chords
+fn unknown_position_interval(interval: &[u8]) -> Option<UnknownPositionInterval> {
+    use Number::*;
+    use Quality::*;
+
+    match assume_root_position_interval(interval) {
+        Some((quality, number)) => Some(UnknownPositionInterval::new(quality, number, 0, 0)),
+        None => match interval {
+            &[3, 5] => Some(UnknownPositionInterval::new(Major, Triad, 2, 1)),
+            &[5, 4] => Some(UnknownPositionInterval::new(Major, Triad, 1, 2)),
+            &[4, 5] => Some(UnknownPositionInterval::new(Minor, Triad, 2, 1)),
+            &[5, 3] => Some(UnknownPositionInterval::new(Minor, Triad, 1, 2)),
+            &[5, 5] => Some(UnknownPositionInterval::new(Suspended2, Triad, 2, 1)),
+            _ => None,
+            // Conflicts:
+            // &[5, 2] => Sus2 Triad 2nd inversion, Sus4 Triad root position
+            // &[4, 4] => Augmented Triad root position + 1st inversion + 2nd inversion
+            // &[3, 3] => Diminished Triad root position + 1st inversion + 2nd inversion
+        },
+    }
+}
+
+/// Determine the chord quality and number assuming that the chord is in root position (tonic is bottom note)
+fn assume_root_position_interval(interval: &[u8]) -> Option<(Quality, Number)> {
+    use Number::*;
+    use Quality::*;
+
+    match interval {
+        &[4, 3] => Some((Major, Triad)),
+        &[3, 4] => Some((Minor, Triad)),
+        &[2, 5] => Some((Suspended2, Triad)),
+        &[5, 2] => Some((Suspended4, Triad)),
+        &[4, 4] => Some((Augmented, Triad)),
+        &[3, 3] => Some((Diminished, Triad)),
+        &[4, 3, 4] => Some((Major, Seventh)),
+        &[3, 4, 3] => Some((Minor, Seventh)),
+        &[4, 4, 2] => Some((Augmented, Seventh)),
+        &[4, 4, 3] => Some((Augmented, MajorSeventh)),
+        &[3, 3, 3] => Some((Diminished, Seventh)),
+        &[3, 3, 4] => Some((HalfDiminished, Seventh)),
+        &[3, 4, 4] => Some((Minor, MajorSeventh)),
+        &[4, 3, 3] => Some((Dominant, Seventh)),
+        &[4, 3, 3, 4] => Some((Dominant, Ninth)),
+        &[4, 3, 4, 3] => Some((Major, Ninth)),
+        &[4, 3, 3, 4, 4] => Some((Dominant, Eleventh)),
+        &[4, 3, 4, 3, 3] => Some((Major, Eleventh)),
+        &[3, 4, 3, 4, 3] => Some((Minor, Eleventh)),
+        &[4, 3, 3, 4, 3, 4] => Some((Dominant, Thirteenth)),
+        &[4, 3, 4, 3, 3, 4] => Some((Major, Thirteenth)),
+        &[3, 4, 3, 4, 3, 4] => Some((Minor, Thirteenth)),
+        _ => None,
     }
 }

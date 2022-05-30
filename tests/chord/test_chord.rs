@@ -36,7 +36,8 @@ mod chord_tests {
             for inversion in 0..pitches.len() {
                 assert_notes(
                     &symbols,
-                    Chord::with_inversion(Pitch::from(chord.0), chord.1, chord.2, inversion as u8).notes(),
+                    Chord::with_inversion(Pitch::from(chord.0), chord.1, chord.2, inversion as u8)
+                        .notes(),
                 );
                 symbols.rotate_left(1);
             }
@@ -54,9 +55,13 @@ mod chord_tests {
             [4, 5, 5, 6, 6],
         ];
         for inversion in 0..octaves[0].len() {
-            let notes =
-                Chord::with_inversion(Pitch::from(chord_desc.0), chord_desc.1, chord_desc.2, inversion as u8)
-                    .notes();
+            let notes = Chord::with_inversion(
+                Pitch::from(chord_desc.0),
+                chord_desc.1,
+                chord_desc.2,
+                inversion as u8,
+            )
+            .notes();
             assert_eq!(
                 notes
                     .into_iter()
@@ -91,7 +96,7 @@ mod chord_tests {
     }
 
     #[test]
-    fn test_chord_from_string() {
+    fn test_chord_from_string_root_position() {
         let c = Pitch::from_str("C").unwrap();
         let chord_tuples = [
             ((c, Major, Triad), "C E G"),
@@ -111,9 +116,28 @@ mod chord_tests {
         ];
 
         for chord_pair in chord_tuples.iter() {
-            let chord = Chord::from_string(chord_pair.1);
+            let chord = Chord::from_string(chord_pair.1).unwrap();
             let (root, quality, number) = (chord.root, chord.quality, chord.number);
             assert_eq!((root, quality, number), (chord_pair.0));
+        }
+    }
+
+    #[test]
+    fn test_chord_from_string_triad_inversions() {
+        let c = Pitch::from_str("C").unwrap();
+        let chord_tuples = [
+            ((c, Major, Triad, 1), "E G C"),
+            ((c, Major, Triad, 2), "G C E"),
+            ((c, Minor, Triad, 1), "Eb G C"),
+            ((c, Minor, Triad, 2), "G C Eb"),
+            ((c, Suspended2, Triad, 1), "D G C"),
+        ];
+
+        for chord_pair in chord_tuples.iter() {
+            let chord = Chord::from_string(chord_pair.1).unwrap();
+            let (root, quality, number, inversion) =
+                (chord.root, chord.quality, chord.number, chord.inversion);
+            assert_eq!((root, quality, number, inversion), (chord_pair.0));
         }
     }
 }
