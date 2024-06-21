@@ -89,7 +89,7 @@ impl Chord {
             &[4, 3, 3, 4, 3, 4] => (Dominant, Thirteenth),
             &[4, 3, 4, 3, 3, 4] => (Major, Thirteenth),
             &[3, 4, 3, 4, 3, 4] => (Minor, Thirteenth),
-            _ => panic!(format!("Couldn't create chord! {:?}", interval))
+            _ => panic!("Couldn't create chord! {:?}", interval)
         };
         Self::new(root, quality, number)
     }
