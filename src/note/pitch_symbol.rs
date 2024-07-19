@@ -1,20 +1,28 @@
-use crate::note::{Pitch, NoteLetter};
+use crate::note::{NoteLetter, Pitch};
 
 /// All possible pitches with accidentals.
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
 pub enum PitchSymbol {
-    Bs, C,
-    Cs, Db,
+    Bs,
+    C,
+    Cs,
+    Db,
     D,
-    Ds, Eb,
+    Ds,
+    Eb,
     E,
-    Es, F,
-    Fs, Gb,
+    Es,
+    F,
+    Fs,
+    Gb,
     G,
-    Gs, Ab,
+    Gs,
+    Ab,
     A,
-    As, Bb,
-    B, Cb,
+    As,
+    Bb,
+    B,
+    Cb,
 }
 
 impl From<PitchSymbol> for Pitch {

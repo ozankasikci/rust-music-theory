@@ -11,6 +11,7 @@ fn assert_notes(symbols: &[PitchSymbol], notes: Vec<Note>) {
 #[cfg(test)]
 mod scale_tests {
     use super::*;
+    use rust_music_theory::interval::Interval;
 
     #[test]
     fn test_all_scales_in_c() {
@@ -29,7 +30,7 @@ mod scale_tests {
             (
                 (ScaleType::MelodicMinor, None),
                 vec![C, D, Ds, F, G, A, B, C],
-            )
+            ),
         ];
 
         for (scale_tuple, pitches) in scale_tuples.iter() {
@@ -55,10 +56,10 @@ mod scale_tests {
     #[test]
     fn test_octave_increment() {
         let scale = Scale::new(
-            ScaleType::Diatonic,
+            Diatonic,
             Pitch::new(NoteLetter::G, 0),
             5,
-            Some(Mode::Mixolydian),
+            Some(Mixolydian),
             Direction::Ascending,
         )
         .unwrap();
@@ -66,5 +67,30 @@ mod scale_tests {
         for (i, note) in scale.notes().iter().enumerate() {
             assert_eq!(note.octave, if i <= 2 { 5 } else { 6 });
         }
+    }
+
+    #[test]
+    fn test_absolute_intervals() {
+        let scale = Scale::new(
+            Diatonic,
+            Pitch::new(NoteLetter::C, 0),
+            4,
+            Some(Ionian),
+            Direction::Ascending,
+        )
+        .unwrap();
+        let intervals = scale.absolute_intervals();
+        assert_eq!(
+            intervals,
+            vec![
+                Interval::from_semitone(0).unwrap(),
+                Interval::from_semitone(2).unwrap(),
+                Interval::from_semitone(4).unwrap(),
+                Interval::from_semitone(5).unwrap(),
+                Interval::from_semitone(7).unwrap(),
+                Interval::from_semitone(9).unwrap(),
+                Interval::from_semitone(11).unwrap(),
+            ]
+        );
     }
 }

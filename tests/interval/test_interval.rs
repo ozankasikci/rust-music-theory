@@ -87,4 +87,27 @@ mod test_interval {
             assert_eq!(inverted.unwrap().semitone_count, list[list.len() - i - 1]);
         }
     }
+
+    #[test]
+    fn test_display() {
+        let intervals = vec![
+            (Interval::from_semitone(0).unwrap(), "1"),
+            (Interval::from_semitone(1).unwrap(), "m2"),
+            (Interval::from_semitone(2).unwrap(), "M2"),
+            (Interval::from_semitone(3).unwrap(), "m3"),
+            (Interval::from_semitone(4).unwrap(), "M3"),
+            (Interval::from_semitone(5).unwrap(), "P4"),
+            (Interval::from_semitone(6).unwrap(), "T"),
+            (Interval::from_semitone(7).unwrap(), "P5"),
+            (Interval::from_semitone(8).unwrap(), "m6"),
+            (Interval::from_semitone(9).unwrap(), "M6"),
+            (Interval::from_semitone(10).unwrap(), "m7"),
+            (Interval::from_semitone(11).unwrap(), "M7"),
+            (Interval::from_semitone(12).unwrap(), "1"),
+        ];
+
+        for interval in intervals {
+            assert_eq!(interval.0.to_string(), interval.1);
+        }
+    }
 }
