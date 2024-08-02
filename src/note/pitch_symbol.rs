@@ -1,3 +1,4 @@
+use std::fmt::Display;
 use crate::note::{Pitch, NoteLetter};
 
 /// All possible pitches with accidentals.
@@ -15,6 +16,38 @@ pub enum PitchSymbol {
     A,
     As, Bb,
     B, Cb,
+}
+
+impl Display for PitchSymbol {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        use PitchSymbol::*;
+        write!(
+            f,
+            "{}",
+            match self {
+                Bs => "B♯",
+                C => "C",
+                Cs => "C♯",
+                Db => "D♭",
+                D => "D",
+                Ds => "D♯",
+                Eb => "E♭",
+                E => "E",
+                Es => "E♯",
+                F => "F",
+                Fs => "F♯",
+                Gb => "G♭",
+                G => "G",
+                Gs => "G♯",
+                Ab => "A♭",
+                A => "A",
+                As => "A♯",
+                Bb => "B♭",
+                B => "B",
+                Cb => "C♭",
+            }
+        )
+    }
 }
 
 impl From<PitchSymbol> for Pitch {
