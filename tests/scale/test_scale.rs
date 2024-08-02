@@ -1,6 +1,7 @@
 extern crate rust_music_theory as theory;
 use theory::note::{PitchSymbol::*, *};
 use theory::scale::{Mode::*, ScaleType::*, *};
+use theory::interval::Interval;
 
 fn assert_notes(symbols: &[PitchSymbol], notes: Vec<Note>) {
     for (i, symbol) in symbols.iter().enumerate() {
@@ -11,7 +12,6 @@ fn assert_notes(symbols: &[PitchSymbol], notes: Vec<Note>) {
 #[cfg(test)]
 mod scale_tests {
     use super::*;
-    use rust_music_theory::interval::Interval;
 
     #[test]
     fn test_all_scales_in_c() {
@@ -30,7 +30,7 @@ mod scale_tests {
             (
                 (ScaleType::MelodicMinor, None),
                 vec![C, D, Ds, F, G, A, B, C],
-            ),
+            )
         ];
 
         for (scale_tuple, pitches) in scale_tuples.iter() {
@@ -56,10 +56,10 @@ mod scale_tests {
     #[test]
     fn test_octave_increment() {
         let scale = Scale::new(
-            Diatonic,
+            ScaleType::Diatonic,
             Pitch::new(NoteLetter::G, 0),
             5,
-            Some(Mixolydian),
+            Some(Mode::Mixolydian),
             Direction::Ascending,
         )
         .unwrap();

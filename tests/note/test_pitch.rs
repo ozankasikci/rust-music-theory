@@ -1,5 +1,5 @@
 extern crate rust_music_theory as theory;
-use theory::note::{NoteLetter::*, Pitch};
+use theory::note::{Pitch, NoteLetter::*};
 
 #[cfg(test)]
 mod test_note {
@@ -74,8 +74,8 @@ mod test_note {
 
     #[test]
     fn test_pitch_format() {
-        assert_eq!(format!("{}", Pitch::new(C, 2)), "C##");
-        assert_eq!(format!("{}", Pitch::new(C, -2)), "Cbb");
-        assert_eq!(format!("{}", Pitch::new(C, 0)), "C");
+        assert_eq!(format!("{}", Pitch::new(C,2)), "C##");
+        assert_eq!(format!("{}", Pitch::new(C,-2)), "Cbb");
+        assert_eq!(format!("{}", Pitch::new(C,0)), "C");
     }
 }

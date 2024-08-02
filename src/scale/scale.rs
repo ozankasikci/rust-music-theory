@@ -117,10 +117,7 @@ impl Notes for Scale {
 impl Default for Scale {
     fn default() -> Self {
         Scale {
-            tonic: Pitch {
-                letter: NoteLetter::C,
-                accidental: 0,
-            },
+            tonic: Pitch { letter: NoteLetter::C, accidental: 0 },
             octave: 0,
             scale_type: ScaleType::Diatonic,
             mode: Some(Ionian),

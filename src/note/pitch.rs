@@ -2,10 +2,10 @@ use crate::interval::Interval;
 use crate::note::errors::NoteError;
 use lazy_static::lazy_static;
 use regex::{Match, Regex};
-use std::collections::HashMap;
 use std::fmt;
 use std::str::FromStr;
 use strum_macros::EnumIter;
+use std::collections::HashMap;
 
 lazy_static! {
     static ref REGEX_PITCH: Regex = Regex::new("^[ABCDEFGabcdefg][b♭♯#s𝄪x]*").unwrap();
@@ -40,19 +40,19 @@ impl Pitch {
     pub fn from_u8(val: u8) -> Self {
         use NoteLetter::*;
         return match val % 12 {
-            0 => Pitch::new(C, 0),
-            1 => Pitch::new(C, 1),
-            2 => Pitch::new(D, 0),
-            3 => Pitch::new(D, 1),
-            4 => Pitch::new(E, 0),
-            5 => Pitch::new(F, 0),
-            6 => Pitch::new(F, 1),
-            7 => Pitch::new(G, 0),
-            8 => Pitch::new(G, 1),
-            9 => Pitch::new(A, 0),
-            10 => Pitch::new(A, 1),
-            11 => Pitch::new(B, 0),
-            _ => panic!("impossible"),
+            0 => { Pitch::new(C, 0) }
+            1 => { Pitch::new(C, 1) }
+            2 => { Pitch::new(D, 0) }
+            3 => { Pitch::new(D, 1) }
+            4 => { Pitch::new(E, 0) }
+            5 => { Pitch::new(F, 0) }
+            6 => { Pitch::new(F, 1) }
+            7 => { Pitch::new(G, 0) }
+            8 => { Pitch::new(G, 1) }
+            9 => { Pitch::new(A, 0) }
+            10 => { Pitch::new(A, 1) }
+            11 => { Pitch::new(B, 0) }
+            _ => panic!("impossible")
         };
     }
 
@@ -67,8 +67,7 @@ impl Pitch {
             G => 7,
             A => 9,
             B => 11,
-        } + self.accidental)
-            % 12) as u8
+        } + self.accidental) % 12) as u8
     }
 
     /// Attempt to parse a pitch from a string. It should contain the name of the note in either
@@ -92,11 +91,17 @@ impl Pitch {
 
         let mut accidental = 0;
         let sharps: HashMap<char, i8> =
-            [('#', 1), ('s', 1), ('S', 1), ('♯', 1), ('𝄪', 2), ('x', 2)]
-                .iter()
-                .cloned()
-                .collect();
-        let flats: HashMap<char, i8> = [('b', -1), ('♭', -1)].iter().cloned().collect();
+            [('#', 1),
+             ('s', 1),
+             ('S', 1),
+             ('♯', 1),
+             ('𝄪', 2),
+             ('x', 2)]
+             .iter().cloned().collect();
+        let flats: HashMap<char, i8> =
+            [('b', -1),
+             ('♭', -1)]
+             .iter().cloned().collect();
         let mut active_map: Option<&HashMap<char, i8>> = None;
         for ch in characters {
             if let Some(map) = active_map {
@@ -117,7 +122,7 @@ impl Pitch {
             }
         }
 
-        return Some(Pitch { letter, accidental });
+        return Some(Pitch { letter, accidental })
     }
 
     /// Create a pitch by moving up the given pitch by an interval.
@@ -161,11 +166,7 @@ impl fmt::Display for Pitch {
         };
 
         let acc = if self.accidental < 0 { "b" } else { "#" };
-        write!(
-            fmt,
-            "{}",
-            letter.to_owned() + &(0..self.accidental.abs()).map(|_| acc).collect::<String>()
-        )
+        write!(fmt, "{}", letter.to_owned() + &(0..self.accidental.abs()).map(|_| acc).collect::<String>())
     }
 }
 

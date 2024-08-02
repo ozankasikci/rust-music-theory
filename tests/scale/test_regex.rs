@@ -9,62 +9,17 @@ mod chord_regex_tests {
     #[test]
     fn test_all_scales() {
         let table = vec![
-            (
-                "C Major",
-                Pitch::new(C, 0),
-                ScaleType::Diatonic,
-                Mode::Ionian,
-            ),
+            ("C Major", Pitch::new(C, 0), ScaleType::Diatonic, Mode::Ionian),
             ("CM", Pitch::new(C, 0), ScaleType::Diatonic, Mode::Ionian),
             ("C Maj", Pitch::new(C, 0), ScaleType::Diatonic, Mode::Ionian),
-            (
-                "C MAJOR",
-                Pitch::new(C, 0),
-                ScaleType::Diatonic,
-                Mode::Ionian,
-            ),
-            (
-                "As locrian",
-                Pitch::new(A, 1),
-                ScaleType::Diatonic,
-                Mode::Locrian,
-            ),
-            (
-                "Bs phrygian",
-                Pitch::new(B, 1),
-                ScaleType::Diatonic,
-                Mode::Phrygian,
-            ),
-            (
-                "E lydian",
-                Pitch::new(E, 0),
-                ScaleType::Diatonic,
-                Mode::Lydian,
-            ),
-            (
-                "F dorian",
-                Pitch::new(F, 0),
-                ScaleType::Diatonic,
-                Mode::Dorian,
-            ),
-            (
-                "Gb mixolydian",
-                Pitch::new(G, -1),
-                ScaleType::Diatonic,
-                Mode::Mixolydian,
-            ),
-            (
-                "B MAJOR",
-                Pitch::new(B, 0),
-                ScaleType::Diatonic,
-                Mode::Ionian,
-            ),
-            (
-                "Bb MAJOR",
-                Pitch::new(B, -1),
-                ScaleType::Diatonic,
-                Mode::Ionian,
-            ),
+            ("C MAJOR", Pitch::new(C, 0), ScaleType::Diatonic, Mode::Ionian),
+            ("As locrian", Pitch::new(A, 1), ScaleType::Diatonic, Mode::Locrian),
+            ("Bs phrygian", Pitch::new(B, 1), ScaleType::Diatonic, Mode::Phrygian),
+            ("E lydian", Pitch::new(E, 0), ScaleType::Diatonic, Mode::Lydian),
+            ("F dorian", Pitch::new(F, 0), ScaleType::Diatonic, Mode::Dorian),
+            ("Gb mixolydian", Pitch::new(G, -1), ScaleType::Diatonic, Mode::Mixolydian),
+            ("B MAJOR", Pitch::new(B, 0), ScaleType::Diatonic, Mode::Ionian),
+            ("Bb MAJOR", Pitch::new(B, -1), ScaleType::Diatonic, Mode::Ionian),
             (
                 "Bb Harmonic Minor",
                 Pitch::new(B, -1),

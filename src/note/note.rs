@@ -14,7 +14,10 @@ pub struct Note {
 impl Note {
     /// Create a new note.
     pub fn new(pitch: Pitch, octave: u8) -> Self {
-        Note { pitch, octave }
+        Note {
+            pitch,
+            octave,
+        }
     }
 }
 
