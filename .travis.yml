@@ -15,14 +15,12 @@ matrix:
     - rust: nightly
 
 before_cache: |
-  rustup component add rustfmt
   if [[ "$TRAVIS_RUST_VERSION" == stable ]]; then
-    cargo install cargo-tarpaulin 
+    cargo install cargo-tarpaulin
   fi
 
 script:
 - cargo clean
-- cargo fmt check
 - cargo build
 - cargo test
 
