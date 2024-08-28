@@ -1,6 +1,7 @@
 use crate::interval::Interval;
-use crate::note::{Note, Notes, Pitch, NoteLetter};
+use crate::note::{Note, NoteLetter, Notes, Pitch};
 use crate::scale::errors::ScaleError;
+use crate::scale::Mode::{Aeolian, Dorian, Ionian, Locrian, Lydian, Mixolydian, Phrygian};
 use crate::scale::{Mode, ScaleType};
 use strum_macros::Display;
 
@@ -37,11 +38,27 @@ impl Scale {
         mode: Option<Mode>,
         direction: Direction,
     ) -> Result<Self, ScaleError> {
-        let intervals = match scale_type {
+        let mut intervals = match scale_type {
             ScaleType::Diatonic => Interval::from_semitones(&[2, 2, 1, 2, 2, 2, 1]),
             ScaleType::HarmonicMinor => Interval::from_semitones(&[2, 1, 2, 2, 1, 3, 1]),
             ScaleType::MelodicMinor => Interval::from_semitones(&[2, 1, 2, 2, 2, 2, 1]),
         }?;
+
+        match mode {
+            None => {}
+            Some(mode) => {
+                match mode {
+                    Ionian => {}
+                    Dorian => intervals.rotate_left(1),
+                    Phrygian => intervals.rotate_left(2),
+                    Lydian => intervals.rotate_left(3),
+                    Mixolydian => intervals.rotate_left(4),
+                    Aeolian => intervals.rotate_right(2),
+                    Locrian => intervals.rotate_right(1),
+                    _ => {}
+                };
+            }
+        };
 
         Ok(Scale {
             tonic,
@@ -67,6 +84,16 @@ impl Scale {
     pub fn from_regex(string: &str) -> Result<Self, ScaleError> {
         Self::from_regex_in_direction(string, Direction::Ascending)
     }
+
+    pub fn absolute_intervals(&self) -> Vec<Interval> {
+        let mut qualities = Vec::new();
+        let mut sum = 0;
+        for interval in &self.intervals {
+            qualities.push(Interval::from_semitone(sum).unwrap());
+            sum += interval.semitone_count;
+        }
+        qualities
+    }
 }
 
 impl Notes for Scale {
@@ -78,24 +105,7 @@ impl Notes for Scale {
             pitch: self.tonic,
         };
 
-        let mut intervals_clone = self.intervals.clone();
-
-        // shift the scale based on the mode
-        match &self.mode {
-            None => {}
-            Some(mode) => {
-                match mode {
-                    Ionian => {}
-                    Dorian => intervals_clone.rotate_left(1),
-                    Phrygian => intervals_clone.rotate_left(2),
-                    Lydian => intervals_clone.rotate_left(3),
-                    Mixolydian => intervals_clone.rotate_left(4),
-                    Aeolian => intervals_clone.rotate_right(2),
-                    Locrian => intervals_clone.rotate_right(1),
-                    _ => {}
-                };
-            }
-        };
+        let intervals_clone = self.intervals.clone();
 
         match &self.direction {
             Ascending => Interval::to_notes(root_note, intervals_clone),
@@ -110,7 +120,7 @@ impl Default for Scale {
             tonic: Pitch { letter: NoteLetter::C, accidental: 0 },
             octave: 0,
             scale_type: ScaleType::Diatonic,
-            mode: Some(Mode::Ionian),
+            mode: Some(Ionian),
             intervals: vec![],
             direction: Direction::Ascending,
         }

@@ -1,6 +1,7 @@
 extern crate rust_music_theory as theory;
 use theory::note::{PitchSymbol::*, *};
 use theory::scale::{Mode::*, ScaleType::*, *};
+use theory::interval::Interval;
 
 fn assert_notes(symbols: &[PitchSymbol], notes: Vec<Note>) {
     for (i, symbol) in symbols.iter().enumerate() {
@@ -66,5 +67,30 @@ mod scale_tests {
         for (i, note) in scale.notes().iter().enumerate() {
             assert_eq!(note.octave, if i <= 2 { 5 } else { 6 });
         }
+    }
+
+    #[test]
+    fn test_absolute_intervals() {
+        let scale = Scale::new(
+            Diatonic,
+            Pitch::new(NoteLetter::C, 0),
+            4,
+            Some(Ionian),
+            Direction::Ascending,
+        )
+        .unwrap();
+        let intervals = scale.absolute_intervals();
+        assert_eq!(
+            intervals,
+            vec![
+                Interval::from_semitone(0).unwrap(),
+                Interval::from_semitone(2).unwrap(),
+                Interval::from_semitone(4).unwrap(),
+                Interval::from_semitone(5).unwrap(),
+                Interval::from_semitone(7).unwrap(),
+                Interval::from_semitone(9).unwrap(),
+                Interval::from_semitone(11).unwrap(),
+            ]
+        );
     }
 }
