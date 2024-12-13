@@ -1,5 +1,7 @@
 use crate::interval::Interval;
 use crate::note::errors::NoteError;
+use crate::note::pitch_symbol::PitchSymbol;
+use crate::scale::{Direction, Mode};
 use lazy_static::lazy_static;
 use regex::{Match, Regex};
 use std::fmt;
@@ -8,7 +10,7 @@ use strum_macros::EnumIter;
 use std::collections::HashMap;
 
 lazy_static! {
-    static ref REGEX_PITCH: Regex = Regex::new("^[ABCDEFGabcdefg][b♭♯#s𝄪x]*").unwrap();
+    static ref REGEX_PITCH: Regex = Regex::new("^[ABCDEFGabcdefg][b♭#s𝄪x]*").unwrap();
 }
 
 /// A note letter without an accidental.
@@ -56,10 +58,79 @@ impl Pitch {
         };
     }
 
+    /// Create a pitch from an integer with a preferred spelling based on mode and scale type
+    pub fn from_u8_with_scale_context(val: u8, mode: Option<Mode>, direction: Direction) -> Self {
+        use super::PitchSymbol;
+        use PitchSymbol::*;
+        use Mode::*;
+
+        let pitch_number = val % 12;
+
+        // Determine spelling based on mode and pitch number
+        let use_flats = match (mode, pitch_number) {
+            // Dorian: flat 3rd and 7th
+            (Some(Dorian), 3 | 10) => true,
+            // Phrygian: flat 2nd, 3rd, 6th, 7th
+            (Some(Phrygian), 1 | 3 | 8 | 10) => true,
+            // Lydian: all sharps
+            (Some(Lydian), _) => false,
+            // Mixolydian: flat 7th
+            (Some(Mixolydian), 10) => true,
+            // Aeolian: flat 3rd, 6th, 7th
+            (Some(Aeolian), 3 | 8 | 10) => true,
+            // Locrian: flat 2nd, 3rd, 5th, 6th, 7th
+            (Some(Locrian), 1 | 3 | 6 | 8 | 10) => true,
+            // For melodic minor and other modes, use the direction
+            (None, _) => matches!(direction, Direction::Descending),
+            // For other modes, use sharps by default
+            _ => false,
+        };
+
+        if use_flats {
+            match pitch_number {
+                0 => Pitch::from(C),
+                1 => Pitch::from(Db),
+                2 => Pitch::from(D),
+                3 => Pitch::from(Eb),
+                4 => Pitch::from(E),
+                5 => Pitch::from(F),
+                6 => Pitch::from(Gb),
+                7 => Pitch::from(G),
+                8 => Pitch::from(Ab),
+                9 => Pitch::from(A),
+                10 => Pitch::from(Bb),
+                11 => Pitch::from(B),
+                _ => unreachable!(),
+            }
+        } else {
+            match pitch_number {
+                0 => Pitch::from(C),
+                1 => Pitch::from(Cs),
+                2 => Pitch::from(D),
+                3 => Pitch::from(Ds),
+                4 => Pitch::from(E),
+                5 => Pitch::from(F),
+                6 => Pitch::from(Fs),
+                7 => Pitch::from(G),
+                8 => Pitch::from(Gs),
+                9 => Pitch::from(A),
+                10 => Pitch::from(As),
+                11 => Pitch::from(B),
+                _ => unreachable!(),
+            }
+        }
+    }
+
+    /// Create a pitch from an integer with a preferred spelling based on direction
+    pub fn from_u8_with_direction(val: u8, direction: Direction) -> Self {
+        // Default to no mode and diatonic scale when only direction is provided
+        Self::from_u8_with_scale_context(val, None, direction)
+    }
+
     /// Convert the pitch into its corresponding integer, where 0 is C and 11 is B.
     pub fn into_u8(self) -> u8 {
         use NoteLetter::*;
-        ((match self.letter {
+        let base = match self.letter {
             C => 0,
             D => 2,
             E => 4,
@@ -67,7 +138,41 @@ impl Pitch {
             G => 7,
             A => 9,
             B => 11,
-        } + self.accidental) % 12) as u8
+        };
+        
+        // Handle negative accidentals correctly by adding 12 first
+        let semitones = ((base as i8 + self.accidental + 12) % 12) as u8;
+        semitones
+    }
+
+    /// Create a pitch by moving up the given pitch by an interval.
+    pub fn from_interval(pitch: Self, interval: Interval) -> Self {
+        let current_pitch = pitch.into_u8();
+        let new_pitch = current_pitch + interval.semitone_count;
+
+        Self::from_u8(new_pitch)
+    }
+
+    /// Create a pitch by moving down the given pitch by an interval.
+    pub fn from_interval_down(pitch: Self, interval: Interval) -> Self {
+        let current_pitch = pitch.into_u8();
+        let new_pitch = (12 + (current_pitch as i16 - interval.semitone_count as i16)) % 12;
+
+        Self::from_u8(new_pitch as u8)
+    }
+
+    /// Create a pitch by moving up the given pitch by an interval with scale context.
+    pub fn from_interval_with_context(pitch: Self, interval: Interval, mode: Option<Mode>, direction: Direction) -> Self {
+        let current_pitch = pitch.into_u8();
+        let new_pitch = current_pitch + interval.semitone_count;
+        Self::from_u8_with_scale_context(new_pitch, mode, direction)
+    }
+
+    /// Create a pitch by moving down the given pitch by an interval with scale context.
+    pub fn from_interval_down_with_context(pitch: Self, interval: Interval, mode: Option<Mode>, direction: Direction) -> Self {
+        let current_pitch = pitch.into_u8();
+        let new_pitch = (12 + (current_pitch as i16 - interval.semitone_count as i16)) % 12;
+        Self::from_u8_with_scale_context(new_pitch as u8, mode, direction)
     }
 
     /// Attempt to parse a pitch from a string. It should contain the name of the note in either
@@ -123,22 +228,6 @@ impl Pitch {
         }
 
         return Some(Pitch { letter, accidental })
-    }
-
-    /// Create a pitch by moving up the given pitch by an interval.
-    pub fn from_interval(pitch: Self, interval: Interval) -> Self {
-        let current_pitch = pitch.into_u8();
-        let new_pitch = current_pitch + interval.semitone_count;
-
-        Self::from_u8(new_pitch)
-    }
-
-    /// Create a pitch by moving down the given pitch by an interval.
-    pub fn from_interval_down(pitch: Self, interval: Interval) -> Self {
-        let current_pitch = pitch.into_u8();
-        let new_pitch = (12 + (current_pitch as i16 - interval.semitone_count as i16)) % 12;
-
-        Self::from_u8(new_pitch as u8)
     }
 
     /// Parse the pitch using a regex, with the same algorithm as described in `from_str`.

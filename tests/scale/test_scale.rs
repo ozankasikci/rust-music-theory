@@ -1,6 +1,8 @@
 extern crate rust_music_theory as theory;
 use theory::note::{PitchSymbol::*, *};
-use theory::scale::{Mode::*, ScaleType::*, *};
+use theory::scale::Mode::*;
+use theory::scale::ScaleType::*;
+use theory::scale::*;
 use theory::interval::Interval;
 
 fn assert_notes(symbols: &[PitchSymbol], notes: Vec<Note>) {
@@ -92,5 +94,68 @@ mod scale_tests {
                 Interval::from_semitone(11).unwrap(),
             ]
         );
+    }
+
+    #[test]
+    fn test_enharmonic_scales() {
+        // Structure: (note1_letter, note1_acc, note2_letter, note2_acc, mode, scale_type, description)
+        let test_cases = vec![
+            // Major scale (Ionian) enharmonic pairs
+            (NoteLetter::C, 1, NoteLetter::D, -1, Some(Ionian), Diatonic, "C♯ major and D♭ major"),
+            (NoteLetter::F, 1, NoteLetter::G, -1, Some(Ionian), Diatonic, "F♯ major and G♭ major"),
+            (NoteLetter::B, 1, NoteLetter::C, 0, Some(Ionian), Diatonic, "B♯ major and C major"),
+            (NoteLetter::E, 1, NoteLetter::F, 0, Some(Ionian), Diatonic, "E♯ major and F major"),
+            
+            // Minor scale (Aeolian) enharmonic pairs
+            (NoteLetter::A, 1, NoteLetter::B, -1, Some(Aeolian), Diatonic, "A♯ minor and B♭ minor"),
+            (NoteLetter::D, 1, NoteLetter::E, -1, Some(Aeolian), Diatonic, "D♯ minor and E♭ minor"),
+            (NoteLetter::G, 1, NoteLetter::A, -1, Some(Aeolian), Diatonic, "G♯ minor and A♭ minor"),
+            
+            // Double accidentals
+            (NoteLetter::C, 2, NoteLetter::D, 0, Some(Ionian), Diatonic, "C𝄪 major and D major"),
+            (NoteLetter::F, -2, NoteLetter::E, -1, Some(Ionian), Diatonic, "F𝄫 major and E♭ major"),
+            
+            // Other modes
+            (NoteLetter::D, 1, NoteLetter::E, -1, Some(Dorian), Diatonic, "D♯ dorian and E♭ dorian"),
+            (NoteLetter::E, 1, NoteLetter::F, 0, Some(Phrygian), Diatonic, "E♯ phrygian and F phrygian"),
+            (NoteLetter::F, 1, NoteLetter::G, -1, Some(Lydian), Diatonic, "F♯ lydian and G♭ lydian"),
+            (NoteLetter::G, 1, NoteLetter::A, -1, Some(Mixolydian), Diatonic, "G♯ mixolydian and A♭ mixolydian"),
+            (NoteLetter::B, 1, NoteLetter::C, 0, Some(Locrian), Diatonic, "B♯ locrian and C locrian"),
+            
+            // Melodic minor enharmonic pairs
+            (NoteLetter::C, 1, NoteLetter::D, -1, None, ScaleType::MelodicMinor, "C♯ melodic minor and D♭ melodic minor"),
+            (NoteLetter::F, 1, NoteLetter::G, -1, None, ScaleType::MelodicMinor, "F♯ melodic minor and G♭ melodic minor"),
+        ];
+
+        for (note1_letter, note1_acc, note2_letter, note2_acc, mode, scale_type, description) in test_cases {
+            let scale1 = Scale::new(
+                scale_type,
+                Pitch::new(note1_letter, note1_acc),
+                4,
+                mode,
+                Direction::Ascending,
+            ).unwrap();
+
+            let scale2 = Scale::new(
+                scale_type,
+                Pitch::new(note2_letter, note2_acc),
+                4,
+                mode,
+                Direction::Ascending,
+            ).unwrap();
+
+            // Verify that the semitone values are the same
+            let notes1: Vec<u8> = scale1.notes().iter().map(|n| n.pitch.into_u8()).collect();
+            let notes2: Vec<u8> = scale2.notes().iter().map(|n| n.pitch.into_u8()).collect();
+            assert_eq!(notes1, notes2, "{} should be enharmonically equivalent", description);
+
+            // Verify intervals are consistent
+            assert_eq!(
+                scale1.absolute_intervals(),
+                scale2.absolute_intervals(),
+                "Intervals should be the same for {}",
+                description
+            );
+        }
     }
 }
