@@ -1,7 +1,8 @@
 use crate::note::{NoteLetter, Pitch};
 use std::fmt::Display;
 
-/// All possible pitches with accidentals.
+/// Symbolic representation of a `Pitch` with a resolved `accidental` (A, A♯, A♭).
+/// Respects enharmonic equivalence:  C♯ ≠ D♭, including C♭ and E♯.
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
 pub enum PitchSymbol {
     Bs,

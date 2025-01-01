@@ -2,7 +2,7 @@ use crate::note::Pitch;
 use std::fmt;
 use std::fmt::Formatter;
 
-/// A note.
+/// A note, with octave information.
 #[derive(Debug, Clone)]
 pub struct Note {
     /// The pitch of the note (A, B, C#, etc).

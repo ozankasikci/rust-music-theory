@@ -11,7 +11,7 @@ lazy_static! {
     static ref REGEX_PITCH: Regex = Regex::new("^[ABCDEFGabcdefg][b♭♯#s𝄪x]*").unwrap();
 }
 
-/// A note letter without an accidental.
+/// A note letter without accidental information, nor octave information.
 #[derive(Debug, Copy, Clone, PartialEq, Eq, EnumIter)]
 pub enum NoteLetter {
     C,
@@ -23,6 +23,7 @@ pub enum NoteLetter {
     B,
 }
 
+/// A note without octave information, but with accidental information.
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
 pub struct Pitch {
     pub letter: NoteLetter,
