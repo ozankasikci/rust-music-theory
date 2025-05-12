@@ -8,13 +8,14 @@ use std::fmt;
 use std::str::FromStr;
 use strum_macros::EnumIter;
 use std::collections::HashMap;
+use std::hash::Hash;
 
 lazy_static! {
     static ref REGEX_PITCH: Regex = Regex::new("^[ABCDEFGabcdefg][b♭#s𝄪x]*").unwrap();
 }
 
 /// A note letter without an accidental.
-#[derive(Debug, Copy, Clone, PartialEq, Eq, EnumIter)]
+#[derive(Debug, Copy, Clone, PartialEq, Eq, EnumIter, Hash)]
 pub enum NoteLetter {
     C,
     D,

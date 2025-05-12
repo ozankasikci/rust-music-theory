@@ -4,6 +4,7 @@ mod errors;
 mod note;
 mod pitch;
 mod pitch_symbol;
+mod key_signature;
 
 pub use errors::NoteError;
 pub use note::{Note, Notes};
