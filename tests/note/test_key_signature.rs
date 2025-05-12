@@ -232,6 +232,5 @@ mod key_signature_tests {
         assert_eq!(key_sig.get_preferred_spelling(Pitch::from_u8(3)), PitchSymbol::Eb, "D#/Eb in F Major should be Eb"); 
         assert_eq!(key_sig.get_preferred_spelling(Pitch::from_u8(6)), PitchSymbol::Gb, "F#/Gb in F Major should be Gb");
         assert_eq!(key_sig.get_preferred_spelling(Pitch::from_u8(8)), PitchSymbol::Ab, "G#/Ab in F Major should be Ab");
-        // Bb is diatonic (PitchSymbol::Bb)
     }
 } 
