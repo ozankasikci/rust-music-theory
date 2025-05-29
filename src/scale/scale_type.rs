@@ -7,6 +7,11 @@ pub enum ScaleType {
     Diatonic,
     MelodicMinor,
     HarmonicMinor,
+    PentatonicMajor,
+    PentatonicMinor,
+    Blues,
+    Chromatic,
+    WholeTone,
 }
 
 impl ScaleType {
@@ -18,6 +23,11 @@ impl ScaleType {
             Aeolian => Diatonic,
             Mode::HarmonicMinor => ScaleType::HarmonicMinor,
             Mode::MelodicMinor => ScaleType::MelodicMinor,
+            Mode::PentatonicMajor => ScaleType::PentatonicMajor,
+            Mode::PentatonicMinor => ScaleType::PentatonicMinor,
+            Mode::Blues => ScaleType::Blues,
+            Mode::Chromatic => ScaleType::Chromatic,
+            Mode::WholeTone => ScaleType::WholeTone,
             _ => Diatonic,
         }
     }

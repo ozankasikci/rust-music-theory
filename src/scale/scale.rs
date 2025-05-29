@@ -42,6 +42,11 @@ impl Scale {
             ScaleType::Diatonic => Interval::from_semitones(&[2, 2, 1, 2, 2, 2, 1]),
             ScaleType::HarmonicMinor => Interval::from_semitones(&[2, 1, 2, 2, 1, 3, 1]),
             ScaleType::MelodicMinor => Interval::from_semitones(&[2, 1, 2, 2, 2, 2, 1]),
+            ScaleType::PentatonicMajor => Interval::from_semitones(&[2, 2, 3, 2, 3]),
+            ScaleType::PentatonicMinor => Interval::from_semitones(&[3, 2, 2, 3, 2]),
+            ScaleType::Blues => Interval::from_semitones(&[3, 2, 1, 1, 3, 2]),
+            ScaleType::Chromatic => Interval::from_semitones(&[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]),
+            ScaleType::WholeTone => Interval::from_semitones(&[2, 2, 2, 2, 2, 2]),
         }?;
 
         match mode {
@@ -55,6 +60,9 @@ impl Scale {
                     Mixolydian => intervals.rotate_left(4),
                     Aeolian => intervals.rotate_right(2),
                     Locrian => intervals.rotate_right(1),
+                    // New scale types don't have modal variations
+                    Mode::PentatonicMajor | Mode::PentatonicMinor | Mode::Blues | 
+                    Mode::Chromatic | Mode::WholeTone => {}
                     _ => {}
                 };
             }

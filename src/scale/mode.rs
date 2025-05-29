@@ -20,6 +20,26 @@ lazy_static! {
             MelodicMinor
         ),
         (
+            Regex::new(r"(?i)(pentatonic\s+major|pentatonic\s+maj|pent\s+maj|pent\s+major)").unwrap(),
+            PentatonicMajor
+        ),
+        (
+            Regex::new(r"(?i)(pentatonic\s+minor|pentatonic\s+min|pent\s+min|pent\s+minor)").unwrap(),
+            PentatonicMinor
+        ),
+        (
+            Regex::new(r"(?i)(blues)").unwrap(),
+            Blues
+        ),
+        (
+            Regex::new(r"(?i)(chromatic)").unwrap(),
+            Chromatic
+        ),
+        (
+            Regex::new(r"(?i)(whole\s+tone|wholetone)").unwrap(),
+            WholeTone
+        ),
+        (
             Regex::new(r"^(m\s+|m$|(?i)min|minor|aeolian)").unwrap(),
             Aeolian
         ),
@@ -45,6 +65,11 @@ pub enum Mode {
     Locrian,
     HarmonicMinor,
     MelodicMinor,
+    PentatonicMajor,
+    PentatonicMinor,
+    Blues,
+    Chromatic,
+    WholeTone,
 }
 
 impl Mode {
@@ -63,6 +88,8 @@ impl Mode {
 
     /// Get whether the mode is diatonic (not harmonic or melodic minor).
     pub fn is_diatonic(self) -> bool {
-        !matches!(self, Self::HarmonicMinor | Self::MelodicMinor)
+        !matches!(self, Self::HarmonicMinor | Self::MelodicMinor | 
+                      Self::PentatonicMajor | Self::PentatonicMinor | 
+                      Self::Blues | Self::Chromatic | Self::WholeTone)
     }
 }

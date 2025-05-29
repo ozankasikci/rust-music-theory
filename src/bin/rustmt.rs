@@ -3,7 +3,7 @@ use rust_music_theory::chord::Chord;
 use rust_music_theory::note::Notes;
 use rust_music_theory::scale::{Direction, Scale};
 
-const AVAILABLE_SCALES: [&str; 9] = [
+const AVAILABLE_SCALES: [&str; 14] = [
     "Major|Ionian",
     "Minor|Aeolian",
     "Dorian",
@@ -13,6 +13,11 @@ const AVAILABLE_SCALES: [&str; 9] = [
     "Locrian",
     "Harmonic Minor",
     "Melodic Minor",
+    "Pentatonic Major",
+    "Pentatonic Minor",
+    "Blues",
+    "Chromatic",
+    "Whole Tone",
 ];
 
 const AVAILABLE_CHORDS: [&str; 22] = [

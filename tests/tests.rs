@@ -10,6 +10,7 @@ mod scale {
     mod test_regex;
     mod test_scale;
     mod test_exotic_scales;
+    mod test_additional_scales;
 }
 
 mod note {
