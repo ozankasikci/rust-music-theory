@@ -99,18 +99,30 @@ impl Scale {
 impl Notes for Scale {
     fn notes(&self) -> Vec<Note> {
         use Direction::*;
-        use Mode::*;
+        use crate::note::KeySignature;
+        
         let root_note = Note {
             octave: self.octave,
             pitch: self.tonic,
         };
 
         let intervals_clone = self.intervals.clone();
+        
+        // Create a key signature for proper enharmonic spelling
+        let key_signature = KeySignature::new_with_mode(self.tonic, self.mode);
 
-        match &self.direction {
+        let mut notes = match &self.direction {
             Ascending => Interval::to_notes(root_note, intervals_clone),
             Descending => Interval::to_notes_reverse(root_note, intervals_clone),
+        };
+        
+        // Apply proper enharmonic spelling based on key signature
+        for note in &mut notes {
+            let preferred_spelling = key_signature.get_preferred_spelling(note.pitch);
+            note.pitch = crate::note::Pitch::from(preferred_spelling);
         }
+        
+        notes
     }
 }
 
