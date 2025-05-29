@@ -105,6 +105,7 @@ impl Chord {
             (Augmented, Triad) => Interval::from_semitones(&[4, 4]),
             (Diminished, Triad) => Interval::from_semitones(&[3, 3]),
             (Major, Seventh) => Interval::from_semitones(&[4, 3, 4]),
+            (Major, MajorSeventh) => Interval::from_semitones(&[4, 3, 4]),
             (Minor, Seventh) => Interval::from_semitones(&[3, 4, 3]),
             (Augmented, Seventh) => Interval::from_semitones(&[4, 4, 2]),
             (Augmented, MajorSeventh) => Interval::from_semitones(&[4, 4, 3]),
