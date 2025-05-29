@@ -47,11 +47,69 @@ impl KeySignature {
         KeySignature { tonic, mode }
     }
 
+    /// Get the relative major key for a given semitone value
+    fn get_relative_major_key(&self, semitones: u8) -> (NoteLetter, i8) {
+        use NoteLetter::*;
+        match semitones {
+            0 => (C, 0),   // C major
+            1 => (D, -1),  // Db major
+            2 => (D, 0),   // D major
+            3 => (E, -1),  // Eb major
+            4 => (E, 0),   // E major
+            5 => (F, 0),   // F major
+            6 => (F, 1),   // F# major
+            7 => (G, 0),   // G major
+            8 => (A, -1),  // Ab major
+            9 => (A, 0),   // A major
+            10 => (B, -1), // Bb major
+            11 => (B, 0),  // B major
+            _ => unreachable!(),
+        }
+    }
+
     pub fn get_preferred_spelling(&self, pitch: Pitch) -> PitchSymbol {
         use PitchSymbol::*;
         
-        // Get the key signature accidentals
-        if let Some(key_accidentals) = KEY_SIGNATURE_SPELLINGS.get(&(self.tonic.letter, self.tonic.accidental)) {
+        // Determine the key to use for spelling based on mode
+        let (key_tonic_letter, key_accidental) = match self.mode {
+            Some(Mode::Aeolian) => {
+                // Aeolian (minor) is the 6th degree, 9 semitones above its relative major
+                let relative_major_semitones = (self.tonic.into_u8() + 12 - 9) % 12;
+                self.get_relative_major_key(relative_major_semitones)
+            },
+            Some(Mode::Dorian) => {
+                // Dorian is the 2nd degree, 2 semitones above its relative major  
+                let relative_major_semitones = (self.tonic.into_u8() + 12 - 2) % 12;
+                self.get_relative_major_key(relative_major_semitones)
+            },
+            Some(Mode::Phrygian) => {
+                // Phrygian is the 3rd degree, 4 semitones above its relative major
+                let relative_major_semitones = (self.tonic.into_u8() + 12 - 4) % 12;
+                self.get_relative_major_key(relative_major_semitones)
+            },
+            Some(Mode::Lydian) => {
+                // Lydian is the 4th degree, 5 semitones above its relative major
+                let relative_major_semitones = (self.tonic.into_u8() + 12 - 5) % 12;
+                self.get_relative_major_key(relative_major_semitones)
+            },
+            Some(Mode::Mixolydian) => {
+                // Mixolydian is the 5th degree, 7 semitones above its relative major
+                let relative_major_semitones = (self.tonic.into_u8() + 12 - 7) % 12;
+                self.get_relative_major_key(relative_major_semitones)
+            },
+            Some(Mode::Locrian) => {
+                // Locrian is the 7th degree, 11 semitones above its relative major
+                let relative_major_semitones = (self.tonic.into_u8() + 12 - 11) % 12;
+                self.get_relative_major_key(relative_major_semitones)
+            },
+            _ => {
+                // For major (Ionian) or no mode, use the tonic as is
+                (self.tonic.letter, self.tonic.accidental)
+            }
+        };
+        
+        // Get the key signature accidentals for the determined key
+        if let Some(key_accidentals) = KEY_SIGNATURE_SPELLINGS.get(&(key_tonic_letter, key_accidental)) {
             // Check if this pitch has a preferred spelling in this key
             for &accidental in key_accidentals {
                 if Pitch::from(accidental).into_u8() == pitch.into_u8() {

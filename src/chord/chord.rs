@@ -183,11 +183,21 @@ impl Chord {
 
 impl Notes for Chord {
     fn notes(&self) -> Vec<Note> {
+        use crate::note::KeySignature;
+        
         let root_note = Note {
             pitch: self.root,
             octave: self.octave,
         };
         let mut notes = Interval::to_notes(root_note, self.intervals.clone());
+        
+        // Apply proper enharmonic spelling based on chord root key signature
+        let key_signature = KeySignature::new(self.root);
+        for note in &mut notes {
+            let preferred_spelling = key_signature.get_preferred_spelling(note.pitch);
+            note.pitch = crate::note::Pitch::from(preferred_spelling);
+        }
+        
         notes.rotate_left(self.inversion as usize);
 
         // Normalize to the correct octave

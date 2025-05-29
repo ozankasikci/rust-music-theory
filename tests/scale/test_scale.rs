@@ -19,19 +19,19 @@ mod scale_tests {
     fn test_all_scales_in_c() {
         let scale_tuples = [
             ((Diatonic, Some(Ionian)), vec![C, D, E, F, G, A, B, C]),
-            ((Diatonic, Some(Dorian)), vec![C, D, Ds, F, G, A, As, C]),
-            ((Diatonic, Some(Phrygian)), vec![C, Cs, Ds, F, G, Gs, As, C]),
-            ((Diatonic, Some(Lydian)), vec![C, D, E, Fs, G, A, B, C]),
-            ((Diatonic, Some(Mixolydian)), vec![C, D, E, F, G, A, As, C]),
-            ((Diatonic, Some(Aeolian)), vec![C, D, Ds, F, G, Gs, As, C]),
-            ((Diatonic, Some(Locrian)), vec![C, Cs, Ds, F, Fs, Gs, As, C]),
+            ((Diatonic, Some(Dorian)), vec![C, D, Eb, F, G, A, Bb, C]),  // Uses Bb major key signature (2 flats)
+            ((Diatonic, Some(Phrygian)), vec![C, Db, Eb, F, G, Ab, Bb, C]),  // Uses Ab major key signature (4 flats)
+            ((Diatonic, Some(Lydian)), vec![C, D, E, Fs, G, A, B, C]),  // Uses G major key signature (1 sharp)
+            ((Diatonic, Some(Mixolydian)), vec![C, D, E, F, G, A, Bb, C]),  // Uses F major key signature (1 flat)
+            ((Diatonic, Some(Aeolian)), vec![C, D, Eb, F, G, Ab, Bb, C]),  // Uses Eb major key signature (3 flats)
+            ((Diatonic, Some(Locrian)), vec![C, Db, Eb, F, Gb, Ab, Bb, C]),  // Uses Db major key signature (5 flats)
             (
                 (ScaleType::HarmonicMinor, None),
-                vec![C, D, Ds, F, G, Gs, B, C],
+                vec![C, D, Ds, F, G, Gs, B, C],  // Uses C major sharp preference
             ),
             (
                 (ScaleType::MelodicMinor, None),
-                vec![C, D, Ds, F, G, A, B, C],
+                vec![C, D, Ds, F, G, A, B, C],  // Uses C major sharp preference
             )
         ];
 
