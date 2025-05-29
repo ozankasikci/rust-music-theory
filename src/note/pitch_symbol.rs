@@ -62,7 +62,7 @@ impl From<PitchSymbol> for Pitch {
             Ds => Pitch::new(NoteLetter::D, 1),
             Eb => Pitch::new(NoteLetter::E, -1),
             E => Pitch::new(NoteLetter::E, 0),
-            Es => Pitch::new(NoteLetter::E, -1),
+            Es => Pitch::new(NoteLetter::E, 1),
             F => Pitch::new(NoteLetter::F, 0),
             Fs => Pitch::new(NoteLetter::F, 1),
             Gb => Pitch::new(NoteLetter::G, -1),

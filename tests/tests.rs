@@ -12,6 +12,7 @@ mod scale {
 
 mod note {
     mod test_pitch;
+    mod test_key_signature;
 }
 
 mod interval {

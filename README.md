@@ -156,6 +156,6 @@ Notes:
 - [ ] Add missing modes for Melodic & Harmonic minor scales
     - [ ] Add support for arbitrary accidentals
     - [ ] Add support for the alternative names of the modes to regex parser
-- [ ] Properly display enharmonic spelling
+- [x] Properly display enharmonic spelling
 - [x] Add inversion support for chords
 - [ ] Add a mechanism to find the chord from the given notes
