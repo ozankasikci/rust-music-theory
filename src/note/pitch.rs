@@ -55,7 +55,7 @@ impl Pitch {
             9 => { Pitch::new(A, 0) }
             10 => { Pitch::new(A, 1) }
             11 => { Pitch::new(B, 0) }
-            _ => panic!("impossible")
+            _ => unreachable!("val % 12 should always be 0-11")
         };
     }
 
