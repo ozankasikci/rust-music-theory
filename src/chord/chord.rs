@@ -46,7 +46,7 @@ impl Chord {
         }
     }
 
-    pub fn from_string(string: &str) -> Self {
+    pub fn from_string(string: &str) -> Result<Self, ChordError> {
         let notes: Vec<Pitch> = string.to_string()
                     .replace(",", "")
                     .split_whitespace()
@@ -63,7 +63,7 @@ impl Chord {
         Chord::from_interval(notes[0], &intervals)
     }
 
-    pub fn from_interval(root: Pitch, interval: &[u8]) -> Self {
+    pub fn from_interval(root: Pitch, interval: &[u8]) -> Result<Self, ChordError> {
         use Number::*;
         use Quality::*;
         let (quality, number) = match interval {
@@ -89,9 +89,9 @@ impl Chord {
             &[4, 3, 3, 4, 3, 4] => (Dominant, Thirteenth),
             &[4, 3, 4, 3, 3, 4] => (Major, Thirteenth),
             &[3, 4, 3, 4, 3, 4] => (Minor, Thirteenth),
-            _ => panic!("Couldn't create chord! {:?}", interval)
+            _ => return Err(ChordError::UnknownIntervalPattern(interval.to_vec()))
         };
-        Self::new(root, quality, number)
+        Ok(Self::new(root, quality, number))
     }
 
     pub fn chord_intervals(quality: Quality, number: Number) -> Vec<Interval> {

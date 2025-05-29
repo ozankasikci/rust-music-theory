@@ -111,7 +111,7 @@ mod chord_tests {
         ];
 
         for chord_pair in chord_tuples.iter() {
-            let chord = Chord::from_string(chord_pair.1);
+            let chord = Chord::from_string(chord_pair.1).unwrap();
             let (root, quality, number) = (chord.root, chord.quality, chord.number);
             assert_eq!((root, quality, number), (chord_pair.0));
         }

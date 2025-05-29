@@ -6,11 +6,17 @@ use std::fmt;
 #[derive(Debug, Clone)]
 pub enum ChordError {
     InvalidRegex,
+    UnknownIntervalPattern(Vec<u8>),
 }
 
 impl fmt::Display for ChordError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "Invalid Regex!")
+        match self {
+            ChordError::InvalidRegex => write!(f, "Invalid Regex!"),
+            ChordError::UnknownIntervalPattern(intervals) => {
+                write!(f, "Unknown chord interval pattern: {:?}", intervals)
+            }
+        }
     }
 }
 
