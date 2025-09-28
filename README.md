@@ -136,8 +136,6 @@ Try the library in your browser with the interactive WASM playground:
 
 [**https://ozankasikci.github.io/rust-music-theory/**](https://ozankasikci.github.io/rust-music-theory/)
 
-The playground allows you to experiment with scales, chords, and other music theory concepts directly in your browser without any installation.
-
 ## Building From Source
 
 The binary is implemented as a regex parser cli that returns the notes of the given scale/chord.
