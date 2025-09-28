@@ -5,6 +5,8 @@
 [![Crates.io](https://img.shields.io/crates/v/rust-music-theory.svg?style=flat-square)](https://crates.io/crates/rust-music-theory)
 [![Documentation](https://docs.rs/rust-music-theory/badge.svg)](https://docs.rs/rust-music-theory)
 
+[**Try the interactive playground →**](https://ozankasikci.github.io/rust-music-theory/)
+
 A library and executable that provides programmatic implementation of the basis of the music theory.
 ## Table of Contents
 
