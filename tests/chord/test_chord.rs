@@ -116,4 +116,114 @@ mod chord_tests {
             assert_eq!((root, quality, number), (chord_pair.0));
         }
     }
+
+    #[test]
+    fn test_invalid_chord_regex() {
+        // Test definitely invalid chord strings
+        let invalid_chords = vec![
+            "",
+            "123",
+            "!@#$%",
+        ];
+
+        for invalid_chord in invalid_chords {
+            assert!(
+                Chord::from_regex(invalid_chord).is_err(),
+                "Expected error for: {}",
+                invalid_chord
+            );
+        }
+    }
+
+    #[test]
+    fn test_chord_from_interval_errors() {
+        // Test unknown interval patterns
+        let root = Pitch::new(NoteLetter::C, 0);
+
+        // Test with invalid interval patterns
+        let invalid_patterns = vec![
+            vec![1, 2],           // Too few intervals for any chord
+            vec![5, 5, 5, 5, 5],  // Nonsensical pattern
+            vec![13, 14, 15],     // Intervals too large
+        ];
+
+        for pattern in invalid_patterns {
+            let result = Chord::from_interval(root, &pattern);
+            assert!(
+                result.is_err(),
+                "Expected error for interval pattern: {:?}",
+                pattern
+            );
+        }
+    }
+
+    #[test]
+    fn test_chord_default() {
+        let default_chord = Chord::default();
+
+        // Verify default chord properties
+        assert_eq!(default_chord.root, Pitch::new(NoteLetter::C, 0));
+        assert_eq!(default_chord.octave, 4);
+        assert_eq!(default_chord.quality, Quality::Major);
+        assert_eq!(default_chord.number, Number::Triad);
+        assert_eq!(default_chord.inversion, 0);
+
+        // Default chord has empty intervals, so we need to create one properly
+        let c_major = Chord::new(
+            Pitch::new(NoteLetter::C, 0),
+            Quality::Major,
+            Number::Triad
+        );
+        let notes = c_major.notes();
+        assert_eq!(notes[0].pitch, Pitch::new(NoteLetter::C, 0));
+        assert_eq!(notes[1].pitch, Pitch::new(NoteLetter::E, 0));
+        assert_eq!(notes[2].pitch, Pitch::new(NoteLetter::G, 0));
+    }
+
+    #[test]
+    fn test_chord_from_interval() {
+        let root = Pitch::new(NoteLetter::C, 0);
+
+        // Major triad intervals: [4, 3]
+        let major_triad = Chord::from_interval(root, &[4, 3]).unwrap();
+        let notes = major_triad.notes();
+        assert_eq!(notes.len(), 3);
+        assert_eq!(notes[0].pitch, root);
+        assert_eq!(notes[1].pitch, Pitch::new(NoteLetter::E, 0));
+        assert_eq!(notes[2].pitch, Pitch::new(NoteLetter::G, 0));
+
+        // Minor triad intervals: [3, 4]
+        let minor_triad = Chord::from_interval(root, &[3, 4]).unwrap();
+        let notes = minor_triad.notes();
+        assert_eq!(notes.len(), 3);
+        assert_eq!(notes[0].pitch, root);
+        assert_eq!(notes[1].pitch.into_u8(), 3); // Eb
+        assert_eq!(notes[2].pitch, Pitch::new(NoteLetter::G, 0));
+
+        // Dominant seventh: [4, 3, 3]
+        let dom7 = Chord::from_interval(root, &[4, 3, 3]).unwrap();
+        let notes = dom7.notes();
+        assert_eq!(notes.len(), 4);
+        assert_eq!(notes[3].pitch.into_u8(), 10); // Bb
+    }
+
+    #[test]
+    fn test_chord_intervals() {
+        // Test that chord_intervals returns correct intervals for various chord types
+        let major_triad_intervals = Chord::chord_intervals(Quality::Major, Number::Triad);
+        assert_eq!(major_triad_intervals.len(), 2);
+        assert_eq!(major_triad_intervals[0].semitone_count, 4);
+        assert_eq!(major_triad_intervals[1].semitone_count, 3);
+
+        let minor_seventh_intervals = Chord::chord_intervals(Quality::Minor, Number::Seventh);
+        assert_eq!(minor_seventh_intervals.len(), 3);
+        assert_eq!(minor_seventh_intervals[0].semitone_count, 3);
+        assert_eq!(minor_seventh_intervals[1].semitone_count, 4);
+        assert_eq!(minor_seventh_intervals[2].semitone_count, 3);
+
+        let dim_triad_intervals = Chord::chord_intervals(Quality::Diminished, Number::Triad);
+        assert_eq!(dim_triad_intervals.len(), 2);
+        assert_eq!(dim_triad_intervals[0].semitone_count, 3);
+        assert_eq!(dim_triad_intervals[1].semitone_count, 3);
+    }
 }

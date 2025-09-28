@@ -158,4 +158,70 @@ mod scale_tests {
             );
         }
     }
+
+    #[test]
+    fn test_invalid_scale_regex() {
+        // Test invalid scale strings
+        let invalid_scales = vec![
+            "",
+            "invalid scale",
+            "XYZ major",
+            "C invalid mode",
+            "123 scale",
+            "!@#$%",
+        ];
+
+        for invalid_scale in invalid_scales {
+            assert!(
+                Scale::from_regex(invalid_scale).is_err(),
+                "Expected error for: {}",
+                invalid_scale
+            );
+        }
+    }
+
+    #[test]
+    fn test_scale_default() {
+        let default_scale = Scale::default();
+        assert_eq!(default_scale.tonic, Pitch::new(NoteLetter::C, 0));
+        assert_eq!(default_scale.octave, 0);
+        assert_eq!(default_scale.scale_type, ScaleType::Diatonic);
+        assert_eq!(default_scale.mode, Some(Mode::Ionian));
+        assert_eq!(default_scale.direction, Direction::Ascending);
+    }
+
+    #[test]
+    fn test_scale_descending() {
+        let c_major_desc = Scale::from_regex_in_direction("C major", Direction::Descending).unwrap();
+        let notes = c_major_desc.notes();
+
+        // In descending order, starting from C going down
+        assert_eq!(notes[0].pitch, Pitch::new(NoteLetter::C, 0));
+        assert_eq!(notes[0].octave, 4);
+
+        // Should go down to B in the lower octave
+        assert_eq!(notes[1].pitch, Pitch::new(NoteLetter::B, 0));
+        assert_eq!(notes[1].octave, 3);
+    }
+
+    #[test]
+    fn test_scale_new_with_modes() {
+        // Test creating scales with different modes
+        let root = Pitch::new(NoteLetter::D, 0);
+
+        let dorian = Scale::new(
+            ScaleType::Diatonic,
+            root,
+            4,
+            Some(Mode::Dorian),
+            Direction::Ascending,
+        )
+        .unwrap();
+
+        let notes = dorian.notes();
+        assert_eq!(notes[0].pitch, root);
+
+        // D Dorian has the same notes as C major
+        assert_eq!(notes[2].pitch, Pitch::new(NoteLetter::F, 0)); // Natural F, not F#
+    }
 }

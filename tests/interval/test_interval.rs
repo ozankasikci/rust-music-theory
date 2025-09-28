@@ -265,4 +265,46 @@ mod test_interval {
         let perfect_fifth = Interval::from_semitone(7).unwrap();
         assert_eq!(perfect_fifth.step, None);
     }
+
+    #[test]
+    fn test_interval_from_semitones_empty() {
+        // Test that empty slice returns error
+        let empty: &[u8] = &[];
+        let result = Interval::from_semitones(empty);
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn test_interval_quality_display() {
+        use theory::interval::Quality;
+
+        assert_eq!(format!("{}", Quality::Perfect), "P");
+        assert_eq!(format!("{}", Quality::Major), "M");
+        assert_eq!(format!("{}", Quality::Minor), "m");
+        assert_eq!(format!("{}", Quality::Augmented), "A");
+        assert_eq!(format!("{}", Quality::Diminished), "d");
+    }
+
+    #[test]
+    fn test_interval_number_display() {
+        use theory::interval::Number;
+
+        assert_eq!(format!("{}", Number::Unison), "1");
+        assert_eq!(format!("{}", Number::Second), "2");
+        assert_eq!(format!("{}", Number::Third), "3");
+        assert_eq!(format!("{}", Number::Fourth), "4");
+        assert_eq!(format!("{}", Number::Fifth), "5");
+        assert_eq!(format!("{}", Number::Sixth), "6");
+        assert_eq!(format!("{}", Number::Seventh), "7");
+        assert_eq!(format!("{}", Number::Octave), "8");
+    }
+
+    #[test]
+    fn test_interval_step_display() {
+        use theory::interval::Step;
+
+        assert_eq!(format!("{}", Step::Half), "Half");
+        assert_eq!(format!("{}", Step::Whole), "Whole");
+        assert_eq!(format!("{}", Step::Tritone), "Tritone");
+    }
 }
