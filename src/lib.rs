@@ -45,3 +45,6 @@ pub mod chord;
 pub mod interval;
 pub mod note;
 pub mod scale;
+
+#[cfg(target_arch = "wasm32")]
+pub mod wasm;

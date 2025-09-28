@@ -10,9 +10,21 @@ edition = "2018"
 exclude = ["/.travis.yml", ".gitignore"]
 keywords = ["music", "music-theory"]
 
+[lib]
+crate-type = ["cdylib"]
+
 [dependencies]
 strum = "0.17.1"
 strum_macros = "0.17.1"
 regex = "1"
 clap = "2.31"
 lazy_static = "1.4.0"
+wasm-bindgen = "0.2"
+serde = { version = "1.0", features = ["derive"] }
+serde-wasm-bindgen = "0.4"
+
+[dependencies.web-sys]
+version = "0.3"
+features = [
+  "console",
+]

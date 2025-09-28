@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rust Music Theory Playground</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎵 Rust Music Theory Playground</h1>
+            <p>Interactive exploration of music theory concepts</p>
+        </header>
+
+        <main>
+            <div class="tabs">
+                <button class="tab-button active" onclick="showTab('scales')">Scales</button>
+                <button class="tab-button" onclick="showTab('chords')">Chords</button>
+            </div>
+
+            <!-- Scales Tab -->
+            <div id="scales" class="tab-content active">
+                <div class="controls">
+                    <div class="control-group">
+                        <label for="scale-tonic">Tonic:</label>
+                        <select id="scale-tonic">
+                            <option value="C">C</option>
+                            <option value="C#">C#</option>
+                            <option value="Db">Db</option>
+                            <option value="D">D</option>
+                            <option value="D#">D#</option>
+                            <option value="Eb">Eb</option>
+                            <option value="E">E</option>
+                            <option value="F">F</option>
+                            <option value="F#">F#</option>
+                            <option value="Gb">Gb</option>
+                            <option value="G">G</option>
+                            <option value="G#">G#</option>
+                            <option value="Ab">Ab</option>
+                            <option value="A">A</option>
+                            <option value="A#">A#</option>
+                            <option value="Bb">Bb</option>
+                            <option value="B">B</option>
+                        </select>
+                    </div>
+
+                    <div class="control-group">
+                        <label for="scale-type">Scale Type:</label>
+                        <select id="scale-type">
+                            <option value="diatonic">Diatonic</option>
+                            <option value="pentatonic_major">Pentatonic Major</option>
+                            <option value="pentatonic_minor">Pentatonic Minor</option>
+                            <option value="blues">Blues</option>
+                            <option value="chromatic">Chromatic</option>
+                            <option value="whole_tone">Whole Tone</option>
+                            <option value="harmonic_minor">Harmonic Minor</option>
+                            <option value="melodic_minor">Melodic Minor</option>
+                        </select>
+                    </div>
+
+                    <div class="control-group">
+                        <label for="scale-mode">Mode:</label>
+                        <select id="scale-mode">
+                            <option value="">None</option>
+                            <option value="ionian">Ionian</option>
+                            <option value="dorian">Dorian</option>
+                            <option value="phrygian">Phrygian</option>
+                            <option value="lydian">Lydian</option>
+                            <option value="mixolydian">Mixolydian</option>
+                            <option value="aeolian">Aeolian</option>
+                            <option value="locrian">Locrian</option>
+                        </select>
+                    </div>
+
+                    <div class="control-group">
+                        <label for="scale-octave">Octave:</label>
+                        <select id="scale-octave">
+                            <option value="3">3</option>
+                            <option value="4" selected>4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                        </select>
+                    </div>
+
+                    <div class="control-group">
+                        <label for="scale-direction">Direction:</label>
+                        <select id="scale-direction">
+                            <option value="true" selected>Ascending</option>
+                            <option value="false">Descending</option>
+                        </select>
+                    </div>
+
+                    <button id="generate-scale" class="generate-btn">Generate Scale</button>
+                </div>
+
+                <div class="output">
+                    <h3>Scale Notes:</h3>
+                    <div id="scale-piano" class="piano-visualization"></div>
+                    <div id="scale-output" class="notes-display"></div>
+                </div>
+            </div>
+
+            <!-- Chords Tab -->
+            <div id="chords" class="tab-content">
+                <div class="controls">
+                    <div class="control-group">
+                        <label for="chord-root">Root:</label>
+                        <select id="chord-root">
+                            <option value="C">C</option>
+                            <option value="C#">C#</option>
+                            <option value="Db">Db</option>
+                            <option value="D">D</option>
+                            <option value="D#">D#</option>
+                            <option value="Eb">Eb</option>
+                            <option value="E">E</option>
+                            <option value="F">F</option>
+                            <option value="F#">F#</option>
+                            <option value="Gb">Gb</option>
+                            <option value="G">G</option>
+                            <option value="G#">G#</option>
+                            <option value="Ab">Ab</option>
+                            <option value="A">A</option>
+                            <option value="A#">A#</option>
+                            <option value="Bb">Bb</option>
+                            <option value="B">B</option>
+                        </select>
+                    </div>
+
+                    <div class="control-group">
+                        <label for="chord-quality">Quality:</label>
+                        <select id="chord-quality">
+                            <option value="major">Major</option>
+                            <option value="minor">Minor</option>
+                            <option value="diminished">Diminished</option>
+                            <option value="augmented">Augmented</option>
+                            <option value="dominant">Dominant</option>
+                            <option value="half_diminished">Half Diminished</option>
+                            <option value="sus2">Sus2</option>
+                            <option value="sus4">Sus4</option>
+                        </select>
+                    </div>
+
+                    <div class="control-group">
+                        <label for="chord-number">Extension:</label>
+                        <select id="chord-number">
+                            <option value="triad">Triad</option>
+                            <option value="seventh">Seventh</option>
+                            <option value="ninth">Ninth</option>
+                            <option value="eleventh">Eleventh</option>
+                            <option value="thirteenth">Thirteenth</option>
+                        </select>
+                    </div>
+
+                    <button id="generate-chord" class="generate-btn">Generate Chord</button>
+                </div>
+
+                <div class="output">
+                    <h3>Chord Notes:</h3>
+                    <div id="chord-piano" class="piano-visualization"></div>
+                    <div id="chord-output" class="notes-display"></div>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>Powered by <a href="https://github.com/ozankasikci/rust-music-theory" target="_blank">rust-music-theory</a> via WebAssembly</p>
+        </footer>
+    </div>
+
+    <script type="module" src="app.js"></script>
+</body>
+</html>
