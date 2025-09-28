@@ -16,6 +16,9 @@ mod scale {
 mod note {
     mod test_pitch;
     mod test_key_signature;
+    mod test_note;
+    mod test_pitch_symbol;
+    mod test_notes_trait;
 }
 
 mod interval {
