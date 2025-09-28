@@ -136,6 +136,8 @@ Try the library in your browser with the interactive WASM playground:
 
 [**https://ozankasikci.github.io/rust-music-theory/**](https://ozankasikci.github.io/rust-music-theory/)
 
+![Playground Screenshot](https://github.com/user-attachments/assets/c7e4b2a1-8b6f-4b5e-9c7a-2d5e8f3a4e6b)
+
 ## Building From Source
 
 The binary is implemented as a regex parser cli that returns the notes of the given scale/chord.
