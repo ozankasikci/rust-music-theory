@@ -11,7 +11,7 @@ exclude = ["/.travis.yml", ".gitignore"]
 keywords = ["music", "music-theory"]
 
 [lib]
-crate-type = ["cdylib"]
+crate-type = ["cdylib", "rlib"]
 
 [dependencies]
 strum = "0.17.1"
