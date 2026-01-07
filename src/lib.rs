@@ -40,7 +40,7 @@
 //! // returns a Vector of the Notes of the chord
 //! let chord_notes = chord.notes();
 
-extern crate strum;
+pub extern crate strum;
 pub mod chord;
 pub mod interval;
 pub mod note;
