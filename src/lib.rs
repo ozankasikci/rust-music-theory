@@ -72,7 +72,7 @@
 //! player.play(&chord, Duration::Quarter, Velocity::new(100).unwrap());
 //! ```
 
-extern crate strum;
+pub extern crate strum;
 pub mod chord;
 pub mod interval;
 pub mod note;
