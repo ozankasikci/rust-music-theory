@@ -1,7 +1,7 @@
 use super::parsers::{parse_mode, parse_pitch_symbol, parse_scale_type};
 use super::types::{WasmNote, WasmScale};
 use crate::note::{Notes, Pitch};
-use crate::scale::{Direction, Scale};
+use crate::scale::{Direction, Mode, Scale};
 use wasm_bindgen::prelude::*;
 
 /// Generate a scale from WASM-compatible parameters
@@ -15,7 +15,13 @@ pub fn generate_scale(
 ) -> JsValue {
     let pitch_symbol = parse_pitch_symbol(tonic);
     let scale_type_enum = parse_scale_type(scale_type);
-    let mode_enum = mode.as_ref().and_then(|m| parse_mode(m));
+    let mode_enum = match mode.as_deref() {
+        Some(mode) => match parse_mode(mode) {
+            Some(mode) => Some(mode),
+            None => return JsValue::NULL,
+        },
+        None => None,
+    };
     let direction = if ascending {
         Direction::Ascending
     } else {
@@ -35,7 +41,7 @@ pub fn generate_scale(
                 notes,
                 scale_type: scale_type.to_string(),
                 tonic: tonic.to_string(),
-                mode,
+                mode: mode_enum.map(|mode| mode.api_name().to_string()),
                 direction: if ascending {
                     "ascending".to_string()
                 } else {
@@ -67,15 +73,10 @@ pub fn get_available_scales() -> JsValue {
 /// Get list of available modes
 #[wasm_bindgen]
 pub fn get_available_modes() -> JsValue {
-    let modes = vec![
-        "ionian",
-        "dorian",
-        "phrygian",
-        "lydian",
-        "mixolydian",
-        "aeolian",
-        "locrian",
-    ];
+    let modes = Mode::heptatonic_modes()
+        .iter()
+        .map(|mode| mode.api_name())
+        .collect::<Vec<_>>();
     serde_wasm_bindgen::to_value(&modes).unwrap_or(JsValue::NULL)
 }
 
@@ -127,16 +128,7 @@ mod tests {
 
     #[wasm_bindgen_test::wasm_bindgen_test]
     fn test_available_modes_count() {
-        let modes = vec![
-            "ionian",
-            "dorian",
-            "phrygian",
-            "lydian",
-            "mixolydian",
-            "aeolian",
-            "locrian",
-        ];
-        assert_eq!(modes.len(), 7);
+        assert_eq!(Mode::heptatonic_modes().len(), 21);
     }
 
     #[wasm_bindgen_test::wasm_bindgen_test]
@@ -174,14 +166,67 @@ mod tests {
         .unwrap();
         assert_eq!(scale.direction, "descending");
         assert_eq!(
-            scale.notes.iter().map(|note| note.pitch.as_str()).collect::<Vec<_>>(),
+            scale
+                .notes
+                .iter()
+                .map(|note| note.pitch.as_str())
+                .collect::<Vec<_>>(),
             vec!["C", "Bb", "Ab", "G", "F", "Eb", "D", "C"]
         );
 
-        let scales: Vec<String> =
-            serde_wasm_bindgen::from_value(get_available_scales()).unwrap();
+        let scales: Vec<String> = serde_wasm_bindgen::from_value(get_available_scales()).unwrap();
         let modes: Vec<String> = serde_wasm_bindgen::from_value(get_available_modes()).unwrap();
         assert_eq!(scales.len(), 8);
-        assert_eq!(modes.len(), 7);
+        assert_eq!(modes.len(), 21);
+        assert!(modes.contains(&"phrygian_dominant".to_string()));
+        assert!(modes.contains(&"altered".to_string()));
+    }
+
+    #[wasm_bindgen_test::wasm_bindgen_test]
+    fn test_complete_minor_modes_and_invalid_input() {
+        let scale: WasmScale = serde_wasm_bindgen::from_value(generate_scale(
+            "C",
+            "harmonic_minor",
+            4,
+            Some("Spanish".to_string()),
+            true,
+        ))
+        .unwrap();
+        assert_eq!(scale.mode.as_deref(), Some("phrygian_dominant"));
+        assert_eq!(
+            scale
+                .notes
+                .iter()
+                .map(|note| note.pitch.as_str())
+                .collect::<Vec<_>>(),
+            vec!["C", "Db", "E", "F", "G", "Ab", "Bb", "C"]
+        );
+
+        let altered: WasmScale = serde_wasm_bindgen::from_value(generate_scale(
+            "C",
+            "melodic_minor",
+            4,
+            Some("super_locrian".to_string()),
+            false,
+        ))
+        .unwrap();
+        assert_eq!(altered.mode.as_deref(), Some("altered"));
+        assert_eq!(
+            altered
+                .notes
+                .iter()
+                .map(|note| note.pitch.as_str())
+                .collect::<Vec<_>>(),
+            vec!["C", "Bb", "Ab", "Gb", "Fb", "Eb", "Db", "C"]
+        );
+
+        assert!(generate_scale(
+            "C",
+            "melodic_minor",
+            4,
+            Some("not_a_mode".to_string()),
+            true,
+        )
+        .is_null());
     }
 }

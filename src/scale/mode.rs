@@ -72,6 +72,30 @@ const ALL_MODES: &[Mode] = &[
     Mode::WholeTone,
 ];
 
+const HEPTATONIC_MODES: &[Mode] = &[
+    Mode::Ionian,
+    Mode::Dorian,
+    Mode::Phrygian,
+    Mode::Lydian,
+    Mode::Mixolydian,
+    Mode::Aeolian,
+    Mode::Locrian,
+    Mode::HarmonicMinor,
+    Mode::LocrianNatural6,
+    Mode::IonianSharp5,
+    Mode::DorianSharp4,
+    Mode::PhrygianDominant,
+    Mode::LydianSharp2,
+    Mode::UltraLocrian,
+    Mode::MelodicMinor,
+    Mode::DorianFlat2,
+    Mode::LydianAugmented,
+    Mode::LydianDominant,
+    Mode::MixolydianFlat6,
+    Mode::LocrianSharp2,
+    Mode::Altered,
+];
+
 fn normalize_mode_name(input: &str) -> String {
     let mut text = String::new();
     for character in input.trim().chars() {
@@ -130,6 +154,11 @@ fn normalize_mode_name(input: &str) -> String {
 }
 
 impl Mode {
+    /// Every supported seven-note mode, grouped by parent scale family.
+    pub fn heptatonic_modes() -> &'static [Self] {
+        HEPTATONIC_MODES
+    }
+
     /// The scale family whose interval pattern produces this mode.
     pub fn scale_type(self) -> ScaleType {
         match self {
