@@ -95,7 +95,7 @@ mod additional_scale_tests {
 
     #[test]
     fn test_blues_scales() {
-        // C Blues: C D# F F# G A# (using sharps for now)
+        // Minor blues spelling policy: 1, flat 3, 4, sharp 4, 5, flat 7.
         let scale = Scale::new(
             ScaleType::Blues,
             Pitch::from(C),
@@ -105,8 +105,7 @@ mod additional_scale_tests {
         )
         .unwrap();
         
-        // C Blues uses sharp notation in current implementation
-        assert_scale_notes(&[C, Ds, F, Fs, G, As, C], scale);
+        assert_scale_notes(&[C, Eb, F, Fs, G, Bb, C], scale);
 
         // A Blues: A C D D# E G
         let scale = Scale::new(
@@ -157,6 +156,29 @@ mod additional_scale_tests {
         assert_eq!(notes.len(), 13, "Chromatic scale should have 13 notes including octave");
         assert_eq!(notes[0].pitch, Pitch::from(F));
         assert_eq!(notes[12].pitch, Pitch::from(F)); // Octave
+    }
+
+    #[test]
+    fn test_chromatic_spelling_policy_in_both_directions() {
+        let descending = Scale::new(
+            ScaleType::Chromatic,
+            Pitch::from(C),
+            4,
+            Some(Mode::Chromatic),
+            Direction::Descending,
+        )
+        .unwrap();
+        assert_scale_notes(&[C, B, Bb, A, Ab, G, Gb, F, E, Eb, D, Db, C], descending);
+
+        let db_ascending = Scale::new(
+            ScaleType::Chromatic,
+            Pitch::from(Db),
+            4,
+            Some(Mode::Chromatic),
+            Direction::Ascending,
+        )
+        .unwrap();
+        assert_scale_notes(&[Db, D, Eb, E, F, Gb, G, Ab, A, Bb, B, C, Db], db_ascending);
     }
 
     #[test]
