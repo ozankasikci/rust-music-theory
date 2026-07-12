@@ -1,6 +1,6 @@
 extern crate rust_music_theory as theory;
 use theory::note::{Pitch, NoteLetter, Note};
-use theory::scale::Direction;
+use theory::scale::{Direction, Mode};
 use theory::interval::Interval;
 use NoteLetter::*;
 
@@ -146,6 +146,60 @@ mod test_note {
                 "Expected {} but got {} for value {}",
                 expected_pitch, pitch, val);
         }
+    }
+
+    #[test]
+    fn test_scale_context_spelling_branches() {
+        let cases = [
+            (Some(Mode::Dorian), 3, Pitch::new(E, -1)),
+            (Some(Mode::Phrygian), 1, Pitch::new(D, -1)),
+            (Some(Mode::Lydian), 6, Pitch::new(F, 1)),
+            (Some(Mode::Mixolydian), 10, Pitch::new(B, -1)),
+            (Some(Mode::Aeolian), 8, Pitch::new(A, -1)),
+            (Some(Mode::Locrian), 6, Pitch::new(G, -1)),
+            (Some(Mode::Ionian), 3, Pitch::new(D, 1)),
+        ];
+
+        for (mode, pitch_class, expected) in cases {
+            assert_eq!(
+                Pitch::from_u8_with_scale_context(
+                    pitch_class,
+                    mode,
+                    Direction::Ascending,
+                ),
+                expected
+            );
+        }
+    }
+
+    #[test]
+    fn test_interval_transposition_covers_upper_simple_intervals_and_context_wrappers() {
+        let c = Pitch::new(C, 0);
+        let major_sixth = Interval::from_semitone(9).unwrap();
+        let major_seventh = Interval::from_semitone(11).unwrap();
+
+        assert_eq!(Pitch::from_interval(c, major_sixth), Pitch::new(A, 0));
+        assert_eq!(Pitch::from_interval(c, major_seventh), Pitch::new(B, 0));
+        assert_eq!(Pitch::from_interval_down(c, major_sixth), Pitch::new(E, -1));
+        assert_eq!(Pitch::from_interval_down(c, major_seventh), Pitch::new(D, -1));
+        assert_eq!(
+            Pitch::from_interval_with_context(
+                c,
+                major_sixth,
+                Some(Mode::Aeolian),
+                Direction::Descending,
+            ),
+            Pitch::new(A, 0)
+        );
+        assert_eq!(
+            Pitch::from_interval_down_with_context(
+                c,
+                major_seventh,
+                Some(Mode::Ionian),
+                Direction::Ascending,
+            ),
+            Pitch::new(D, -1)
+        );
     }
 
     #[test]
