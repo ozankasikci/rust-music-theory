@@ -193,22 +193,46 @@ impl Interval {
     /// Creates an interval by inverting the given interval
     /// e.g. Perfect fifth (C to G) becomes a perfect fourth (G to C)
     pub fn invert(interval: &Self) -> Result<Self, IntervalError> {
-        if interval.semitone_count == 12 {
-            Self::from_semitone(12)
-        } else {
-            let adjusted = (12 + (12i16 - interval.semitone_count as i16)) % 12;
-            Self::from_semitone(adjusted as u8)
+        match (interval.semitone_count, interval.quality, interval.number) {
+            (6, Quality::Diminished, Number::Fifth) => {
+                return Ok(Self::new(
+                    6,
+                    Quality::Augmented,
+                    Number::Fourth,
+                    Some(Step::Tritone),
+                ));
+            }
+            (6, Quality::Augmented, Number::Fourth) => {
+                return Ok(Self::new(
+                    6,
+                    Quality::Diminished,
+                    Number::Fifth,
+                    Some(Step::Tritone),
+                ));
+            }
+            _ => {}
         }
+
+        let inverted = match interval.semitone_count {
+            0 => 12,
+            12 => 0,
+            semitones => 12 - semitones,
+        };
+        Self::from_semitone(inverted)
     }
 
     /// Move the given note up by this interval.
     pub fn second_note_from(self, first_note: Note) -> Note {
         let pitch = Pitch::from_interval(first_note.pitch, self);
-        let octave = first_note.octave;
-        let excess_octave = (first_note.pitch.into_u8() + self.semitone_count) / 12;
+        let excess_octave = match self.number {
+            Number::Octave => 1,
+            Number::Unison => 0,
+            _ if pitch.letter.index() <= first_note.pitch.letter.index() => 1,
+            _ => 0,
+        };
 
         Note {
-            octave: octave + excess_octave,
+            octave: first_note.octave + excess_octave,
             pitch,
         }
     }
@@ -216,12 +240,15 @@ impl Interval {
     /// Move the given note down by this interval.
     pub fn second_note_down_from(self, first_note: Note) -> Note {
         let pitch = Pitch::from_interval_down(first_note.pitch, self);
-        let octave = first_note.octave;
-        let raw_diff = first_note.pitch.into_u8() as i16 - self.semitone_count as i16;
-        let excess_octave = (raw_diff / -12) + if raw_diff < 0 { 1 } else { 0 };
+        let excess_octave = match self.number {
+            Number::Octave => 1,
+            Number::Unison => 0,
+            _ if pitch.letter.index() >= first_note.pitch.letter.index() => 1,
+            _ => 0,
+        };
 
         Note {
-            octave: octave - excess_octave as u8,
+            octave: first_note.octave - excess_octave,
             pitch,
         }
     }
@@ -267,7 +294,7 @@ impl Default for Interval {
     fn default() -> Self {
         Interval {
             semitone_count: 0,
-            quality: Quality::Major,
+            quality: Quality::Perfect,
             number: Number::Unison,
             step: None,
         }
@@ -289,18 +316,6 @@ impl Display for Interval {
                 number: Number::Fourth,
                 step: _,
             } => write!(f, "T"),
-            Interval {
-                semitone_count: _,
-                quality: _,
-                number: Number::Unison,
-                step: _,
-            } => write!(f, "1"),
-            Interval {
-                semitone_count: _,
-                quality: _,
-                number: Number::Octave,
-                step: _,
-            } => write!(f, "1"),
             _ => write!(f, "{}{}", self.quality, self.number),
         }
     }
