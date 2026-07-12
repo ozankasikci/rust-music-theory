@@ -1,5 +1,5 @@
 use clap::{App, Arg, ArgMatches};
-use rust_music_theory::chord::Chord;
+use rust_music_theory::chord::{Chord, SUPPORTED_CHORD_SYNTAX};
 use rust_music_theory::note::Notes;
 use rust_music_theory::scale::{Direction, Scale};
 
@@ -18,32 +18,6 @@ const AVAILABLE_SCALES: [&str; 14] = [
     "Blues",
     "Chromatic",
     "Whole Tone",
-];
-
-const AVAILABLE_CHORDS: [&str; 23] = [
-    "Major Triad",
-    "Minor Triad",
-    "Suspended2 Triad",
-    "Suspended4 Triad",
-    "Augmented Triad",
-    "Diminished Triad",
-    "Major Seventh",
-    "Minor Seventh",
-    "Augmented Seventh",
-    "Augmented Major Seventh",
-    "Diminished Seventh",
-    "Half Diminished Seventh",
-    "Minor Major Seventh",
-    "Dominant Seventh",
-    "Dominant Ninth",
-    "Major Ninth",
-    "Minor Ninth",
-    "Dominant Eleventh",
-    "Major Eleventh",
-    "Minor Eleventh",
-    "Dominant Thirteenth",
-    "Major Thirteenth",
-    "Minor Thirteenth",
 ];
 
 fn scale_command(scale_matches: &ArgMatches) {
@@ -71,30 +45,41 @@ fn scale_command(scale_matches: &ArgMatches) {
     }
 }
 
-fn chord_command(chord_matches: &ArgMatches) {
+fn joined_args(matches: &ArgMatches) -> Result<String, String> {
+    matches
+        .values_of("args")
+        .map(|values| values.collect::<Vec<_>>().join(" "))
+        .filter(|value| !value.trim().is_empty())
+        .ok_or_else(|| "missing chord symbol".to_string())
+}
+
+fn chord_command(chord_matches: &ArgMatches) -> Result<(), String> {
     match chord_matches.subcommand() {
         ("list", _) => {
-            println!("Available chords:");
-            for chord in &AVAILABLE_CHORDS {
-                println!(" - {}", chord);
+            println!("Supported chord syntax:");
+            for syntax in SUPPORTED_CHORD_SYNTAX {
+                println!(" - {}", syntax);
             }
+            Ok(())
+        }
+        ("normalize", Some(normalize_matches)) => {
+            let symbol = joined_args(normalize_matches)?;
+            let chord = Chord::parse(&symbol).map_err(|error| error.to_string())?;
+            println!("{}", chord.canonical_symbol());
+            Ok(())
         }
         _ => {
-            let chord_args = chord_matches
-                .values_of("args")
-                .unwrap()
-                .collect::<Vec<_>>()
-                .join(" ");
-
-            let chord = Chord::from_regex(&chord_args).unwrap();
+            let chord_args = joined_args(chord_matches)?;
+            let chord = Chord::parse(&chord_args).map_err(|error| error.to_string())?;
             chord.print_notes();
+            Ok(())
         }
     }
 }
 
 fn main() {
     let matches = App::new("RustMusicTheory")
-        .version("0.1")
+        .version(env!("CARGO_PKG_VERSION"))
         .author("Ozan Kaşıkçı")
         .about("A music theory guide")
         .subcommand(
@@ -117,6 +102,16 @@ fn main() {
             App::new("chord")
                 .about("Provides information for the specified chord")
                 .subcommand(App::new("list").about("Prints out the available chords"))
+                .subcommand(
+                    App::new("normalize")
+                        .about("Prints the canonical ASCII form of a chord symbol")
+                        .arg(
+                            Arg::with_name("args")
+                                .help("chord symbol, for example C7(b9,#11)")
+                                .required(true)
+                                .multiple(true),
+                        ),
+                )
                 .arg(
                     Arg::with_name("args")
                         .help("chord args, examples:\nC minor\nAb augmented major seventh\nF# dominant seventh / C#\nC/1")
@@ -125,15 +120,22 @@ fn main() {
         )
         .get_matches();
 
-    match matches.subcommand() {
+    let result = match matches.subcommand() {
         ("scale", Some(scale_matches)) => {
             scale_command(scale_matches);
+            Ok(())
         }
 
-        ("chord", Some(chord_matches)) => {
-            chord_command(chord_matches);
-        }
+        ("chord", Some(chord_matches)) => chord_command(chord_matches),
 
-        _ => println!("Please use the help command to see the available commands"),
+        _ => {
+            println!("Please use the help command to see the available commands");
+            Ok(())
+        }
+    };
+
+    if let Err(message) = result {
+        eprintln!("error: {}", message);
+        std::process::exit(2);
     }
 }

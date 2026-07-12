@@ -11,7 +11,7 @@ use std::str::FromStr;
 use strum_macros::EnumIter;
 
 lazy_static! {
-    static ref REGEX_PITCH: Regex = Regex::new("^[ABCDEFGabcdefg][b♭#sS♯𝄪x]*").unwrap();
+    static ref REGEX_PITCH: Regex = Regex::new("^[ABCDEFGabcdefg][b♭𝄫#sS♯𝄪x]*").unwrap();
 }
 
 /// A note letter without an accidental.
@@ -260,27 +260,27 @@ impl Pitch {
             _ => return None,
         };
 
-        let mut accidental = 0;
+        let mut accidental: i8 = 0;
         let sharps: HashMap<char, i8> =
             [('#', 1), ('s', 1), ('S', 1), ('♯', 1), ('𝄪', 2), ('x', 2)]
                 .iter()
                 .cloned()
                 .collect();
-        let flats: HashMap<char, i8> = [('b', -1), ('♭', -1)].iter().cloned().collect();
+        let flats: HashMap<char, i8> = [('b', -1), ('♭', -1), ('𝄫', -2)].iter().cloned().collect();
         let mut active_map: Option<&HashMap<char, i8>> = None;
         for ch in characters {
             if let Some(map) = active_map {
                 if !map.contains_key(&ch) {
                     return None;
                 }
-                accidental += map.get(&ch).unwrap();
+                accidental = accidental.checked_add(*map.get(&ch).unwrap())?;
             } else {
                 if sharps.contains_key(&ch) {
                     active_map = Some(&sharps);
-                    accidental += sharps.get(&ch).unwrap();
+                    accidental = accidental.checked_add(*sharps.get(&ch).unwrap())?;
                 } else if flats.contains_key(&ch) {
                     active_map = Some(&flats);
-                    accidental += flats.get(&ch).unwrap();
+                    accidental = accidental.checked_add(*flats.get(&ch).unwrap())?;
                 } else {
                     return None;
                 }
@@ -318,7 +318,10 @@ impl fmt::Display for Pitch {
         write!(
             fmt,
             "{}",
-            letter.to_owned() + &(0..self.accidental.abs()).map(|_| acc).collect::<String>()
+            letter.to_owned()
+                + &(0..self.accidental.unsigned_abs())
+                    .map(|_| acc)
+                    .collect::<String>()
         )
     }
 }

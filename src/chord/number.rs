@@ -12,6 +12,9 @@ lazy_static! {
                 MajorSeventh,
             ),
             (Regex::new("(?i)^(triad)$").unwrap(), Triad),
+            (Regex::new("(?i)^(fifth|5)$").unwrap(), Fifth),
+            (Regex::new("(?i)^(sixth|6)$").unwrap(), Sixth),
+            (Regex::new("(?i)^(six[- ]?nine|6/9)$").unwrap(), SixNine),
             (Regex::new("(?i)^(seventh|7)$").unwrap(), Seventh),
             (Regex::new("(?i)^(ninth|9)$").unwrap(), Ninth),
             (Regex::new("(?i)^(eleventh|11)$").unwrap(), Eleventh),
@@ -21,9 +24,12 @@ lazy_static! {
 }
 
 /// The superscript number after a chord.
-#[derive(Display, Debug, Clone, Copy, PartialEq)]
+#[derive(Display, Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Number {
     Triad,
+    Fifth,
+    Sixth,
+    SixNine,
     Seventh,
     MajorSeventh,
     Ninth,

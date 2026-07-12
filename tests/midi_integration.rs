@@ -140,3 +140,30 @@ fn builder_chaining() {
     let bytes = file.to_bytes();
     assert_eq!(&bytes[0..4], b"MThd");
 }
+
+#[test]
+fn lead_sheet_theoretical_accidentals_export_at_the_correct_midi_octaves() {
+    use midly::{MidiMessage, Smf, TrackEventKind};
+
+    fn exported_pitches(symbol: &str) -> Vec<u8> {
+        let chord = Chord::parse(symbol).unwrap();
+        let bytes = chord
+            .to_midi(Duration::Quarter, Velocity::new(100).unwrap())
+            .to_bytes();
+        let midi = Smf::parse(&bytes).unwrap();
+        midi.tracks
+            .iter()
+            .flat_map(|track| track.iter())
+            .filter_map(|event| match event.kind {
+                TrackEventKind::Midi {
+                    message: MidiMessage::NoteOn { key, vel },
+                    ..
+                } if vel.as_int() > 0 => Some(key.as_int()),
+                _ => None,
+            })
+            .collect()
+    }
+
+    assert_eq!(exported_pitches("Cbmaj7"), [59, 63, 66, 70]);
+    assert_eq!(exported_pitches("B#maj7"), [72, 76, 79, 83]);
+}

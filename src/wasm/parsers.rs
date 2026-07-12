@@ -1,6 +1,6 @@
+use crate::chord::{Number as ChordNumber, Quality as ChordQuality};
 use crate::note::PitchSymbol;
-use crate::scale::{ScaleType, Mode};
-use crate::chord::{Quality as ChordQuality, Number as ChordNumber};
+use crate::scale::{Mode, ScaleType};
 
 /// Parse a string representation of a pitch into a PitchSymbol
 pub fn parse_pitch_symbol(input: &str) -> PitchSymbol {
@@ -66,6 +66,7 @@ pub fn parse_chord_quality(input: &str) -> ChordQuality {
         "half_diminished" => ChordQuality::HalfDiminished,
         "sus2" | "suspended2" => ChordQuality::Suspended2,
         "sus4" | "suspended4" => ChordQuality::Suspended4,
+        "power" => ChordQuality::Power,
         _ => ChordQuality::Major,
     }
 }
@@ -74,7 +75,11 @@ pub fn parse_chord_quality(input: &str) -> ChordQuality {
 pub fn parse_chord_number(input: &str) -> ChordNumber {
     match input.to_lowercase().as_str() {
         "triad" => ChordNumber::Triad,
+        "fifth" => ChordNumber::Fifth,
+        "sixth" => ChordNumber::Sixth,
+        "six_nine" | "6/9" => ChordNumber::SixNine,
         "seventh" => ChordNumber::Seventh,
+        "major_seventh" | "maj7" => ChordNumber::MajorSeventh,
         "ninth" => ChordNumber::Ninth,
         "eleventh" => ChordNumber::Eleventh,
         "thirteenth" => ChordNumber::Thirteenth,
@@ -105,7 +110,10 @@ mod tests {
     fn test_parse_scale_type() {
         assert_eq!(parse_scale_type("diatonic"), ScaleType::Diatonic);
         assert_eq!(parse_scale_type("DIATONIC"), ScaleType::Diatonic);
-        assert_eq!(parse_scale_type("pentatonic_major"), ScaleType::PentatonicMajor);
+        assert_eq!(
+            parse_scale_type("pentatonic_major"),
+            ScaleType::PentatonicMajor
+        );
         assert_eq!(parse_scale_type("blues"), ScaleType::Blues);
         assert_eq!(parse_scale_type("chromatic"), ScaleType::Chromatic);
         assert_eq!(parse_scale_type("harmonic_minor"), ScaleType::HarmonicMinor);
