@@ -18,7 +18,7 @@ pub struct Scale {
     /// The root note of the scale.
     pub tonic: Pitch,
     /// The octave of the root note of the scale.
-    pub octave: u8,
+    pub octave: i16,
     /// The type of scale (diatonic, melodic minor, harmonic minor).
     pub scale_type: ScaleType,
     /// The mode of the scale.
@@ -34,14 +34,18 @@ impl Scale {
     pub fn new(
         scale_type: ScaleType,
         tonic: Pitch,
-        octave: u8,
+        octave: i16,
         mode: Option<Mode>,
         direction: Direction,
     ) -> Result<Self, ScaleError> {
         let mut intervals = match scale_type {
             ScaleType::Diatonic => Interval::from_semitones(&[2, 2, 1, 2, 2, 2, 1]),
             ScaleType::HarmonicMinor => Interval::from_semitones(&[2, 1, 2, 2, 1, 3, 1]),
-            ScaleType::MelodicMinor => Interval::from_semitones(&[2, 1, 2, 2, 2, 2, 1]),
+            ScaleType::MelodicMinor => match direction {
+                Direction::Ascending => Interval::from_semitones(&[2, 1, 2, 2, 2, 2, 1]),
+                // Classical melodic minor descends as natural minor.
+                Direction::Descending => Interval::from_semitones(&[2, 1, 2, 2, 1, 2, 2]),
+            },
             ScaleType::PentatonicMajor => Interval::from_semitones(&[2, 2, 3, 2, 3]),
             ScaleType::PentatonicMinor => Interval::from_semitones(&[3, 2, 2, 3, 2]),
             ScaleType::Blues => Interval::from_semitones(&[3, 2, 1, 1, 3, 2]),
@@ -61,8 +65,11 @@ impl Scale {
                     Aeolian => intervals.rotate_right(2),
                     Locrian => intervals.rotate_right(1),
                     // New scale types don't have modal variations
-                    Mode::PentatonicMajor | Mode::PentatonicMinor | Mode::Blues | 
-                    Mode::Chromatic | Mode::WholeTone => {}
+                    Mode::PentatonicMajor
+                    | Mode::PentatonicMinor
+                    | Mode::Blues
+                    | Mode::Chromatic
+                    | Mode::WholeTone => {}
                     _ => {}
                 };
             }
@@ -107,29 +114,93 @@ impl Scale {
 impl Notes for Scale {
     fn notes(&self) -> Vec<Note> {
         use Direction::*;
-        use crate::note::KeySignature;
-        
+
         let root_note = Note {
             octave: self.octave,
             pitch: self.tonic,
         };
 
         let intervals_clone = self.intervals.clone();
-        
-        // Create a key signature for proper enharmonic spelling
-        let key_signature = KeySignature::new_with_mode(self.tonic, self.mode);
 
         let mut notes = match &self.direction {
             Ascending => Interval::to_notes(root_note, intervals_clone),
             Descending => Interval::to_notes_reverse(root_note, intervals_clone),
         };
-        
-        // Apply proper enharmonic spelling based on key signature
-        for note in &mut notes {
-            let preferred_spelling = key_signature.get_preferred_spelling(note.pitch);
-            note.pitch = crate::note::Pitch::from(preferred_spelling);
+
+        if self.scale_type == ScaleType::Chromatic {
+            let major_steps = [2u8, 2, 1, 2, 2, 2, 1];
+            let mut pitch_class = self.tonic.into_u8();
+            let mut diatonic = vec![self.tonic];
+            for (degree, step) in major_steps.iter().enumerate().take(6) {
+                pitch_class = (pitch_class + step) % 12;
+                diatonic.push(Pitch::from_u8_with_letter(
+                    pitch_class,
+                    self.tonic.letter.offset(degree as i16 + 1),
+                ));
+            }
+
+            for note in &mut notes {
+                let pitch_class = note.pitch.into_u8();
+                note.pitch = if let Some(diatonic_pitch) =
+                    diatonic.iter().find(|pitch| pitch.into_u8() == pitch_class)
+                {
+                    *diatonic_pitch
+                } else {
+                    let adjacent_pitch_class = match self.direction {
+                        Ascending => (pitch_class + 11) % 12,
+                        Descending => (pitch_class + 1) % 12,
+                    };
+                    let adjacent = diatonic
+                        .iter()
+                        .find(|pitch| pitch.into_u8() == adjacent_pitch_class)
+                        .unwrap();
+                    Pitch::from_u8_with_letter(pitch_class, adjacent.letter)
+                };
+            }
+            notes.first_mut().unwrap().pitch = self.tonic;
+            notes.last_mut().unwrap().pitch = self.tonic;
+            return notes;
         }
-        
+
+        if self.scale_type == ScaleType::WholeTone {
+            for note in &mut notes {
+                note.pitch = Pitch::from_u8_with_direction(note.pitch.into_u8(), self.direction);
+            }
+            notes.first_mut().unwrap().pitch = self.tonic;
+            notes.last_mut().unwrap().pitch = self.tonic;
+            return notes;
+        }
+
+        // Scale spellings follow scale-degree letters. This keeps all seven
+        // letter names in heptatonic scales and permits required double
+        // accidentals in theoretical keys.
+        let ascending_degrees: &[i16] = match self.scale_type {
+            ScaleType::Diatonic | ScaleType::HarmonicMinor | ScaleType::MelodicMinor => {
+                &[0, 1, 2, 3, 4, 5, 6, 7]
+            }
+            ScaleType::PentatonicMajor => &[0, 1, 2, 4, 5, 7],
+            ScaleType::PentatonicMinor => &[0, 2, 3, 4, 6, 7],
+            // Minor blues: 1, flat 3, 4, sharp 4, 5, flat 7.
+            ScaleType::Blues => &[0, 2, 3, 3, 4, 6, 7],
+            ScaleType::WholeTone => unreachable!(),
+            ScaleType::Chromatic => unreachable!(),
+        };
+        let degree_offsets: Vec<i16> = match self.direction {
+            Ascending => ascending_degrees.to_vec(),
+            Descending => {
+                let octave_degree = *ascending_degrees.last().unwrap();
+                ascending_degrees
+                    .iter()
+                    .rev()
+                    .map(|degree| degree - octave_degree)
+                    .collect()
+            }
+        };
+        for (note, degree_offset) in notes.iter_mut().zip(degree_offsets) {
+            let letter = self.tonic.letter.offset(degree_offset);
+            note.pitch = Pitch::from_u8_with_letter(note.pitch.into_u8(), letter);
+        }
+
         notes
     }
 }
@@ -137,7 +208,10 @@ impl Notes for Scale {
 impl Default for Scale {
     fn default() -> Self {
         Scale {
-            tonic: Pitch { letter: NoteLetter::C, accidental: 0 },
+            tonic: Pitch {
+                letter: NoteLetter::C,
+                accidental: 0,
+            },
             octave: 0,
             scale_type: ScaleType::Diatonic,
             mode: Some(Ionian),
