@@ -19,6 +19,15 @@ fn assert_chord_notes(expected: &[theory::note::PitchSymbol], chord: Chord) {
     }
 }
 
+fn assert_chord_spelling(expected: &str, chord: Chord) {
+    let expected: Vec<Pitch> = expected
+        .split_whitespace()
+        .map(|pitch| Pitch::from_str(pitch).unwrap())
+        .collect();
+    let actual: Vec<Pitch> = chord.notes().into_iter().map(|note| note.pitch).collect();
+    assert_eq!(actual, expected, "Incorrect spelling for {:?}", chord);
+}
+
 #[cfg(test)]
 mod chord_enharmonic_tests {
     use super::*;
@@ -63,27 +72,24 @@ mod chord_enharmonic_tests {
     #[test]
     fn test_minor_triads_enharmonic_spelling() {
         let test_cases = vec![
-            // Flat key minors (use root note's major key signature)
-            (Pitch::new(NoteLetter::F, 0), vec![F, Ab, C]),          // F minor (F major key sig)
-            (Pitch::new(NoteLetter::B, -1), vec![Bb, Cs, F]),        // Bb minor (Bb major key sig)
-            (Pitch::new(NoteLetter::E, -1), vec![Eb, Fs, Bb]),       // Eb minor (Eb major key sig)
-            (Pitch::new(NoteLetter::A, -1), vec![Ab, B, Eb]),        // Ab minor (Ab major key sig)
-            (Pitch::new(NoteLetter::D, -1), vec![Db, E, Ab]),        // Db minor (Db major key sig)
-            (Pitch::new(NoteLetter::G, -1), vec![Gb, A, Db]),        // Gb minor (Gb major key sig)
-            
-            // Sharp key minors
-            (Pitch::new(NoteLetter::G, 0), vec![G, As, D]),          // G minor (G major key sig)
-            (Pitch::new(NoteLetter::D, 0), vec![D, F, A]),           // D minor (D major key sig)
-            (Pitch::new(NoteLetter::A, 0), vec![A, C, E]),           // A minor (A major key sig)
-            (Pitch::new(NoteLetter::E, 0), vec![E, G, B]),           // E minor (E major key sig)
-            (Pitch::new(NoteLetter::B, 0), vec![B, D, Fs]),          // B minor (B major key sig)
-            (Pitch::new(NoteLetter::F, 1), vec![Fs, A, Cs]),         // F# minor (F# major key sig)
-            (Pitch::new(NoteLetter::C, 1), vec![Cs, E, Gs]),         // C# minor (C# major key sig)
+            (Pitch::new(NoteLetter::F, 0), "F Ab C"),
+            (Pitch::new(NoteLetter::B, -1), "Bb Db F"),
+            (Pitch::new(NoteLetter::E, -1), "Eb Gb Bb"),
+            (Pitch::new(NoteLetter::A, -1), "Ab Cb Eb"),
+            (Pitch::new(NoteLetter::D, -1), "Db Fb Ab"),
+            (Pitch::new(NoteLetter::G, -1), "Gb Bbb Db"),
+            (Pitch::new(NoteLetter::G, 0), "G Bb D"),
+            (Pitch::new(NoteLetter::D, 0), "D F A"),
+            (Pitch::new(NoteLetter::A, 0), "A C E"),
+            (Pitch::new(NoteLetter::E, 0), "E G B"),
+            (Pitch::new(NoteLetter::B, 0), "B D Fs"),
+            (Pitch::new(NoteLetter::F, 1), "Fs A Cs"),
+            (Pitch::new(NoteLetter::C, 1), "Cs E Gs"),
         ];
 
         for (root, expected) in test_cases {
             let chord = Chord::new(root, Minor, Triad);
-            assert_chord_notes(&expected, chord);
+            assert_chord_spelling(expected, chord);
         }
     }
 
@@ -100,40 +106,30 @@ mod chord_enharmonic_tests {
             (Pitch::new(NoteLetter::C, 1), vec![Cs, Es, Gs, Bs]),    // C# maj7
             (Pitch::new(NoteLetter::B, 0), vec![B, Ds, Fs, As]),     // B maj7
             
-            // Dominant 7th chords
-            (Pitch::new(NoteLetter::G, -1), vec![Gb, Bb, Db, E]),    // Gb7 (E is enharmonic to Fb)
-            (Pitch::new(NoteLetter::F, 1), vec![Fs, As, Cs, E]),     // F#7
         ];
 
         for (root, expected) in test_cases {
-            let chord_maj7 = Chord::new(root, Major, MajorSeventh);
-            if expected == vec![Gb, Bb, Db, E] || expected == vec![Fs, As, Cs, E] {
-                // These are dominant 7ths, not major 7ths
-                let chord_dom7 = Chord::new(root, Dominant, Seventh);
-                assert_chord_notes(&expected, chord_dom7);
-            } else {
-                assert_chord_notes(&expected, chord_maj7);
-            }
+            assert_chord_notes(&expected, Chord::new(root, Major, MajorSeventh));
         }
+
+        assert_chord_spelling("Gb Bb Db Fb", Chord::new(Pitch::new(NoteLetter::G, -1), Dominant, Seventh));
+        assert_chord_spelling("Fs As Cs E", Chord::new(Pitch::new(NoteLetter::F, 1), Dominant, Seventh));
     }
 
     #[test]
     fn test_diminished_and_augmented_triads() {
         let test_cases = vec![
-            // Diminished triads
-            (Pitch::new(NoteLetter::G, -1), Diminished, vec![Gb, A, C]),      // Gb dim (A=Bbb, C=Dbb enharmonic)
-            (Pitch::new(NoteLetter::F, 1), Diminished, vec![Fs, A, C]),       // F# dim
-            (Pitch::new(NoteLetter::A, -1), Diminished, vec![Ab, B, D]),      // Ab dim (uses Ab major key sig)
-            
-            // Augmented triads  
-            (Pitch::new(NoteLetter::G, -1), Augmented, vec![Gb, Bb, D]),      // Gb aug
-            (Pitch::new(NoteLetter::F, 1), Augmented, vec![Fs, As, D]),       // F# aug (D natural, not in F# major scale)
-            (Pitch::new(NoteLetter::D, -1), Augmented, vec![Db, F, A]),       // Db aug
+            (Pitch::new(NoteLetter::G, -1), Diminished, "Gb Bbb Dbb"),
+            (Pitch::new(NoteLetter::F, 1), Diminished, "Fs A C"),
+            (Pitch::new(NoteLetter::A, -1), Diminished, "Ab Cb Ebb"),
+            (Pitch::new(NoteLetter::G, -1), Augmented, "Gb Bb D"),
+            (Pitch::new(NoteLetter::F, 1), Augmented, "Fs As Css"),
+            (Pitch::new(NoteLetter::D, -1), Augmented, "Db F A"),
         ];
 
         for (root, quality, expected) in test_cases {
             let chord = Chord::new(root, quality, Triad);
-            assert_chord_notes(&expected, chord);
+            assert_chord_spelling(expected, chord);
         }
     }
 
