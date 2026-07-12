@@ -1,13 +1,15 @@
 use crate::interval::IntervalError;
 use crate::note::NoteError;
+use crate::scale::{Mode, ScaleType};
 use std::error;
 use std::fmt;
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum ScaleError {
     InvalidInterval,
     ModeFromRegex,
     InvalidRegex,
+    IncompatibleMode { scale_type: ScaleType, mode: Mode },
 }
 
 impl fmt::Display for ScaleError {
@@ -18,6 +20,13 @@ impl fmt::Display for ScaleError {
             }
             ScaleError::ModeFromRegex => write!(f, "Can't determine the mode!"),
             ScaleError::InvalidRegex => write!(f, "Invalid scale regex!"),
+            ScaleError::IncompatibleMode { scale_type, mode } => write!(
+                f,
+                "Mode {} belongs to {}, not {}",
+                mode.canonical_name(),
+                mode.scale_type(),
+                scale_type
+            ),
         }
     }
 }

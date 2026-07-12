@@ -11,6 +11,32 @@ pub enum Direction {
     Descending,
 }
 
+fn raw_midi(note: &Note) -> i32 {
+    use NoteLetter::*;
+    let natural = match note.pitch.letter {
+        C => 0,
+        D => 2,
+        E => 4,
+        F => 5,
+        G => 7,
+        A => 9,
+        B => 11,
+    };
+    (note.octave as i32 + 1) * 12 + natural + note.pitch.accidental as i32
+}
+
+fn synchronize_octaves(notes: &mut [Note], direction: Direction) {
+    for index in 1..notes.len() {
+        let previous = raw_midi(&notes[index - 1]);
+        let pitch_value = raw_midi(&Note::new(notes[index].pitch, -1));
+        let octave_plus_one = match direction {
+            Direction::Ascending => (previous - pitch_value).div_euclid(12) + 1,
+            Direction::Descending => (previous - 1 - pitch_value).div_euclid(12),
+        };
+        notes[index].octave = (octave_plus_one - 1).clamp(i16::MIN as i32, i16::MAX as i32) as i16;
+    }
+}
+
 /// A scale.
 #[derive(Debug, Clone)]
 pub struct Scale {
@@ -37,14 +63,23 @@ impl Scale {
         mode: Option<Mode>,
         direction: Direction,
     ) -> Result<Self, ScaleError> {
+        if let Some(mode) = mode {
+            if mode.scale_type() != scale_type {
+                return Err(ScaleError::IncompatibleMode { scale_type, mode });
+            }
+        }
+
+        let classical_melodic_descent = scale_type == ScaleType::MelodicMinor
+            && direction == Direction::Descending
+            && mode.map(Mode::rotation).unwrap_or(0) == 0;
         let mut intervals = match scale_type {
             ScaleType::Diatonic => Interval::from_semitones(&[2, 2, 1, 2, 2, 2, 1]),
             ScaleType::HarmonicMinor => Interval::from_semitones(&[2, 1, 2, 2, 1, 3, 1]),
-            ScaleType::MelodicMinor => match direction {
-                Direction::Ascending => Interval::from_semitones(&[2, 1, 2, 2, 2, 2, 1]),
-                // Classical melodic minor descends as natural minor.
-                Direction::Descending => Interval::from_semitones(&[2, 1, 2, 2, 1, 2, 2]),
-            },
+            ScaleType::MelodicMinor if classical_melodic_descent => {
+                // Preserve the classical base scale: it descends as natural minor.
+                Interval::from_semitones(&[2, 1, 2, 2, 1, 2, 2])
+            }
+            ScaleType::MelodicMinor => Interval::from_semitones(&[2, 1, 2, 2, 2, 2, 1]),
             ScaleType::PentatonicMajor => Interval::from_semitones(&[2, 2, 3, 2, 3]),
             ScaleType::PentatonicMinor => Interval::from_semitones(&[3, 2, 2, 3, 2]),
             ScaleType::Blues => Interval::from_semitones(&[3, 2, 1, 1, 3, 2]),
@@ -142,6 +177,7 @@ impl Notes for Scale {
             }
             notes.first_mut().unwrap().pitch = self.tonic;
             notes.last_mut().unwrap().pitch = self.tonic;
+            synchronize_octaves(&mut notes, self.direction);
             return notes;
         }
 
@@ -151,6 +187,7 @@ impl Notes for Scale {
             }
             notes.first_mut().unwrap().pitch = self.tonic;
             notes.last_mut().unwrap().pitch = self.tonic;
+            synchronize_octaves(&mut notes, self.direction);
             return notes;
         }
 
@@ -183,6 +220,8 @@ impl Notes for Scale {
             let letter = self.tonic.letter.offset(degree_offset);
             note.pitch = Pitch::from_u8_with_letter(note.pitch.into_u8(), letter);
         }
+
+        synchronize_octaves(&mut notes, self.direction);
 
         notes
     }

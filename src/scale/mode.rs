@@ -30,6 +30,12 @@ pub enum Mode {
     LydianSharp2,
     UltraLocrian,
     MelodicMinor,
+    DorianFlat2,
+    LydianAugmented,
+    LydianDominant,
+    MixolydianFlat6,
+    LocrianSharp2,
+    Altered,
     PentatonicMajor,
     PentatonicMinor,
     Blues,
@@ -53,6 +59,12 @@ const ALL_MODES: &[Mode] = &[
     Mode::LydianSharp2,
     Mode::UltraLocrian,
     Mode::MelodicMinor,
+    Mode::DorianFlat2,
+    Mode::LydianAugmented,
+    Mode::LydianDominant,
+    Mode::MixolydianFlat6,
+    Mode::LocrianSharp2,
+    Mode::Altered,
     Mode::PentatonicMajor,
     Mode::PentatonicMinor,
     Mode::Blues,
@@ -135,7 +147,13 @@ impl Mode {
             | Self::PhrygianDominant
             | Self::LydianSharp2
             | Self::UltraLocrian => ScaleType::HarmonicMinor,
-            Self::MelodicMinor => ScaleType::MelodicMinor,
+            Self::MelodicMinor
+            | Self::DorianFlat2
+            | Self::LydianAugmented
+            | Self::LydianDominant
+            | Self::MixolydianFlat6
+            | Self::LocrianSharp2
+            | Self::Altered => ScaleType::MelodicMinor,
             Self::PentatonicMajor => ScaleType::PentatonicMajor,
             Self::PentatonicMinor => ScaleType::PentatonicMinor,
             Self::Blues => ScaleType::Blues,
@@ -148,12 +166,12 @@ impl Mode {
     pub fn rotation(self) -> usize {
         match self {
             Self::Ionian | Self::HarmonicMinor | Self::MelodicMinor => 0,
-            Self::Dorian | Self::LocrianNatural6 => 1,
-            Self::Phrygian | Self::IonianSharp5 => 2,
-            Self::Lydian | Self::DorianSharp4 => 3,
-            Self::Mixolydian | Self::PhrygianDominant => 4,
-            Self::Aeolian | Self::LydianSharp2 => 5,
-            Self::Locrian | Self::UltraLocrian => 6,
+            Self::Dorian | Self::LocrianNatural6 | Self::DorianFlat2 => 1,
+            Self::Phrygian | Self::IonianSharp5 | Self::LydianAugmented => 2,
+            Self::Lydian | Self::DorianSharp4 | Self::LydianDominant => 3,
+            Self::Mixolydian | Self::PhrygianDominant | Self::MixolydianFlat6 => 4,
+            Self::Aeolian | Self::LydianSharp2 | Self::LocrianSharp2 => 5,
+            Self::Locrian | Self::UltraLocrian | Self::Altered => 6,
             Self::PentatonicMajor
             | Self::PentatonicMinor
             | Self::Blues
@@ -180,6 +198,12 @@ impl Mode {
             Self::LydianSharp2 => "Lydian #2",
             Self::UltraLocrian => "Ultralocrian",
             Self::MelodicMinor => "Melodic Minor",
+            Self::DorianFlat2 => "Dorian b2",
+            Self::LydianAugmented => "Lydian Augmented",
+            Self::LydianDominant => "Lydian Dominant",
+            Self::MixolydianFlat6 => "Mixolydian b6",
+            Self::LocrianSharp2 => "Locrian #2",
+            Self::Altered => "Altered",
             Self::PentatonicMajor => "Pentatonic Major",
             Self::PentatonicMinor => "Pentatonic Minor",
             Self::Blues => "Blues",
@@ -206,6 +230,12 @@ impl Mode {
             Self::LydianSharp2 => "lydian_sharp_2",
             Self::UltraLocrian => "ultralocrian",
             Self::MelodicMinor => "melodic_minor",
+            Self::DorianFlat2 => "dorian_flat_2",
+            Self::LydianAugmented => "lydian_augmented",
+            Self::LydianDominant => "lydian_dominant",
+            Self::MixolydianFlat6 => "mixolydian_flat_6",
+            Self::LocrianSharp2 => "locrian_sharp_2",
+            Self::Altered => "altered",
             Self::PentatonicMajor => "pentatonic_major",
             Self::PentatonicMinor => "pentatonic_minor",
             Self::Blues => "blues",
@@ -253,6 +283,17 @@ impl Mode {
                 "superlocrian diminished",
             ],
             Self::MelodicMinor => &["melodic minor", "melodicminor", "mel minor", "jazz minor"],
+            Self::DorianFlat2 => &["dorian b2", "phrygian #6", "melodic minor second mode"],
+            Self::LydianAugmented => &["lydian augmented", "lydian #5"],
+            Self::LydianDominant => &["lydian dominant", "lydian b7", "overtone"],
+            Self::MixolydianFlat6 => &["mixolydian b6", "melodic minor fifth mode", "hindu"],
+            Self::LocrianSharp2 => &["locrian #2", "half diminished", "aeolian b5"],
+            Self::Altered => &[
+                "altered",
+                "super locrian",
+                "superlocrian",
+                "diminished whole tone",
+            ],
             Self::PentatonicMajor => &[
                 "pentatonic major",
                 "pentatonic maj",
@@ -302,7 +343,7 @@ impl FromStr for Mode {
             .iter()
             .copied()
             .find(|mode| {
-                mode.api_name().replace('_', " ") == normalized
+                normalize_mode_name(mode.api_name()) == normalized
                     || mode.aliases().iter().any(|alias| {
                         let alias = normalize_mode_name(alias);
                         alias == normalized || alias.replace(' ', "") == compact

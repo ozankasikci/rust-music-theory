@@ -199,7 +199,10 @@ fn every_supported_chord_formula_is_transposed_and_spelled_by_chord_member() {
             }
 
             let recognized = Chord::from_interval(root, adjacent_intervals).unwrap();
-            assert_eq!((recognized.quality(), recognized.number()), (quality, number));
+            assert_eq!(
+                (recognized.quality(), recognized.number()),
+                (quality, number)
+            );
         }
     }
 }
@@ -506,7 +509,19 @@ fn scale_type_mapping_is_exhaustive() {
         (Mode::Aeolian, ScaleType::Diatonic),
         (Mode::Locrian, ScaleType::Diatonic),
         (Mode::HarmonicMinor, ScaleType::HarmonicMinor),
+        (Mode::LocrianNatural6, ScaleType::HarmonicMinor),
+        (Mode::IonianSharp5, ScaleType::HarmonicMinor),
+        (Mode::DorianSharp4, ScaleType::HarmonicMinor),
+        (Mode::PhrygianDominant, ScaleType::HarmonicMinor),
+        (Mode::LydianSharp2, ScaleType::HarmonicMinor),
+        (Mode::UltraLocrian, ScaleType::HarmonicMinor),
         (Mode::MelodicMinor, ScaleType::MelodicMinor),
+        (Mode::DorianFlat2, ScaleType::MelodicMinor),
+        (Mode::LydianAugmented, ScaleType::MelodicMinor),
+        (Mode::LydianDominant, ScaleType::MelodicMinor),
+        (Mode::MixolydianFlat6, ScaleType::MelodicMinor),
+        (Mode::LocrianSharp2, ScaleType::MelodicMinor),
+        (Mode::Altered, ScaleType::MelodicMinor),
         (Mode::PentatonicMajor, ScaleType::PentatonicMajor),
         (Mode::PentatonicMinor, ScaleType::PentatonicMinor),
         (Mode::Blues, ScaleType::Blues),
