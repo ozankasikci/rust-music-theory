@@ -71,6 +71,52 @@ mod key_signature_tests {
         assert_eq!(key_sig.get_preferred_spelling(Pitch::from_u8(8)), PitchSymbol::Gs, "G# as chromatic/leading tone in A minor context");
     }
 
+    #[test]
+    fn test_modal_relative_major_spellings() {
+        let cases = [
+            (Mode::Dorian, 3, PitchSymbol::Eb),
+            (Mode::Phrygian, 1, PitchSymbol::Db),
+            (Mode::Lydian, 6, PitchSymbol::Fs),
+            (Mode::Mixolydian, 10, PitchSymbol::Bb),
+            (Mode::Locrian, 6, PitchSymbol::Gb),
+        ];
+        for (mode, pitch_class, expected) in cases {
+            let key = KeySignature::new_with_mode(Pitch::new(NoteLetter::C, 0), Some(mode));
+            assert_eq!(key.get_preferred_spelling(Pitch::from_u8(pitch_class)), expected);
+        }
+    }
+
+    #[test]
+    fn test_a_flat_minor_uses_c_flat_major_key_signature() {
+        let key = KeySignature::new_with_mode(
+            Pitch::new(NoteLetter::A, -1),
+            Some(Mode::Aeolian),
+        );
+        assert_eq!(key.get_preferred_spelling(Pitch::from_u8(11)), PitchSymbol::Cb);
+        assert_eq!(key.get_preferred_spelling(Pitch::from_u8(4)), PitchSymbol::Fb);
+    }
+
+    #[test]
+    fn test_unknown_theoretical_keys_use_consistent_fallback_accidentals() {
+        use PitchSymbol::*;
+
+        let flat_fallback = KeySignature::new(Pitch::new(NoteLetter::C, 2));
+        let sharp_fallback = KeySignature::new(Pitch::new(NoteLetter::G, 2));
+        let expected_flat = [C, Db, D, Eb, E, F, Gb, G, Ab, A, Bb, B];
+        let expected_sharp = [C, Cs, D, Ds, E, F, Fs, G, Gs, A, As, B];
+
+        for pitch_class in 0..12 {
+            assert_eq!(
+                flat_fallback.get_preferred_spelling(Pitch::from_u8(pitch_class)),
+                expected_flat[pitch_class as usize]
+            );
+            assert_eq!(
+                sharp_fallback.get_preferred_spelling(Pitch::from_u8(pitch_class)),
+                expected_sharp[pitch_class as usize]
+            );
+        }
+    }
+
      #[test]
     fn test_pitch_symbol_bs_cb_spellings() {
         // Test B# spelling (should be preferred in C# major, for example)
@@ -233,4 +279,4 @@ mod key_signature_tests {
         assert_eq!(key_sig.get_preferred_spelling(Pitch::from_u8(6)), PitchSymbol::Gb, "F#/Gb in F Major should be Gb");
         assert_eq!(key_sig.get_preferred_spelling(Pitch::from_u8(8)), PitchSymbol::Ab, "G#/Ab in F Major should be Ab");
     }
-} 
+}
