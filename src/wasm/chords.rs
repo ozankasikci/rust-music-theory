@@ -11,7 +11,10 @@ pub fn generate_chord(root: &str, quality: &str, number: &str) -> JsValue {
     let chord_quality = parse_chord_quality(quality);
     let chord_number = parse_chord_number(number);
 
-    let chord = Chord::new(Pitch::from(pitch_symbol), chord_quality, chord_number);
+    let chord = match Chord::try_new(Pitch::from(pitch_symbol), chord_quality, chord_number) {
+        Ok(chord) => chord,
+        Err(_) => return JsValue::NULL,
+    };
     let notes: Vec<WasmNote> = chord.notes().into_iter().map(WasmNote::from).collect();
     let wasm_chord = WasmChord {
         notes,
@@ -51,7 +54,7 @@ mod tests {
     use super::*;
     use crate::chord::{Quality, Number};
 
-    #[test]
+    #[wasm_bindgen_test::wasm_bindgen_test]
     fn test_chord_generation_logic() {
         // Test the core logic without WASM bindings
         let pitch_symbol = parse_pitch_symbol("C");
@@ -71,7 +74,7 @@ mod tests {
         assert_eq!(wasm_notes[0].pitch, "C");
     }
 
-    #[test]
+    #[wasm_bindgen_test::wasm_bindgen_test]
     fn test_chord_with_sharps_and_flats() {
         let f_sharp_chord = Chord::new(
             Pitch::from(parse_pitch_symbol("F#")),
@@ -86,7 +89,7 @@ mod tests {
         assert_eq!(wasm_notes[0].pitch, "F#");
     }
 
-    #[test]
+    #[wasm_bindgen_test::wasm_bindgen_test]
     fn test_available_chord_qualities_count() {
         let qualities = vec![
             "major",
@@ -101,13 +104,13 @@ mod tests {
         assert_eq!(qualities.len(), 8);
     }
 
-    #[test]
+    #[wasm_bindgen_test::wasm_bindgen_test]
     fn test_available_chord_numbers_count() {
         let numbers = vec!["triad", "seventh", "ninth", "eleventh", "thirteenth"];
         assert_eq!(numbers.len(), 5);
     }
 
-    #[test]
+    #[wasm_bindgen_test::wasm_bindgen_test]
     fn test_extended_chords() {
         let ninth_chord = Chord::new(
             Pitch::from(parse_pitch_symbol("G")),
@@ -120,5 +123,31 @@ mod tests {
 
         let wasm_notes: Vec<WasmNote> = notes.into_iter().map(WasmNote::from).collect();
         assert_eq!(wasm_notes[0].pitch, "G");
+    }
+
+    #[wasm_bindgen_test::wasm_bindgen_test]
+    fn test_exported_chord_generation_and_lists() {
+        let chord: WasmChord = serde_wasm_bindgen::from_value(generate_chord(
+            "C",
+            "augmented",
+            "seventh",
+        ))
+        .unwrap();
+        assert_eq!(
+            chord.notes.iter().map(|note| note.pitch.as_str()).collect::<Vec<_>>(),
+            vec!["C", "E", "G#", "Bb"]
+        );
+
+        let qualities: Vec<String> =
+            serde_wasm_bindgen::from_value(get_available_chord_qualities()).unwrap();
+        let numbers: Vec<String> =
+            serde_wasm_bindgen::from_value(get_available_chord_numbers()).unwrap();
+        assert!(qualities.contains(&"half_diminished".to_string()));
+        assert!(numbers.contains(&"thirteenth".to_string()));
+    }
+
+    #[wasm_bindgen_test::wasm_bindgen_test]
+    fn test_exported_chord_rejects_unsupported_combinations() {
+        assert!(generate_chord("C", "diminished", "ninth").is_null());
     }
 }

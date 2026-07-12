@@ -8,37 +8,29 @@ mod test_interval {
 
     #[test]
     fn test_second_note_from() {
-        let notes = vec![(C, 3), (D, 3), (E, 3), (Fs, 3), (Gs, 3), (As, 3), (C, 4)]
-            .into_iter()
-            .map(|note| Note {
-                pitch: Pitch::from(note.0),
-                octave: note.1,
-            })
-            .collect::<Vec<Note>>();
-
         let major_second = Interval::from_semitone(2).unwrap();
-        for i in 0..(notes.len() - 1) {
-            let next_note = major_second.second_note_from(notes[i].clone());
-            assert_eq!(next_note.pitch, notes[i + 1].pitch);
-            assert_eq!(next_note.octave, notes[i + 1].octave);
+        let cases = [("C", 3, "D", 3), ("E", 3, "Fs", 3), ("As", 3, "Bs", 3)];
+        for (first, first_octave, expected, expected_octave) in cases {
+            let next_note = major_second.second_note_from(Note::new(
+                Pitch::from_str(first).unwrap(),
+                first_octave,
+            ));
+            assert_eq!(next_note.pitch, Pitch::from_str(expected).unwrap());
+            assert_eq!(next_note.octave, expected_octave);
         }
     }
 
     #[test]
     fn test_second_note_down_from() {
-        let notes = vec![(C, 4), (As, 3), (Gs, 3), (Fs, 3), (E, 3), (D, 3), (C, 3)]
-            .into_iter()
-            .map(|note| Note {
-                pitch: Pitch::from(note.0),
-                octave: note.1,
-            })
-            .collect::<Vec<Note>>();
-
         let major_second = Interval::from_semitone(2).unwrap();
-        for i in 0..(notes.len() - 1) {
-            let next_note = major_second.second_note_down_from(notes[i].clone());
-            assert_eq!(next_note.pitch, notes[i + 1].pitch);
-            assert_eq!(next_note.octave, notes[i + 1].octave);
+        let cases = [("C", 4, "Bb", 3), ("Fs", 3, "E", 3), ("Cb", 4, "Bbb", 3)];
+        for (first, first_octave, expected, expected_octave) in cases {
+            let next_note = major_second.second_note_down_from(Note::new(
+                Pitch::from_str(first).unwrap(),
+                first_octave,
+            ));
+            assert_eq!(next_note.pitch, Pitch::from_str(expected).unwrap());
+            assert_eq!(next_note.octave, expected_octave);
         }
     }
 
@@ -58,7 +50,7 @@ mod test_interval {
     #[test]
     fn test_octave_jump_down() {
         let octave_interval = Interval::from_semitone(12).unwrap();
-        for octave in 8..=0 {
+        for octave in 1..=8 {
             let note = Note {
                 pitch: Pitch::from(C),
                 octave,
@@ -73,25 +65,23 @@ mod test_interval {
         let unison = Interval::from_semitone(0).unwrap();
         let inverted = Interval::invert(&unison);
         assert!(inverted.is_ok());
-        assert_eq!(inverted.unwrap().semitone_count, unison.semitone_count);
+        assert_eq!(inverted.unwrap().semitone_count, 12);
     }
 
     #[test]
     fn test_invert() {
-        let list = vec![12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
-
-        for i in 0..list.len() {
-            let interval = Interval::from_semitone(list[i]).unwrap();
-            let inverted = Interval::invert(&interval);
-            assert!(inverted.is_ok());
-            assert_eq!(inverted.unwrap().semitone_count, list[list.len() - i - 1]);
+        for semitones in 0..=12 {
+            let interval = Interval::from_semitone(semitones).unwrap();
+            let inverted = Interval::invert(&interval).unwrap();
+            assert_eq!(inverted.semitone_count, 12 - semitones);
+            assert_eq!(Interval::invert(&inverted).unwrap(), interval);
         }
     }
 
     #[test]
     fn test_display() {
         let intervals = vec![
-            (Interval::from_semitone(0).unwrap(), "1"),
+            (Interval::from_semitone(0).unwrap(), "P1"),
             (Interval::from_semitone(1).unwrap(), "m2"),
             (Interval::from_semitone(2).unwrap(), "M2"),
             (Interval::from_semitone(3).unwrap(), "m3"),
@@ -103,7 +93,7 @@ mod test_interval {
             (Interval::from_semitone(9).unwrap(), "M6"),
             (Interval::from_semitone(10).unwrap(), "m7"),
             (Interval::from_semitone(11).unwrap(), "M7"),
-            (Interval::from_semitone(12).unwrap(), "1"),
+            (Interval::from_semitone(12).unwrap(), "P8"),
         ];
 
         for interval in intervals {

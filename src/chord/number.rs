@@ -7,12 +7,15 @@ lazy_static! {
     static ref NUMBER_REGEXES: Vec<(Regex, Number)> = {
         use Number::*;
         vec![
-            (Regex::new("(?i)(triad)").unwrap(), Triad),
-            (Regex::new("(?i)(seventh)").unwrap(), Seventh),
-            (Regex::new(r"(?i)(major\s*seventh)").unwrap(), MajorSeventh),
-            (Regex::new("(?i)(ninth)").unwrap(), Ninth),
-            (Regex::new("(?i)(eleventh)").unwrap(), Eleventh),
-            (Regex::new("(?i)(thirteenth)").unwrap(), Thirteenth),
+            (
+                Regex::new(r"(?i)^(major\s*seventh|maj7|major7)$").unwrap(),
+                MajorSeventh,
+            ),
+            (Regex::new("(?i)^(triad)$").unwrap(), Triad),
+            (Regex::new("(?i)^(seventh|7)$").unwrap(), Seventh),
+            (Regex::new("(?i)^(ninth|9)$").unwrap(), Ninth),
+            (Regex::new("(?i)^(eleventh|11)$").unwrap(), Eleventh),
+            (Regex::new("(?i)^(thirteenth|13)$").unwrap(), Thirteenth),
         ]
     };
 }
@@ -30,7 +33,7 @@ pub enum Number {
 
 impl Number {
     /// Parse the number using a regex.
-    pub fn from_regex(string: &str) -> Result<(Self, Option<Match>), ChordError> {
+    pub fn from_regex(string: &str) -> Result<(Self, Option<Match<'_>>), ChordError> {
         for (regex, number_enum) in &*NUMBER_REGEXES {
             let mode = regex.find(string);
 

@@ -25,7 +25,7 @@ mod chord_regex_tests {
             ("Cb MAJ Seventh", Pitch::new(C, -1), Major, Seventh),
             ("C M", Pitch::new(C, 0), Major, Triad),
             ("C MaJ Triad", Pitch::new(C, 0), Major, Triad),
-            ("C Major Seventh", Pitch::new(C, 0), Major, Seventh),
+            ("C Major Seventh", Pitch::new(C, 0), Major, MajorSeventh),
             ("C M Ninth", Pitch::new(C, 0), Major, Ninth),
             ("C M eleventh", Pitch::new(C, 0), Major, Eleventh),
             ("C M ThirTeenth", Pitch::new(C, 0), Major, Thirteenth),
@@ -64,9 +64,6 @@ mod chord_regex_tests {
             ("C augmented", Pitch::new(C, 0), Augmented, Triad),
             ("C augmented Triad", Pitch::new(C, 0), Augmented, Triad),
             ("C Augmented Seventh", Pitch::new(C, 0), Augmented, Seventh),
-            ("C Augmented Ninth", Pitch::new(C, 0), Augmented, Ninth),
-            ("C# augmented Eleventh", Pitch::new(C, 1), Augmented, Eleventh),
-            ("Ds augmented Thirteenth", Pitch::new(D, 1), Augmented, Thirteenth),
         ];
 
         assert_chords(table);
@@ -83,9 +80,6 @@ mod chord_regex_tests {
             ("C Diminished", Pitch::new(C, 0), Diminished, Triad),
             ("C Diminished Triad", Pitch::new(C, 0), Diminished, Triad),
             ("C Diminished Seventh", Pitch::new(C, 0), Diminished, Seventh),
-            ("C Diminished Ninth", Pitch::new(C, 0), Diminished, Ninth),
-            ("C# Diminished Eleventh", Pitch::new(C, 1), Diminished, Eleventh),
-            ("Ds Diminished Thirteenth", Pitch::new(D, 1), Diminished, Thirteenth),
         ];
 
         assert_chords(table);
@@ -94,22 +88,8 @@ mod chord_regex_tests {
     #[test]
     fn test_half_diminished() {
         let table = vec![
-            ("C Half Diminished", Pitch::new(C, 0), HalfDiminished, Triad),
-            ("E halfdiminished", Pitch::new(E, 0), HalfDiminished, Triad),
-            ("C half diminished", Pitch::new(C, 0), HalfDiminished, Triad),
-            ("Cb HALFDIMINISHED", Pitch::new(C, -1), HalfDiminished, Triad),
             ("Cb HalfDiminished seventh", Pitch::new(C, -1), HalfDiminished, Seventh),
-            ("C HalfDiminished", Pitch::new(C, 0), HalfDiminished, Triad),
-            ("C HalfDiminished Triad", Pitch::new(C, 0), HalfDiminished, Triad),
             ("C HalfDiminished Seventh", Pitch::new(C, 0), HalfDiminished, Seventh),
-            ("C HalfDiminished Ninth", Pitch::new(C, 0), HalfDiminished, Ninth),
-            ("C# HalfDiminished Eleventh", Pitch::new(C, 1), HalfDiminished, Eleventh),
-            (
-                "Ds HalfDiminished Thirteenth",
-                Pitch::new(D, 1),
-                HalfDiminished,
-                Thirteenth,
-            ),
         ];
 
         assert_chords(table);
@@ -118,13 +98,7 @@ mod chord_regex_tests {
     #[test]
     fn test_dominant() {
         let table = vec![
-            ("C dominant", Pitch::new(C, 0), Dominant, Triad),
-            ("E DOMINANT", Pitch::new(E, 0), Dominant, Triad),
-            ("C DOmInAnT", Pitch::new(C, 0), Dominant, Triad),
-            ("Cb Dominant", Pitch::new(C, -1), Dominant, Triad),
             ("Cb Dominant seventh", Pitch::new(C, -1), Dominant, Seventh),
-            ("C Dominant", Pitch::new(C, 0), Dominant, Triad),
-            ("C Dominant Triad", Pitch::new(C, 0), Dominant, Triad),
             ("C Dominant Seventh", Pitch::new(C, 0), Dominant, Seventh),
             ("C Dominant Ninth", Pitch::new(C, 0), Dominant, Ninth),
             ("C# Dominant Eleventh", Pitch::new(C, 1), Dominant, Eleventh),
@@ -145,5 +119,18 @@ mod chord_regex_tests {
         ];
 
         assert_chords(table);
+    }
+
+    #[test]
+    fn test_rejects_unsupported_quality_number_combinations() {
+        for chord in [
+            "C augmented ninth",
+            "C diminished ninth",
+            "C half diminished triad",
+            "C dominant triad",
+            "C suspended2 seventh",
+        ] {
+            assert!(Chord::from_regex(chord).is_err(), "{} should be rejected", chord);
+        }
     }
 }

@@ -3,21 +3,18 @@ use std::fmt;
 use std::fmt::Formatter;
 
 /// A note.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Note {
     /// The pitch of the note (A, B, C#, etc).
     pub pitch: Pitch,
     /// The octave of the note in standard notation.
-    pub octave: u8,
+    pub octave: i16,
 }
 
 impl Note {
     /// Create a new note.
-    pub fn new(pitch: Pitch, octave: u8) -> Self {
-        Note {
-            pitch,
-            octave,
-        }
+    pub fn new(pitch: Pitch, octave: i16) -> Self {
+        Note { pitch, octave }
     }
 
     /// Convert to MIDI pitch number (0-127).

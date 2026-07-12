@@ -17,6 +17,7 @@ mod test_pitch_symbol {
         assert_eq!(format!("{}", PitchSymbol::E), "E");
         assert_eq!(format!("{}", PitchSymbol::Es), "E♯");
         assert_eq!(format!("{}", PitchSymbol::F), "F");
+        assert_eq!(format!("{}", PitchSymbol::Fb), "F♭");
         assert_eq!(format!("{}", PitchSymbol::Fs), "F♯");
         assert_eq!(format!("{}", PitchSymbol::Gb), "G♭");
         assert_eq!(format!("{}", PitchSymbol::G), "G");
@@ -53,6 +54,7 @@ mod test_pitch_symbol {
         assert_eq!(Pitch::from(PitchSymbol::Cb), Pitch::new(NoteLetter::C, -1));
         assert_eq!(Pitch::from(PitchSymbol::Db), Pitch::new(NoteLetter::D, -1));
         assert_eq!(Pitch::from(PitchSymbol::Eb), Pitch::new(NoteLetter::E, -1));
+        assert_eq!(Pitch::from(PitchSymbol::Fb), Pitch::new(NoteLetter::F, -1));
         assert_eq!(Pitch::from(PitchSymbol::Gb), Pitch::new(NoteLetter::G, -1));
         assert_eq!(Pitch::from(PitchSymbol::Ab), Pitch::new(NoteLetter::A, -1));
         assert_eq!(Pitch::from(PitchSymbol::Bb), Pitch::new(NoteLetter::B, -1));

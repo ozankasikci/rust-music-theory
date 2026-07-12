@@ -6,5 +6,6 @@ mod number;
 mod quality;
 
 pub use chord::Chord;
+pub use errors::ChordError;
 pub use number::Number;
 pub use quality::Quality;

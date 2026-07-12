@@ -20,7 +20,7 @@ const AVAILABLE_SCALES: [&str; 14] = [
     "Whole Tone",
 ];
 
-const AVAILABLE_CHORDS: [&str; 22] = [
+const AVAILABLE_CHORDS: [&str; 23] = [
     "Major Triad",
     "Minor Triad",
     "Suspended2 Triad",
@@ -37,6 +37,7 @@ const AVAILABLE_CHORDS: [&str; 22] = [
     "Dominant Seventh",
     "Dominant Ninth",
     "Major Ninth",
+    "Minor Ninth",
     "Dominant Eleventh",
     "Major Eleventh",
     "Minor Eleventh",

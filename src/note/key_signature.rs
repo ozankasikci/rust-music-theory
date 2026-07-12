@@ -20,6 +20,7 @@ lazy_static! {
         m.insert((NoteLetter::G, -1), vec![PitchSymbol::Gb, PitchSymbol::Ab, PitchSymbol::Bb, PitchSymbol::Cb, PitchSymbol::Db, PitchSymbol::Eb, PitchSymbol::F]);
         m.insert((NoteLetter::F, 1), vec![PitchSymbol::Fs, PitchSymbol::Gs, PitchSymbol::As, PitchSymbol::B, PitchSymbol::Cs, PitchSymbol::Ds, PitchSymbol::Es]);
         m.insert((NoteLetter::C, 1), vec![PitchSymbol::Cs, PitchSymbol::Ds, PitchSymbol::Es, PitchSymbol::Fs, PitchSymbol::Gs, PitchSymbol::As, PitchSymbol::Bs]);
+        m.insert((NoteLetter::C, -1), vec![PitchSymbol::Cb, PitchSymbol::Db, PitchSymbol::Eb, PitchSymbol::Fb, PitchSymbol::Gb, PitchSymbol::Ab, PitchSymbol::Bb]);
         m
     };
 }
@@ -47,24 +48,15 @@ impl KeySignature {
         KeySignature { tonic, mode }
     }
 
-    /// Get the relative major key for a given semitone value
-    fn get_relative_major_key(&self, semitones: u8) -> (NoteLetter, i8) {
-        use NoteLetter::*;
-        match semitones {
-            0 => (C, 0),   // C major
-            1 => (D, -1),  // Db major
-            2 => (D, 0),   // D major
-            3 => (E, -1),  // Eb major
-            4 => (E, 0),   // E major
-            5 => (F, 0),   // F major
-            6 => (F, 1),   // F# major
-            7 => (G, 0),   // G major
-            8 => (A, -1),  // Ab major
-            9 => (A, 0),   // A major
-            10 => (B, -1), // Bb major
-            11 => (B, 0),  // B major
-            _ => unreachable!(),
-        }
+    fn relative_major_key(
+        &self,
+        semitones_down: u8,
+        letter_steps_down: i16,
+    ) -> (NoteLetter, i8) {
+        let pitch_class = (self.tonic.into_u8() + 12 - semitones_down) % 12;
+        let letter = self.tonic.letter.offset(-letter_steps_down);
+        let pitch = Pitch::from_u8_with_letter(pitch_class, letter);
+        (pitch.letter, pitch.accidental)
     }
 
     pub fn get_preferred_spelling(&self, pitch: Pitch) -> PitchSymbol {
@@ -74,33 +66,27 @@ impl KeySignature {
         let (key_tonic_letter, key_accidental) = match self.mode {
             Some(Mode::Aeolian) => {
                 // Aeolian (minor) is the 6th degree, 9 semitones above its relative major
-                let relative_major_semitones = (self.tonic.into_u8() + 12 - 9) % 12;
-                self.get_relative_major_key(relative_major_semitones)
+                self.relative_major_key(9, 5)
             },
             Some(Mode::Dorian) => {
                 // Dorian is the 2nd degree, 2 semitones above its relative major  
-                let relative_major_semitones = (self.tonic.into_u8() + 12 - 2) % 12;
-                self.get_relative_major_key(relative_major_semitones)
+                self.relative_major_key(2, 1)
             },
             Some(Mode::Phrygian) => {
                 // Phrygian is the 3rd degree, 4 semitones above its relative major
-                let relative_major_semitones = (self.tonic.into_u8() + 12 - 4) % 12;
-                self.get_relative_major_key(relative_major_semitones)
+                self.relative_major_key(4, 2)
             },
             Some(Mode::Lydian) => {
                 // Lydian is the 4th degree, 5 semitones above its relative major
-                let relative_major_semitones = (self.tonic.into_u8() + 12 - 5) % 12;
-                self.get_relative_major_key(relative_major_semitones)
+                self.relative_major_key(5, 3)
             },
             Some(Mode::Mixolydian) => {
                 // Mixolydian is the 5th degree, 7 semitones above its relative major
-                let relative_major_semitones = (self.tonic.into_u8() + 12 - 7) % 12;
-                self.get_relative_major_key(relative_major_semitones)
+                self.relative_major_key(7, 4)
             },
             Some(Mode::Locrian) => {
                 // Locrian is the 7th degree, 11 semitones above its relative major
-                let relative_major_semitones = (self.tonic.into_u8() + 12 - 11) % 12;
-                self.get_relative_major_key(relative_major_semitones)
+                self.relative_major_key(11, 6)
             },
             _ => {
                 // For major (Ionian) or no mode, use the tonic as is
@@ -137,10 +123,14 @@ impl KeySignature {
             }
         } else {
             // For other keys, follow traditional rules
-            let is_sharp_key = match self.tonic.letter {
-                NoteLetter::G | NoteLetter::D | NoteLetter::A | NoteLetter::E | NoteLetter::B => true,
-                _ => false,
-            };
+            let is_sharp_key = matches!(
+                self.tonic.letter,
+                NoteLetter::G
+                    | NoteLetter::D
+                    | NoteLetter::A
+                    | NoteLetter::E
+                    | NoteLetter::B
+            );
 
             // Use sharps for sharp keys and leading tones, flats for flat keys
             match pitch.into_u8() {
