@@ -296,6 +296,6 @@ Notes:
 - [x] Properly display enharmonic spelling
 - [x] Add inversion support for chords
 - [ ] Add missing modes for Melodic & Harmonic minor scales
-- [ ] Add support for arbitrary accidentals
+- [x] Add support for arbitrary accidentals
 - [ ] Add a mechanism to find the chord from the given notes
 - [ ] MIDI input (receive from external devices)
