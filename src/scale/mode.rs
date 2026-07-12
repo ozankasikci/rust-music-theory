@@ -11,7 +11,7 @@ lazy_static! {
 }
 
 /// The mode of a scale.
-#[derive(Display, Debug, Clone, Copy, EnumIter, PartialEq, Eq)]
+#[derive(Display, Debug, Clone, Copy, EnumIter, PartialEq, Eq, Hash)]
 pub enum Mode {
     /// Also known as a major scale.
     Ionian,
@@ -379,5 +379,48 @@ impl FromStr for Mode {
                     })
             })
             .ok_or(ModeFromRegex)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::collections::{HashMap, HashSet};
+
+    #[test]
+    fn every_registered_alias_is_unique_and_round_trips() {
+        let mut owners = HashMap::new();
+        for mode in ALL_MODES.iter().copied() {
+            for name in std::iter::once(mode.canonical_name())
+                .chain(std::iter::once(mode.api_name()))
+                .chain(mode.aliases().iter().copied())
+            {
+                assert_eq!(name.parse::<Mode>().unwrap(), mode, "alias {name}");
+                let normalized = normalize_mode_name(name);
+                if let Some(previous) = owners.insert(normalized.clone(), mode) {
+                    assert_eq!(
+                        previous, mode,
+                        "normalized alias {normalized} belongs to two modes"
+                    );
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn heptatonic_registry_contains_twenty_one_unique_modes() {
+        assert_eq!(HEPTATONIC_MODES.len(), 21);
+        assert_eq!(
+            HEPTATONIC_MODES
+                .iter()
+                .copied()
+                .collect::<HashSet<_>>()
+                .len(),
+            21
+        );
+        assert!(HEPTATONIC_MODES.iter().all(|mode| matches!(
+            mode.scale_type(),
+            ScaleType::Diatonic | ScaleType::HarmonicMinor | ScaleType::MelodicMinor
+        )));
     }
 }
