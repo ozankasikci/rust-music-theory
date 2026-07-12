@@ -18,34 +18,34 @@ mod scale_tests {
     #[test]
     fn test_all_scales_in_c() {
         let scale_tuples = [
-            ((Diatonic, Some(Ionian)), vec![C, D, E, F, G, A, B, C]),
-            ((Diatonic, Some(Dorian)), vec![C, D, Eb, F, G, A, Bb, C]),  // Uses Bb major key signature (2 flats)
-            ((Diatonic, Some(Phrygian)), vec![C, Db, Eb, F, G, Ab, Bb, C]),  // Uses Ab major key signature (4 flats)
-            ((Diatonic, Some(Lydian)), vec![C, D, E, Fs, G, A, B, C]),  // Uses G major key signature (1 sharp)
-            ((Diatonic, Some(Mixolydian)), vec![C, D, E, F, G, A, Bb, C]),  // Uses F major key signature (1 flat)
-            ((Diatonic, Some(Aeolian)), vec![C, D, Eb, F, G, Ab, Bb, C]),  // Uses Eb major key signature (3 flats)
-            ((Diatonic, Some(Locrian)), vec![C, Db, Eb, F, Gb, Ab, Bb, C]),  // Uses Db major key signature (5 flats)
+            ((Diatonic, Some(Ionian)), vec![C, D, E, F, G, A, B, C], vec![C, B, A, G, F, E, D, C]),
+            ((Diatonic, Some(Dorian)), vec![C, D, Eb, F, G, A, Bb, C], vec![C, Bb, A, G, F, Eb, D, C]),
+            ((Diatonic, Some(Phrygian)), vec![C, Db, Eb, F, G, Ab, Bb, C], vec![C, Bb, Ab, G, F, Eb, Db, C]),
+            ((Diatonic, Some(Lydian)), vec![C, D, E, Fs, G, A, B, C], vec![C, B, A, G, Fs, E, D, C]),
+            ((Diatonic, Some(Mixolydian)), vec![C, D, E, F, G, A, Bb, C], vec![C, Bb, A, G, F, E, D, C]),
+            ((Diatonic, Some(Aeolian)), vec![C, D, Eb, F, G, Ab, Bb, C], vec![C, Bb, Ab, G, F, Eb, D, C]),
+            ((Diatonic, Some(Locrian)), vec![C, Db, Eb, F, Gb, Ab, Bb, C], vec![C, Bb, Ab, Gb, F, Eb, Db, C]),
             (
                 (ScaleType::HarmonicMinor, None),
-                vec![C, D, Ds, F, G, Gs, B, C],  // Uses C major sharp preference
+                vec![C, D, Eb, F, G, Ab, B, C],
+                vec![C, B, Ab, G, F, Eb, D, C],
             ),
             (
                 (ScaleType::MelodicMinor, None),
-                vec![C, D, Ds, F, G, A, B, C],  // Uses C major sharp preference
+                vec![C, D, Eb, F, G, A, B, C],
+                vec![C, Bb, Ab, G, F, Eb, D, C],
             )
         ];
 
-        for (scale_tuple, pitches) in scale_tuples.iter() {
+        for (scale_tuple, ascending_pitches, descending_pitches) in scale_tuples.iter() {
             let (scale_type, mode) = scale_tuple;
             let scale_ascending =
                 Scale::new(*scale_type, Pitch::from(C), 4, *mode, Direction::Ascending).unwrap();
-            assert_notes(pitches, scale_ascending.notes());
+            assert_notes(ascending_pitches, scale_ascending.notes());
 
             let scale_descending =
                 Scale::new(*scale_type, Pitch::from(C), 4, *mode, Direction::Descending).unwrap();
-            let mut pitches_descending = pitches.clone();
-            pitches_descending.reverse();
-            assert_notes(&pitches_descending, scale_descending.notes());
+            assert_notes(descending_pitches, scale_descending.notes());
 
             if scale_ascending.scale_type == Diatonic {
                 if let Some(mode) = scale_ascending.mode {
