@@ -86,7 +86,7 @@ pub fn parse_chord_number(input: &str) -> ChordNumber {
 mod tests {
     use super::*;
 
-    #[test]
+    #[wasm_bindgen_test::wasm_bindgen_test]
     fn test_parse_pitch_symbol() {
         assert_eq!(parse_pitch_symbol("C"), PitchSymbol::C);
         assert_eq!(parse_pitch_symbol("c"), PitchSymbol::C);
@@ -101,7 +101,7 @@ mod tests {
         assert_eq!(parse_pitch_symbol("invalid"), PitchSymbol::C); // default
     }
 
-    #[test]
+    #[wasm_bindgen_test::wasm_bindgen_test]
     fn test_parse_scale_type() {
         assert_eq!(parse_scale_type("diatonic"), ScaleType::Diatonic);
         assert_eq!(parse_scale_type("DIATONIC"), ScaleType::Diatonic);
@@ -112,7 +112,7 @@ mod tests {
         assert_eq!(parse_scale_type("invalid"), ScaleType::Diatonic); // default
     }
 
-    #[test]
+    #[wasm_bindgen_test::wasm_bindgen_test]
     fn test_parse_mode() {
         assert_eq!(parse_mode("ionian"), Some(Mode::Ionian));
         assert_eq!(parse_mode("IONIAN"), Some(Mode::Ionian));
@@ -125,7 +125,7 @@ mod tests {
         assert_eq!(parse_mode("invalid"), None);
     }
 
-    #[test]
+    #[wasm_bindgen_test::wasm_bindgen_test]
     fn test_parse_chord_quality() {
         assert_eq!(parse_chord_quality("major"), ChordQuality::Major);
         assert_eq!(parse_chord_quality("MAJOR"), ChordQuality::Major);
@@ -139,7 +139,7 @@ mod tests {
         assert_eq!(parse_chord_quality("invalid"), ChordQuality::Major); // default
     }
 
-    #[test]
+    #[wasm_bindgen_test::wasm_bindgen_test]
     fn test_parse_chord_number() {
         assert_eq!(parse_chord_number("triad"), ChordNumber::Triad);
         assert_eq!(parse_chord_number("TRIAD"), ChordNumber::Triad);
