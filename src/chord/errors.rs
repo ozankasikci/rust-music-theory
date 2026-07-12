@@ -7,6 +7,8 @@ use std::fmt;
 pub enum ChordError {
     InvalidRegex,
     UnknownIntervalPattern(Vec<u8>),
+    UnsupportedChord(String),
+    InvalidInversion(u8),
 }
 
 impl fmt::Display for ChordError {
@@ -15,6 +17,10 @@ impl fmt::Display for ChordError {
             ChordError::InvalidRegex => write!(f, "Invalid Regex!"),
             ChordError::UnknownIntervalPattern(intervals) => {
                 write!(f, "Unknown chord interval pattern: {:?}", intervals)
+            }
+            ChordError::UnsupportedChord(chord) => write!(f, "Unsupported chord: {}", chord),
+            ChordError::InvalidInversion(inversion) => {
+                write!(f, "Invalid chord inversion: {}", inversion)
             }
         }
     }
