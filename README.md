@@ -11,6 +11,7 @@ A library and executable that provides programmatic implementation of the basis 
 - [Overview](#overview)
 - [Usage as a Library](#usage-as-a-library)
 - [Lead-Sheet Chord Symbols](#lead-sheet-chord-symbols)
+- [Harmonic and Melodic Minor Modes](#harmonic-and-melodic-minor-modes)
 - [MIDI Support](#midi-support)
 - [Usage as an Executable](#usage-as-an-executable)
 - [Interactive Playground](#interactive-playground)
@@ -100,6 +101,45 @@ octaves follow written scientific pitch, so `Cb4` plays as MIDI 59 and `B#4` as 
 `Chord::builder(root)` exposes the same validated model for programmatic construction. See
 [the chord-symbol reference](docs/chord-symbols.md) for grammar, canonicalization, builder usage,
 errors, and the 0.4 to 0.5 migration.
+
+## Harmonic and Melodic Minor Modes
+
+All seven rotations of the harmonic-minor and melodic-minor families are available through the
+same `Scale`, `ScaleType`, and `Mode` APIs:
+
+```rust
+use rust_music_theory::note::{NoteLetter, Notes, Pitch};
+use rust_music_theory::scale::{Direction, Mode, Scale, ScaleType};
+
+let scale = Scale::new(
+    ScaleType::HarmonicMinor,
+    Pitch::new(NoteLetter::C, 0),
+    4,
+    Some(Mode::PhrygianDominant),
+    Direction::Ascending,
+)?;
+
+assert_eq!(
+    scale.notes().iter().map(|note| note.pitch.to_string()).collect::<Vec<_>>(),
+    ["C", "Db", "E", "F", "G", "Ab", "Bb", "C"]
+);
+# Ok::<(), rust_music_theory::scale::ScaleError>(())
+```
+
+- Harmonic minor: `Harmonic Minor`, `Locrian natural 6`, `Ionian #5`, `Dorian #4`,
+  `Phrygian Dominant`, `Lydian #2`, and `Ultralocrian`.
+- Melodic minor: `Melodic Minor`, `Dorian b2`, `Lydian Augmented`, `Lydian Dominant`,
+  `Mixolydian b6`, `Locrian #2`, and `Altered`.
+
+Names are case-insensitive and accept ASCII or Unicode accidentals, words such as `flat` and
+`sharp`, snake-case API identifiers, and established aliases such as `Spanish`, `Overtone`,
+`Hindu`, `Super Locrian`, and `Diminished Whole Tone`. The definitions follow the
+[Tonal scale registry](https://github.com/tonaljs/tonal/blob/main/packages/scale-type/data.ts).
+
+The existing base melodic-minor scale retains classical behavior: descending it lowers the sixth
+and seventh. Derived melodic-minor modes use the ascending/jazz pitch collection in both
+directions. Altered mode retains rotation-derived diatonic spelling, so C altered is written
+`C Db Eb Fb Gb Ab Bb` rather than using enharmonic chord-tension names.
 
 ## MIDI Support
 
@@ -233,15 +273,32 @@ C7b9#11
 `rustmt scale list`
 ```yaml
 Available Scales:
- - Major|Ionian
- - Minor|Aeolian
+ - Ionian
  - Dorian
  - Phrygian
  - Lydian
  - Mixolydian
+ - Aeolian
  - Locrian
  - Harmonic Minor
+ - Locrian natural 6
+ - Ionian #5
+ - Dorian #4
+ - Phrygian Dominant
+ - Lydian #2
+ - Ultralocrian
  - Melodic Minor
+ - Dorian b2
+ - Lydian Augmented
+ - Lydian Dominant
+ - Mixolydian b6
+ - Locrian #2
+ - Altered
+ - Pentatonic Major
+ - Pentatonic Minor
+ - Blues
+ - Chromatic
+ - Whole Tone
 ```
 
 
@@ -295,7 +352,7 @@ Notes:
 - [x] MIDI Clock (master mode)
 - [x] Properly display enharmonic spelling
 - [x] Add inversion support for chords
-- [ ] Add missing modes for Melodic & Harmonic minor scales
+- [x] Add missing modes for Melodic & Harmonic minor scales
 - [x] Add support for arbitrary accidentals
 - [ ] Add a mechanism to find the chord from the given notes
 - [ ] MIDI input (receive from external devices)

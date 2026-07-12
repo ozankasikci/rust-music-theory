@@ -1,3 +1,16 @@
+## Unreleased
+
+### Features
+
+- Add every harmonic-minor and melodic-minor mode with canonical names, established aliases,
+  validated scale-family metadata, CLI generation, and WASM identifiers
+
+### Fixes
+
+- Preserve classical melodic-minor descent while derived melodic-minor modes use the jazz pitch
+  collection in both directions
+- Synchronize scale octaves after theoretical respelling so augmented steps remain strictly ordered
+
 ## v0.5.0 - 2026-07-12
 
 ### Features
