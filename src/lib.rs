@@ -46,7 +46,7 @@
 //! With the `midi` feature enabled, you can export chords and scales to MIDI files:
 //!
 //! ```toml
-//! rust-music-theory = { version = "0.3", features = ["midi"] }
+//! rust-music-theory = { version = "0.4", features = ["midi"] }
 //! ```
 //!
 //! ```ignore
@@ -61,7 +61,7 @@
 //! With the `midi-playback` feature, play to connected MIDI instruments:
 //!
 //! ```toml
-//! rust-music-theory = { version = "0.3", features = ["midi-playback"] }
+//! rust-music-theory = { version = "0.4", features = ["midi-playback"] }
 //! ```
 //!
 //! ```ignore

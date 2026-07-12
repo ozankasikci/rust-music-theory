@@ -2,7 +2,7 @@
 name = "rust-music-theory"
 description = "A library that procedurally implements music theory notions like Scale, Chord, Interval, Note"
 license = "MIT"
-version = "0.3.0"
+version = "0.4.0"
 readme = "README.md"
 repository = "https://github.com/ozankasikci/rust-music-theory"
 authors = ["Ozan Kaşıkçı <ozan@kasikci.io>"]
@@ -17,6 +17,34 @@ midi-playback = ["midi", "dep:midir"]
 
 [lib]
 crate-type = ["cdylib", "rlib"]
+
+[[example]]
+name = "hypnotic_techno"
+required-features = ["midi-playback"]
+
+[[example]]
+name = "midi_cc_demo"
+required-features = ["midi-playback"]
+
+[[example]]
+name = "nocturne"
+required-features = ["midi-playback"]
+
+[[example]]
+name = "nocturne_duo"
+required-features = ["midi-playback"]
+
+[[example]]
+name = "simple_midi_test"
+required-features = ["midi-playback"]
+
+[[example]]
+name = "synth_chords"
+required-features = ["midi-playback"]
+
+[[example]]
+name = "techno_bass"
+required-features = ["midi-playback"]
 
 [dependencies]
 strum = "0.17.1"

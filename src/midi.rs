@@ -7,7 +7,7 @@
 //!
 //! Enable with the `midi` feature flag:
 //! ```toml
-//! rust-music-theory = { version = "0.3", features = ["midi"] }
+//! rust-music-theory = { version = "0.4", features = ["midi"] }
 //! ```
 //!
 //! # Quick Export
@@ -60,7 +60,7 @@
 //! With the `midi-playback` feature, you can play notes on connected MIDI devices:
 //!
 //! ```toml
-//! rust-music-theory = { version = "0.3", features = ["midi-playback"] }
+//! rust-music-theory = { version = "0.4", features = ["midi-playback"] }
 //! ```
 //!
 //! ```ignore
