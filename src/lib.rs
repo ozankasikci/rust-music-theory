@@ -39,6 +39,10 @@
 //!
 //! // returns a Vector of the Notes of the chord
 //! let chord_notes = chord.notes();
+//!
+//! // Or parse a complete lead-sheet symbol.
+//! let altered = Chord::parse("C7(b9,#11)").unwrap();
+//! assert_eq!(altered.canonical_symbol(), "C7b9#11");
 //! ```
 //!
 //! ## MIDI Export (optional feature)
@@ -46,7 +50,7 @@
 //! With the `midi` feature enabled, you can export chords and scales to MIDI files:
 //!
 //! ```toml
-//! rust-music-theory = { version = "0.4", features = ["midi"] }
+//! rust-music-theory = { version = "0.5", features = ["midi"] }
 //! ```
 //!
 //! ```ignore
@@ -61,7 +65,7 @@
 //! With the `midi-playback` feature, play to connected MIDI instruments:
 //!
 //! ```toml
-//! rust-music-theory = { version = "0.4", features = ["midi-playback"] }
+//! rust-music-theory = { version = "0.5", features = ["midi-playback"] }
 //! ```
 //!
 //! ```ignore

@@ -4,10 +4,10 @@ use theory::note::{Pitch, NoteLetter::*};
 
 fn assert_chords(table: Vec<(&str, Pitch, Quality, Number)>) {
     for (string, pitch, quality, number) in table {
-        let chord = Chord::from_regex(string).unwrap();
-        assert_eq!(chord.quality, quality);
-        assert_eq!(chord.root, pitch);
-        assert_eq!(chord.number, number);
+        let chord = Chord::parse(string).unwrap();
+        assert_eq!(chord.quality(), quality);
+        assert_eq!(chord.root(), pitch);
+        assert_eq!(chord.number(), number);
     }
 }
 
@@ -22,7 +22,7 @@ mod chord_regex_tests {
             ("E MAJOR", Pitch::new(E, 0), Major, Triad),
             ("C Maj", Pitch::new(C, 0), Major, Triad),
             ("Cb MAJ", Pitch::new(C, -1), Major, Triad),
-            ("Cb MAJ Seventh", Pitch::new(C, -1), Major, Seventh),
+            ("Cb MAJ Seventh", Pitch::new(C, -1), Major, MajorSeventh),
             ("C M", Pitch::new(C, 0), Major, Triad),
             ("C MaJ Triad", Pitch::new(C, 0), Major, Triad),
             ("C Major Seventh", Pitch::new(C, 0), Major, MajorSeventh),
@@ -127,10 +127,8 @@ mod chord_regex_tests {
             "C augmented ninth",
             "C diminished ninth",
             "C half diminished triad",
-            "C dominant triad",
-            "C suspended2 seventh",
         ] {
-            assert!(Chord::from_regex(chord).is_err(), "{} should be rejected", chord);
+            assert!(Chord::parse(chord).is_err(), "{} should be rejected", chord);
         }
     }
 }

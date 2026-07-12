@@ -10,7 +10,7 @@ mod test_notes_trait {
     #[test]
     fn test_chord_notes_trait() {
         // Test that Chord implements Notes trait
-        let c_major = Chord::from_regex("C major").unwrap();
+        let c_major = Chord::parse("C major").unwrap();
         let notes = c_major.notes();
 
         assert_eq!(notes.len(), 3);
@@ -71,7 +71,7 @@ mod test_notes_trait {
     #[test]
     fn test_chord_notes_with_sharps_and_flats() {
         // Test D minor chord
-        let d_minor = Chord::from_regex("D minor").unwrap();
+        let d_minor = Chord::parse("D minor").unwrap();
         let notes = d_minor.notes();
 
         assert_eq!(notes.len(), 3);
@@ -80,7 +80,7 @@ mod test_notes_trait {
         assert_eq!(notes[2].pitch, Pitch::new(NoteLetter::A, 0));
 
         // Test F# major chord
-        let fs_major = Chord::from_regex("F# major").unwrap();
+        let fs_major = Chord::parse("F# major").unwrap();
         let notes = fs_major.notes();
 
         assert_eq!(notes.len(), 3);
@@ -110,7 +110,7 @@ mod test_notes_trait {
     #[test]
     fn test_seventh_chord_notes() {
         // Test a seventh chord
-        let c_maj7 = Chord::from_regex("C major seventh").unwrap();
+        let c_maj7 = Chord::parse("C major seventh").unwrap();
         let notes = c_maj7.notes();
 
         assert_eq!(notes.len(), 4);
@@ -123,7 +123,7 @@ mod test_notes_trait {
     #[test]
     fn test_diminished_chord_notes() {
         // Test a diminished chord
-        let b_dim = Chord::from_regex("B diminished").unwrap();
+        let b_dim = Chord::parse("B diminished").unwrap();
         let notes = b_dim.notes();
 
         assert_eq!(notes.len(), 3);

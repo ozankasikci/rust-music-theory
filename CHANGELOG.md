@@ -1,3 +1,29 @@
+## v0.5.0 - 2026-07-12
+
+### Features
+
+- Add complete common jazz/pop lead-sheet chord symbols with aliases, modifiers, slash basses,
+  canonical ASCII formatting, and exact theoretical note spelling
+- Add normalized `ChordSpec`/`ChordFormula` theory types, `Chord::parse`, `FromStr`, `Display`,
+  getters, and `Chord::builder`
+- Add compact chord support and `chord normalize` to the CLI
+- Add `parse_chord_symbol` and normalized chord metadata to WASM
+
+### Fixes
+
+- Preserve power-chord and minor-major quality markers instead of silently reinterpreting invalid
+  combinations
+- Correct scientific octaves and MIDI pitches for theoretical notes such as C-flat and B-sharp
+- Accept Unicode double-flat roots and basses and canonicalize all accidentals to ASCII
+- Report parser error positions against the original input after aliases, Unicode, and whitespace
+  normalization
+- Keep source-position tracking linear for long or adversarial invalid symbols
+
+### Breaking Changes
+
+- Make `Chord` fields private so symbol metadata and playback formulas remain consistent; legacy
+  constructors and quality/number adapters remain available
+
 ## v0.4.0 - 2026-07-12
 
 ### Features

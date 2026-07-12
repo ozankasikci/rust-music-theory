@@ -271,4 +271,14 @@ mod test_note {
         let f_quintuple_sharp = Pitch::new(NoteLetter::F, 5);
         assert_eq!(f_quintuple_sharp.into_u8(), 10); // F##### = Bb
     }
+
+    #[test]
+    fn test_accidental_overflow_is_rejected_and_extremes_format_without_panicking() {
+        let too_many_sharps = format!("C{}", "#".repeat(512));
+        assert!(Pitch::from_str(&too_many_sharps).is_none());
+
+        let lowest = Pitch::new(NoteLetter::C, i8::MIN).to_string();
+        assert_eq!(lowest.len(), 129);
+        assert!(lowest[1..].chars().all(|character| character == 'b'));
+    }
 }

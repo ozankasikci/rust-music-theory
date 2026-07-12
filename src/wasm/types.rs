@@ -26,6 +26,10 @@ pub struct WasmChord {
     pub root: String,
     pub quality: String,
     pub number: String,
+    pub canonical_symbol: String,
+    pub bass: Option<String>,
+    pub modifiers: Vec<String>,
+    pub formula: Vec<String>,
 }
 
 impl From<Note> for WasmNote {

@@ -8,14 +8,8 @@ lazy_static! {
         use Quality::*;
 
         vec![
-            (
-                Regex::new(r"^(m\s+|m$|(?i:min(?:or)?))").unwrap(),
-                Minor,
-            ),
-            (
-                Regex::new(r"^(M\s+|M$|(?i:maj(?:or)?))").unwrap(),
-                Major,
-            ),
+            (Regex::new(r"^(m\s+|m$|(?i:min(?:or)?))").unwrap(), Minor),
+            (Regex::new(r"^(M\s+|M$|(?i:maj(?:or)?))").unwrap(), Major),
             (
                 Regex::new(r"(?i)^(half\s*diminished|halfdiminished|halfdim)").unwrap(),
                 HalfDiminished,
@@ -31,12 +25,13 @@ lazy_static! {
                 Regex::new(r"(?i)^(sus4\s+|sus4$|suspended4)").unwrap(),
                 Suspended4,
             ),
+            (Regex::new(r"(?i)^(power|power\s*chord)$").unwrap(), Power),
         ]
     };
 }
 
 /// The quality of a chord.
-#[derive(Display, Debug, Clone, Copy, PartialEq)]
+#[derive(Display, Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Quality {
     Major,
     Minor,
@@ -46,6 +41,7 @@ pub enum Quality {
     Dominant,
     Suspended2,
     Suspended4,
+    Power,
 }
 
 impl Quality {

@@ -199,7 +199,7 @@ fn every_supported_chord_formula_is_transposed_and_spelled_by_chord_member() {
             }
 
             let recognized = Chord::from_interval(root, adjacent_intervals).unwrap();
-            assert_eq!((recognized.quality, recognized.number), (quality, number));
+            assert_eq!((recognized.quality(), recognized.number()), (quality, number));
         }
     }
 }
@@ -549,7 +549,7 @@ fn public_parsers_do_not_panic_on_arbitrary_short_input() {
         for second in alphabet {
             for third in alphabet {
                 let input = [first, second, third].iter().collect::<String>();
-                assert!(std::panic::catch_unwind(|| Chord::from_regex(&input)).is_ok());
+                assert!(std::panic::catch_unwind(|| Chord::parse(&input)).is_ok());
                 assert!(std::panic::catch_unwind(|| Scale::from_regex(&input)).is_ok());
                 assert!(std::panic::catch_unwind(|| Pitch::from_str(&input)).is_ok());
             }

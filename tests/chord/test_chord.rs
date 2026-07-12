@@ -76,31 +76,31 @@ mod chord_tests {
 
     #[test]
     fn test_regex() {
-        let chord = Chord::from_regex("F major");
+        let chord = Chord::parse("F major");
         assert!(chord.is_ok());
         let chord = chord.unwrap();
         assert_notes(&vec![F, A, C], chord.notes());
-        assert_eq!(chord.inversion, 0);
+        assert_eq!(chord.inversion(), 0);
     }
 
     #[test]
     fn test_inversion_regex() {
-        let chord = Chord::from_regex("F/C");
-        let chord_num = Chord::from_regex("F/2");
+        let chord = Chord::parse("F/C");
+        let chord_num = Chord::parse("F/2");
         assert!(chord.is_ok());
         assert!(chord_num.is_ok());
         let chord = chord.unwrap();
         let chord_num = chord_num.unwrap();
         assert_notes(&vec![C, F, A], chord.notes());
         assert_notes(&vec![C, F, A], chord_num.notes());
-        assert_eq!(chord.inversion, 2);
-        assert_eq!(chord_num.inversion, 2);
+        assert_eq!(chord.inversion(), 2);
+        assert_eq!(chord_num.inversion(), 2);
     }
 
     #[test]
     fn test_non_chord_slash_bass() {
-        let chord = Chord::from_regex("C/Fs").unwrap();
-        assert_eq!(chord.bass, Some(Pitch::from(Fs)));
+        let chord = Chord::parse("C/Fs").unwrap();
+        assert_eq!(chord.bass(), Some(Pitch::from(Fs)));
         let notes = chord.notes();
         assert_eq!(notes[0], Note::new(Pitch::from(Fs), 3));
         assert_notes(&[C, E, G], notes[1..].to_vec());
@@ -108,12 +108,12 @@ mod chord_tests {
 
     #[test]
     fn test_major_seventh_modifiers_are_not_lost() {
-        let augmented = Chord::from_regex("C Augmented Major Seventh").unwrap();
-        assert_eq!((augmented.quality, augmented.number), (Augmented, MajorSeventh));
+        let augmented = Chord::parse("C Augmented Major Seventh").unwrap();
+        assert_eq!((augmented.quality(), augmented.number()), (Augmented, MajorSeventh));
         assert_notes(&[C, E, Gs, B], augmented.notes());
 
-        let minor = Chord::from_regex("C Minor Major Seventh").unwrap();
-        assert_eq!((minor.quality, minor.number), (Minor, MajorSeventh));
+        let minor = Chord::parse("C Minor Major Seventh").unwrap();
+        assert_eq!((minor.quality(), minor.number()), (Minor, MajorSeventh));
         assert_notes(&[C, Eb, G, B], minor.notes());
     }
 
@@ -124,22 +124,22 @@ mod chord_tests {
             ("C9", Quality::Dominant, Number::Ninth),
             ("C11", Quality::Dominant, Number::Eleventh),
             ("C13", Quality::Dominant, Number::Thirteenth),
-            ("CM7", Quality::Major, Number::Seventh),
+            ("CM7", Quality::Major, Number::MajorSeventh),
             ("Cmaj7", Quality::Major, Number::MajorSeventh),
             ("Cm7", Quality::Minor, Number::Seventh),
         ];
 
         for (symbol, quality, number) in cases {
-            let chord = Chord::from_regex(symbol).unwrap();
-            assert_eq!(chord.quality, quality, "wrong quality for {symbol}");
-            assert_eq!(chord.number, number, "wrong number for {symbol}");
+            let chord = Chord::parse(symbol).unwrap();
+            assert_eq!(chord.quality(), quality, "wrong quality for {symbol}");
+            assert_eq!(chord.number(), number, "wrong number for {symbol}");
         }
     }
 
     #[test]
     fn test_chord_parser_rejects_trailing_text_and_invalid_inversions() {
         for input in ["C garbage", "C major seventh extra", "C/3", "C/", "C//E"] {
-            assert!(Chord::from_regex(input).is_err(), "{} should be invalid", input);
+            assert!(Chord::parse(input).is_err(), "{} should be invalid", input);
         }
     }
 
@@ -165,7 +165,7 @@ mod chord_tests {
 
         for chord_pair in chord_tuples.iter() {
             let chord = Chord::from_string(chord_pair.1).unwrap();
-            let (root, quality, number) = (chord.root, chord.quality, chord.number);
+            let (root, quality, number) = (chord.root(), chord.quality(), chord.number());
             assert_eq!((root, quality, number), (chord_pair.0));
         }
     }
@@ -181,6 +181,9 @@ mod chord_tests {
     fn test_try_new_rejects_unsupported_chords() {
         assert!(Chord::try_new(Pitch::from(C), Diminished, Ninth).is_err());
         assert!(Chord::try_new(Pitch::from(C), HalfDiminished, Triad).is_err());
+        assert!(Chord::try_new(Pitch::from(C), Dominant, Triad).is_err());
+        assert!(Chord::try_new(Pitch::from(C), Suspended4, Seventh).is_err());
+        assert!(Chord::try_new(Pitch::from(C), Diminished, MajorSeventh).is_err());
         assert!(Chord::try_with_inversion(Pitch::from(C), Major, Triad, 3).is_err());
     }
 
@@ -195,7 +198,7 @@ mod chord_tests {
 
         for invalid_chord in invalid_chords {
             assert!(
-                Chord::from_regex(invalid_chord).is_err(),
+                Chord::parse(invalid_chord).is_err(),
                 "Expected error for: {}",
                 invalid_chord
             );
@@ -229,12 +232,12 @@ mod chord_tests {
         let default_chord = Chord::default();
 
         // Verify default chord properties
-        assert_eq!(default_chord.root, Pitch::new(NoteLetter::C, 0));
-        assert_eq!(default_chord.octave, 4);
-        assert_eq!(default_chord.quality, Quality::Major);
-        assert_eq!(default_chord.number, Number::Triad);
-        assert_eq!(default_chord.inversion, 0);
-        assert_eq!(default_chord.bass, None);
+        assert_eq!(default_chord.root(), Pitch::new(NoteLetter::C, 0));
+        assert_eq!(default_chord.octave(), 4);
+        assert_eq!(default_chord.quality(), Quality::Major);
+        assert_eq!(default_chord.number(), Number::Triad);
+        assert_eq!(default_chord.inversion(), 0);
+        assert_eq!(default_chord.bass(), None);
 
         // Default chord has empty intervals, so we need to create one properly
         let c_major = Chord::new(

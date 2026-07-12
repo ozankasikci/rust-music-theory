@@ -4,6 +4,10 @@ mod chord {
     mod test_quality;
     mod test_regex;
     mod test_enharmonics;
+    mod test_lead_sheet;
+    mod test_lead_sheet_audit;
+    mod test_lead_sheet_second_audit;
+    mod test_lead_sheet_third_audit;
 }
 
 mod scale {

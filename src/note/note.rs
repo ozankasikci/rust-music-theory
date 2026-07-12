@@ -22,9 +22,18 @@ impl Note {
     /// Middle C (C4) = 60, A4 (440Hz) = 69.
     /// Uses standard MIDI octave convention where octave -1 starts at 0.
     pub fn midi_pitch(&self) -> u8 {
-        let semitone = self.pitch.into_u8();
-        let midi_value = (self.octave as u16 + 1) * 12 + semitone as u16;
-        midi_value.min(127) as u8
+        use crate::note::NoteLetter::*;
+        let natural = match self.pitch.letter {
+            C => 0,
+            D => 2,
+            E => 4,
+            F => 5,
+            G => 7,
+            A => 9,
+            B => 11,
+        };
+        let midi_value = (self.octave as i32 + 1) * 12 + natural + self.pitch.accidental as i32;
+        midi_value.clamp(0, 127) as u8
     }
 }
 
