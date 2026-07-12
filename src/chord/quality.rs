@@ -9,20 +9,20 @@ lazy_static! {
 
         vec![
             (
-                Regex::new(r"^(M\s+|M$|(?i)maj|Maj|Major|major)").unwrap(),
+                Regex::new(r"^(m\s+|m$|(?i:min(?:or)?))").unwrap(),
+                Minor,
+            ),
+            (
+                Regex::new(r"^(M\s+|M$|(?i:maj(?:or)?))").unwrap(),
                 Major,
             ),
             (
-                Regex::new(r"^(m\s+|m$|(?i)min|Min|Minor|minor)").unwrap(),
-                Minor,
-            ),
-            (Regex::new(r"(?i)^(diminished)").unwrap(), Diminished),
-            (Regex::new(r"(?i)^(augmented)").unwrap(), Augmented),
-            (
-                Regex::new(r"(?i)^(half\s*diminished|halfdiminished)").unwrap(),
+                Regex::new(r"(?i)^(half\s*diminished|halfdiminished|halfdim)").unwrap(),
                 HalfDiminished,
             ),
-            (Regex::new(r"(?i)^(dominant)").unwrap(), Dominant),
+            (Regex::new(r"(?i)^dim(?:inished)?").unwrap(), Diminished),
+            (Regex::new(r"(?i)^aug(?:mented)?").unwrap(), Augmented),
+            (Regex::new(r"(?i)^dom(?:inant)?").unwrap(), Dominant),
             (
                 Regex::new(r"(?i)^(sus2\s+|sus2$|suspended2)").unwrap(),
                 Suspended2,
@@ -50,7 +50,7 @@ pub enum Quality {
 
 impl Quality {
     /// Parse a quality from a regex.
-    pub fn from_regex(string: &str) -> Result<(Self, Option<Match>), ChordError> {
+    pub fn from_regex(string: &str) -> Result<(Self, Option<Match<'_>>), ChordError> {
         use Quality::*;
 
         for (regex, quality_enum) in &*QUALITY_REGEXES {
