@@ -31,7 +31,7 @@ pub fn get_chromatic_pitches() -> JsValue {
 mod tests {
     use super::*;
 
-    #[test]
+    #[wasm_bindgen_test::wasm_bindgen_test]
     fn test_chromatic_pitches_count() {
         let pitches = vec![
             "C", "C#", "Db", "D", "D#", "Eb", "E", "F",
@@ -40,7 +40,7 @@ mod tests {
         assert_eq!(pitches.len(), 17);
     }
 
-    #[test]
+    #[wasm_bindgen_test::wasm_bindgen_test]
     fn test_chromatic_pitches_content() {
         let pitches = vec![
             "C", "C#", "Db", "D", "D#", "Eb", "E", "F",
@@ -61,5 +61,14 @@ mod tests {
         assert!(pitches.contains(&"G"));
         assert!(pitches.contains(&"A"));
         assert!(pitches.contains(&"B"));
+    }
+
+    #[wasm_bindgen_test::wasm_bindgen_test]
+    fn test_exported_chromatic_pitches() {
+        let pitches: Vec<String> =
+            serde_wasm_bindgen::from_value(get_chromatic_pitches()).unwrap();
+        assert_eq!(pitches.len(), 17);
+        assert!(pitches.contains(&"C#".to_string()));
+        assert!(pitches.contains(&"Db".to_string()));
     }
 }
