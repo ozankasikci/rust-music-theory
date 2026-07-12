@@ -1,15 +1,15 @@
+use super::parsers::{parse_mode, parse_pitch_symbol, parse_scale_type};
+use super::types::{WasmNote, WasmScale};
+use crate::note::{Notes, Pitch};
+use crate::scale::{Direction, Scale};
 use wasm_bindgen::prelude::*;
-use crate::note::{Pitch, Notes};
-use crate::scale::{Scale, Direction};
-use super::types::{WasmScale, WasmNote};
-use super::parsers::{parse_pitch_symbol, parse_scale_type, parse_mode};
 
 /// Generate a scale from WASM-compatible parameters
 #[wasm_bindgen]
 pub fn generate_scale(
     tonic: &str,
     scale_type: &str,
-    octave: u8,
+    octave: i16,
     mode: Option<String>,
     ascending: bool,
 ) -> JsValue {
@@ -82,9 +82,8 @@ pub fn get_available_modes() -> JsValue {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::scale::{ScaleType, Mode};
 
-    #[test]
+    #[wasm_bindgen_test::wasm_bindgen_test]
     fn test_scale_generation_logic() {
         // Test the core logic without WASM bindings
         let pitch_symbol = parse_pitch_symbol("C");
@@ -97,7 +96,8 @@ mod tests {
             4,
             mode_enum,
             Direction::Ascending,
-        ).unwrap();
+        )
+        .unwrap();
 
         let notes = scale.notes();
         assert_eq!(notes.len(), 8); // C major scale
@@ -109,7 +109,7 @@ mod tests {
         assert_eq!(wasm_notes[0].pitch, "C");
     }
 
-    #[test]
+    #[wasm_bindgen_test::wasm_bindgen_test]
     fn test_available_scales_count() {
         // This would normally call the WASM function, but we test the data
         let scales = vec![
@@ -125,7 +125,7 @@ mod tests {
         assert_eq!(scales.len(), 8);
     }
 
-    #[test]
+    #[wasm_bindgen_test::wasm_bindgen_test]
     fn test_available_modes_count() {
         let modes = vec![
             "ionian",
@@ -139,18 +139,49 @@ mod tests {
         assert_eq!(modes.len(), 7);
     }
 
-    #[test]
+    #[wasm_bindgen_test::wasm_bindgen_test]
     fn test_scale_direction_handling() {
         let ascending = true;
         let descending = false;
 
         assert_eq!(
-            if ascending { Direction::Ascending } else { Direction::Descending },
+            if ascending {
+                Direction::Ascending
+            } else {
+                Direction::Descending
+            },
             Direction::Ascending
         );
         assert_eq!(
-            if descending { Direction::Ascending } else { Direction::Descending },
+            if descending {
+                Direction::Ascending
+            } else {
+                Direction::Descending
+            },
             Direction::Descending
         );
+    }
+
+    #[wasm_bindgen_test::wasm_bindgen_test]
+    fn test_exported_scale_generation_and_lists() {
+        let scale: WasmScale = serde_wasm_bindgen::from_value(generate_scale(
+            "C",
+            "melodic_minor",
+            4,
+            Some("melodic_minor".to_string()),
+            false,
+        ))
+        .unwrap();
+        assert_eq!(scale.direction, "descending");
+        assert_eq!(
+            scale.notes.iter().map(|note| note.pitch.as_str()).collect::<Vec<_>>(),
+            vec!["C", "Bb", "Ab", "G", "F", "Eb", "D", "C"]
+        );
+
+        let scales: Vec<String> =
+            serde_wasm_bindgen::from_value(get_available_scales()).unwrap();
+        let modes: Vec<String> = serde_wasm_bindgen::from_value(get_available_modes()).unwrap();
+        assert_eq!(scales.len(), 8);
+        assert_eq!(modes.len(), 7);
     }
 }
