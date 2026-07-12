@@ -58,17 +58,19 @@ fn simple_chord_export() {
 
 #[test]
 fn all_chord_qualities() {
-    let qualities = [
-        Quality::Major,
-        Quality::Minor,
-        Quality::Diminished,
-        Quality::Augmented,
-        Quality::HalfDiminished,
-        Quality::Dominant,
+    let chords = [
+        (Quality::Major, Number::Triad),
+        (Quality::Minor, Number::Triad),
+        (Quality::Diminished, Number::Triad),
+        (Quality::Augmented, Number::Triad),
+        (Quality::HalfDiminished, Number::Seventh),
+        (Quality::Dominant, Number::Seventh),
+        (Quality::Suspended2, Number::Triad),
+        (Quality::Suspended4, Number::Triad),
     ];
 
-    for quality in qualities {
-        let chord = Chord::new(Pitch::from(C), quality, Number::Triad);
+    for (quality, number) in chords {
+        let chord = Chord::new(Pitch::from(C), quality, number);
         let bytes = chord.to_midi(Duration::Quarter, Velocity::new(100).unwrap())
             .to_bytes();
         assert_eq!(&bytes[0..4], b"MThd", "Failed for quality {:?}", quality);

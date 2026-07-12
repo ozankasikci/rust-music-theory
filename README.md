@@ -70,7 +70,7 @@ Enable the `midi` feature to export chords and scales to MIDI files:
 
 ```toml
 [dependencies]
-rust-music-theory = { version = "0.3", features = ["midi"] }
+rust-music-theory = { version = "0.4", features = ["midi"] }
 ```
 
 ```rust
@@ -101,7 +101,7 @@ Enable the `midi-playback` feature to play notes on connected MIDI devices (hard
 
 ```toml
 [dependencies]
-rust-music-theory = { version = "0.3", features = ["midi-playback"] }
+rust-music-theory = { version = "0.4", features = ["midi-playback"] }
 ```
 
 ```rust
