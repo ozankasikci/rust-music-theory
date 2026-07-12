@@ -24,3 +24,15 @@ mod note {
 mod interval {
     mod test_interval;
 }
+
+mod theory {
+    mod test_reference_theory;
+}
+
+mod cli {
+    mod test_cli;
+}
+
+mod errors {
+    mod test_errors;
+}
