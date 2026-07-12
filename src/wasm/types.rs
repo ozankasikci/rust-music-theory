@@ -1,11 +1,11 @@
-use serde::{Deserialize, Serialize};
 use crate::note::Note;
+use serde::{Deserialize, Serialize};
 
 /// WASM-compatible note representation
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct WasmNote {
     pub pitch: String,
-    pub octave: u8,
+    pub octave: i16,
     pub display: String,
 }
 
@@ -41,9 +41,9 @@ impl From<Note> for WasmNote {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::note::{Pitch, NoteLetter};
+    use crate::note::{NoteLetter, Pitch};
 
-    #[test]
+    #[wasm_bindgen_test::wasm_bindgen_test]
     fn test_wasm_note_from_note() {
         let note = Note::new(Pitch::new(NoteLetter::C, 1), 4); // C# in octave 4
         let wasm_note = WasmNote::from(note);
@@ -53,7 +53,7 @@ mod tests {
         assert_eq!(wasm_note.display, "C#");
     }
 
-    #[test]
+    #[wasm_bindgen_test::wasm_bindgen_test]
     fn test_wasm_note_with_flats() {
         let note = Note::new(Pitch::new(NoteLetter::B, -1), 3); // Bb in octave 3
         let wasm_note = WasmNote::from(note);
@@ -63,7 +63,7 @@ mod tests {
         assert_eq!(wasm_note.display, "Bb");
     }
 
-    #[test]
+    #[wasm_bindgen_test::wasm_bindgen_test]
     fn test_wasm_note_serialization() {
         let note = Note::new(Pitch::new(NoteLetter::F, 1), 5); // F# in octave 5
         let wasm_note = WasmNote::from(note);
