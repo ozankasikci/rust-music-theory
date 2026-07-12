@@ -1,7 +1,6 @@
 use crate::interval::Interval;
 use crate::note::{Note, NoteLetter, Notes, Pitch};
 use crate::scale::errors::ScaleError;
-use crate::scale::Mode::{Aeolian, Dorian, Ionian, Locrian, Lydian, Mixolydian, Phrygian};
 use crate::scale::{Mode, ScaleType};
 use strum_macros::Display;
 
@@ -53,27 +52,11 @@ impl Scale {
             ScaleType::WholeTone => Interval::from_semitones(&[2, 2, 2, 2, 2, 2]),
         }?;
 
-        match mode {
-            None => {}
-            Some(mode) => {
-                match mode {
-                    Ionian => {}
-                    Dorian => intervals.rotate_left(1),
-                    Phrygian => intervals.rotate_left(2),
-                    Lydian => intervals.rotate_left(3),
-                    Mixolydian => intervals.rotate_left(4),
-                    Aeolian => intervals.rotate_right(2),
-                    Locrian => intervals.rotate_right(1),
-                    // New scale types don't have modal variations
-                    Mode::PentatonicMajor
-                    | Mode::PentatonicMinor
-                    | Mode::Blues
-                    | Mode::Chromatic
-                    | Mode::WholeTone => {}
-                    _ => {}
-                };
+        if let Some(mode) = mode {
+            if mode.scale_type() == scale_type {
+                intervals.rotate_left(mode.rotation());
             }
-        };
+        }
 
         Ok(Scale {
             tonic,
@@ -214,7 +197,7 @@ impl Default for Scale {
             },
             octave: 0,
             scale_type: ScaleType::Diatonic,
-            mode: Some(Ionian),
+            mode: Some(Mode::Ionian),
             intervals: vec![],
             direction: Direction::Ascending,
         }
