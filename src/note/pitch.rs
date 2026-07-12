@@ -4,14 +4,14 @@ use crate::note::pitch_symbol::PitchSymbol;
 use crate::scale::{Direction, Mode};
 use lazy_static::lazy_static;
 use regex::{Match, Regex};
+use std::collections::HashMap;
 use std::fmt;
+use std::hash::Hash;
 use std::str::FromStr;
 use strum_macros::EnumIter;
-use std::collections::HashMap;
-use std::hash::Hash;
 
 lazy_static! {
-    static ref REGEX_PITCH: Regex = Regex::new("^[ABCDEFGabcdefg][b♭#s𝄪x]*").unwrap();
+    static ref REGEX_PITCH: Regex = Regex::new("^[ABCDEFGabcdefg][b♭#sS♯𝄪x]*").unwrap();
 }
 
 /// A note letter without an accidental.
@@ -24,6 +24,28 @@ pub enum NoteLetter {
     G,
     A,
     B,
+}
+
+impl NoteLetter {
+    pub(crate) fn index(self) -> i16 {
+        use NoteLetter::*;
+        match self {
+            C => 0,
+            D => 1,
+            E => 2,
+            F => 3,
+            G => 4,
+            A => 5,
+            B => 6,
+        }
+    }
+
+    pub(crate) fn offset(self, steps: i16) -> Self {
+        use NoteLetter::*;
+        const LETTERS: [NoteLetter; 7] = [C, D, E, F, G, A, B];
+        let current = self.index();
+        LETTERS[(current + steps).rem_euclid(7) as usize]
+    }
 }
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
@@ -43,27 +65,48 @@ impl Pitch {
     pub fn from_u8(val: u8) -> Self {
         use NoteLetter::*;
         return match val % 12 {
-            0 => { Pitch::new(C, 0) }
-            1 => { Pitch::new(C, 1) }
-            2 => { Pitch::new(D, 0) }
-            3 => { Pitch::new(D, 1) }
-            4 => { Pitch::new(E, 0) }
-            5 => { Pitch::new(F, 0) }
-            6 => { Pitch::new(F, 1) }
-            7 => { Pitch::new(G, 0) }
-            8 => { Pitch::new(G, 1) }
-            9 => { Pitch::new(A, 0) }
-            10 => { Pitch::new(A, 1) }
-            11 => { Pitch::new(B, 0) }
-            _ => unreachable!("val % 12 should always be 0-11")
+            0 => Pitch::new(C, 0),
+            1 => Pitch::new(C, 1),
+            2 => Pitch::new(D, 0),
+            3 => Pitch::new(D, 1),
+            4 => Pitch::new(E, 0),
+            5 => Pitch::new(F, 0),
+            6 => Pitch::new(F, 1),
+            7 => Pitch::new(G, 0),
+            8 => Pitch::new(G, 1),
+            9 => Pitch::new(A, 0),
+            10 => Pitch::new(A, 1),
+            11 => Pitch::new(B, 0),
+            _ => unreachable!("val % 12 should always be 0-11"),
         };
+    }
+
+    /// Spell a pitch class using a required note letter.
+    ///
+    /// Tonal scales and tertian chords need both a sounding pitch class and a
+    /// diatonic letter. For example, the minor third above B-flat is D-flat,
+    /// not the enharmonically equivalent C-sharp.
+    pub(crate) fn from_u8_with_letter(val: u8, letter: NoteLetter) -> Self {
+        use NoteLetter::*;
+        let natural_pitch = match letter {
+            C => 0i16,
+            D => 2,
+            E => 4,
+            F => 5,
+            G => 7,
+            A => 9,
+            B => 11,
+        };
+        let difference = val as i16 % 12 - natural_pitch;
+        let accidental = (difference + 6).rem_euclid(12) - 6;
+        Self::new(letter, accidental as i8)
     }
 
     /// Create a pitch from an integer with a preferred spelling based on mode and scale type
     pub fn from_u8_with_scale_context(val: u8, mode: Option<Mode>, direction: Direction) -> Self {
         use super::PitchSymbol;
-        use PitchSymbol::*;
         use Mode::*;
+        use PitchSymbol::*;
 
         let pitch_number = val % 12;
 
@@ -140,40 +183,62 @@ impl Pitch {
             A => 9,
             B => 11,
         };
-        
-        // Handle negative accidentals correctly by adding 12 first
-        let semitones = ((base as i8 + self.accidental + 12) % 12) as u8;
-        semitones
+
+        (base as i16 + self.accidental as i16).rem_euclid(12) as u8
     }
 
     /// Create a pitch by moving up the given pitch by an interval.
     pub fn from_interval(pitch: Self, interval: Interval) -> Self {
         let current_pitch = pitch.into_u8();
         let new_pitch = current_pitch + interval.semitone_count;
+        let letter_steps = match interval.number {
+            crate::interval::Number::Unison | crate::interval::Number::Octave => 0,
+            crate::interval::Number::Second => 1,
+            crate::interval::Number::Third => 2,
+            crate::interval::Number::Fourth => 3,
+            crate::interval::Number::Fifth => 4,
+            crate::interval::Number::Sixth => 5,
+            crate::interval::Number::Seventh => 6,
+        };
 
-        Self::from_u8(new_pitch)
+        Self::from_u8_with_letter(new_pitch, pitch.letter.offset(letter_steps))
     }
 
     /// Create a pitch by moving down the given pitch by an interval.
     pub fn from_interval_down(pitch: Self, interval: Interval) -> Self {
         let current_pitch = pitch.into_u8();
         let new_pitch = (12 + (current_pitch as i16 - interval.semitone_count as i16)) % 12;
+        let letter_steps = match interval.number {
+            crate::interval::Number::Unison | crate::interval::Number::Octave => 0,
+            crate::interval::Number::Second => 1,
+            crate::interval::Number::Third => 2,
+            crate::interval::Number::Fourth => 3,
+            crate::interval::Number::Fifth => 4,
+            crate::interval::Number::Sixth => 5,
+            crate::interval::Number::Seventh => 6,
+        };
 
-        Self::from_u8(new_pitch as u8)
+        Self::from_u8_with_letter(new_pitch as u8, pitch.letter.offset(-letter_steps))
     }
 
     /// Create a pitch by moving up the given pitch by an interval with scale context.
-    pub fn from_interval_with_context(pitch: Self, interval: Interval, mode: Option<Mode>, direction: Direction) -> Self {
-        let current_pitch = pitch.into_u8();
-        let new_pitch = current_pitch + interval.semitone_count;
-        Self::from_u8_with_scale_context(new_pitch, mode, direction)
+    pub fn from_interval_with_context(
+        pitch: Self,
+        interval: Interval,
+        _mode: Option<Mode>,
+        _direction: Direction,
+    ) -> Self {
+        Self::from_interval(pitch, interval)
     }
 
     /// Create a pitch by moving down the given pitch by an interval with scale context.
-    pub fn from_interval_down_with_context(pitch: Self, interval: Interval, mode: Option<Mode>, direction: Direction) -> Self {
-        let current_pitch = pitch.into_u8();
-        let new_pitch = (12 + (current_pitch as i16 - interval.semitone_count as i16)) % 12;
-        Self::from_u8_with_scale_context(new_pitch as u8, mode, direction)
+    pub fn from_interval_down_with_context(
+        pitch: Self,
+        interval: Interval,
+        _mode: Option<Mode>,
+        _direction: Direction,
+    ) -> Self {
+        Self::from_interval_down(pitch, interval)
     }
 
     /// Attempt to parse a pitch from a string. It should contain the name of the note in either
@@ -197,17 +262,11 @@ impl Pitch {
 
         let mut accidental = 0;
         let sharps: HashMap<char, i8> =
-            [('#', 1),
-             ('s', 1),
-             ('S', 1),
-             ('♯', 1),
-             ('𝄪', 2),
-             ('x', 2)]
-             .iter().cloned().collect();
-        let flats: HashMap<char, i8> =
-            [('b', -1),
-             ('♭', -1)]
-             .iter().cloned().collect();
+            [('#', 1), ('s', 1), ('S', 1), ('♯', 1), ('𝄪', 2), ('x', 2)]
+                .iter()
+                .cloned()
+                .collect();
+        let flats: HashMap<char, i8> = [('b', -1), ('♭', -1)].iter().cloned().collect();
         let mut active_map: Option<&HashMap<char, i8>> = None;
         for ch in characters {
             if let Some(map) = active_map {
@@ -228,11 +287,11 @@ impl Pitch {
             }
         }
 
-        return Some(Pitch { letter, accidental })
+        return Some(Pitch { letter, accidental });
     }
 
     /// Parse the pitch using a regex, with the same algorithm as described in `from_str`.
-    pub fn from_regex(string: &str) -> Result<(Self, Match), NoteError> {
+    pub fn from_regex(string: &str) -> Result<(Self, Match<'_>), NoteError> {
         let pitch_match = REGEX_PITCH.find(&string).ok_or(NoteError::InvalidPitch)?;
 
         let pitch = Self::from_str(&string[pitch_match.start()..pitch_match.end()])
@@ -256,7 +315,11 @@ impl fmt::Display for Pitch {
         };
 
         let acc = if self.accidental < 0 { "b" } else { "#" };
-        write!(fmt, "{}", letter.to_owned() + &(0..self.accidental.abs()).map(|_| acc).collect::<String>())
+        write!(
+            fmt,
+            "{}",
+            letter.to_owned() + &(0..self.accidental.abs()).map(|_| acc).collect::<String>()
+        )
     }
 }
 
