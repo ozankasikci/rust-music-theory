@@ -74,7 +74,7 @@ pub enum Mode {
 
 impl Mode {
     /// Parse a mode using a regex.
-    pub fn from_regex(string: &str) -> Result<(Self, Match), ScaleError> {
+    pub fn from_regex(string: &str) -> Result<(Self, Match<'_>), ScaleError> {
         for (regex, mode_enum) in &*MODE_REGEXES {
             let mode = regex.find(string.trim());
 
