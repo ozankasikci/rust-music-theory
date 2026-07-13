@@ -43,16 +43,7 @@ pub fn parse_scale_type(input: &str) -> ScaleType {
 
 /// Parse a string representation of a mode into a Mode
 pub fn parse_mode(input: &str) -> Option<Mode> {
-    match input.to_lowercase().as_str() {
-        "ionian" => Some(Mode::Ionian),
-        "dorian" => Some(Mode::Dorian),
-        "phrygian" => Some(Mode::Phrygian),
-        "lydian" => Some(Mode::Lydian),
-        "mixolydian" => Some(Mode::Mixolydian),
-        "aeolian" => Some(Mode::Aeolian),
-        "locrian" => Some(Mode::Locrian),
-        _ => None,
-    }
+    input.parse().ok()
 }
 
 /// Parse a string representation of a chord quality into a ChordQuality
@@ -130,6 +121,12 @@ mod tests {
         assert_eq!(parse_mode("mixolydian"), Some(Mode::Mixolydian));
         assert_eq!(parse_mode("aeolian"), Some(Mode::Aeolian));
         assert_eq!(parse_mode("locrian"), Some(Mode::Locrian));
+        assert_eq!(
+            parse_mode("phrygian_dominant"),
+            Some(Mode::PhrygianDominant)
+        );
+        assert_eq!(parse_mode("Dorian ♭2"), Some(Mode::DorianFlat2));
+        assert_eq!(parse_mode("super locrian"), Some(Mode::Altered));
         assert_eq!(parse_mode("invalid"), None);
     }
 

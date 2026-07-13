@@ -1,18 +1,9 @@
 use clap::{App, Arg, ArgMatches};
 use rust_music_theory::chord::{Chord, SUPPORTED_CHORD_SYNTAX};
 use rust_music_theory::note::Notes;
-use rust_music_theory::scale::{Direction, Scale};
+use rust_music_theory::scale::{Direction, Mode, Scale};
 
-const AVAILABLE_SCALES: [&str; 14] = [
-    "Major|Ionian",
-    "Minor|Aeolian",
-    "Dorian",
-    "Phrygian",
-    "Lydian",
-    "Mixolydian",
-    "Locrian",
-    "Harmonic Minor",
-    "Melodic Minor",
+const STANDALONE_SCALES: [&str; 5] = [
     "Pentatonic Major",
     "Pentatonic Minor",
     "Blues",
@@ -20,27 +11,33 @@ const AVAILABLE_SCALES: [&str; 14] = [
     "Whole Tone",
 ];
 
-fn scale_command(scale_matches: &ArgMatches) {
+fn scale_command(scale_matches: &ArgMatches) -> Result<(), String> {
     use Direction::*;
     match scale_matches.subcommand() {
         ("list", _) => {
             println!("Available Scales:");
-            for scale in &AVAILABLE_SCALES {
+            for mode in Mode::heptatonic_modes() {
+                println!(" - {}", mode.canonical_name());
+            }
+            for scale in &STANDALONE_SCALES {
                 println!(" - {}", scale);
             }
+            Ok(())
         }
         _ => {
             let scale_args = scale_matches
                 .values_of("args")
-                .unwrap()
-                .collect::<Vec<_>>()
-                .join(" ");
+                .map(|values| values.collect::<Vec<_>>().join(" "))
+                .filter(|value| !value.trim().is_empty())
+                .ok_or_else(|| "missing scale".to_string())?;
 
             let descending = scale_matches.is_present("descending");
             let direction = if descending { Descending } else { Ascending };
 
-            let scale = Scale::from_regex_in_direction(&scale_args, direction).unwrap();
+            let scale = Scale::from_regex_in_direction(&scale_args, direction)
+                .map_err(|error| error.to_string())?;
             scale.print_notes();
+            Ok(())
         }
     }
 }
@@ -121,10 +118,7 @@ fn main() {
         .get_matches();
 
     let result = match matches.subcommand() {
-        ("scale", Some(scale_matches)) => {
-            scale_command(scale_matches);
-            Ok(())
-        }
+        ("scale", Some(scale_matches)) => scale_command(scale_matches),
 
         ("chord", Some(chord_matches)) => chord_command(chord_matches),
 
