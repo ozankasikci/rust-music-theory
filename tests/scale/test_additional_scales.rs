@@ -104,7 +104,7 @@ mod additional_scale_tests {
             Direction::Ascending,
         )
         .unwrap();
-        
+
         assert_scale_notes(&[C, Eb, F, Fs, G, Bb, C], scale);
 
         // A Blues: A C D D# E G
@@ -153,7 +153,11 @@ mod additional_scale_tests {
         )
         .unwrap();
         let notes = scale.notes();
-        assert_eq!(notes.len(), 13, "Chromatic scale should have 13 notes including octave");
+        assert_eq!(
+            notes.len(),
+            13,
+            "Chromatic scale should have 13 notes including octave"
+        );
         assert_eq!(notes[0].pitch, Pitch::from(F));
         assert_eq!(notes[12].pitch, Pitch::from(F)); // Octave
     }
@@ -215,7 +219,11 @@ mod additional_scale_tests {
         )
         .unwrap();
         let notes = scale.notes();
-        assert_eq!(notes.len(), 7, "Whole tone scale should have 7 notes including octave");
+        assert_eq!(
+            notes.len(),
+            7,
+            "Whole tone scale should have 7 notes including octave"
+        );
     }
 
     #[test]
@@ -279,10 +287,10 @@ mod additional_scale_tests {
             Direction::Descending,
         )
         .unwrap();
-        
+
         let notes = scale.notes();
         assert_eq!(notes.len(), 6); // Should include the octave
-        
+
         // First and last notes should be the same pitch (C)
         assert_eq!(notes[0].pitch, Pitch::from(C));
         assert_eq!(notes[5].pitch, Pitch::from(C));
@@ -299,7 +307,7 @@ mod additional_scale_tests {
             Direction::Ascending,
         )
         .unwrap();
-        
+
         let notes = scale.notes();
         // F# Major Pentatonic should use sharps, not flats
         // F# G# A# C# D#

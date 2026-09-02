@@ -1,21 +1,30 @@
+use crate::note::{NoteLetter, Pitch};
 use std::fmt::Display;
-use crate::note::{Pitch, NoteLetter};
 
 /// All possible pitches with accidentals.
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
 pub enum PitchSymbol {
-    Bs, C,
-    Cs, Db,
+    Bs,
+    C,
+    Cs,
+    Db,
     D,
-    Ds, Eb,
+    Ds,
+    Eb,
     E,
-    Es, F, Fb,
-    Fs, Gb,
+    Es,
+    F,
+    Fb,
+    Fs,
+    Gb,
     G,
-    Gs, Ab,
+    Gs,
+    Ab,
     A,
-    As, Bb,
-    B, Cb,
+    As,
+    Bb,
+    B,
+    Cb,
 }
 
 impl Display for PitchSymbol {

@@ -1,6 +1,6 @@
 extern crate rust_music_theory as theory;
 use theory::chord::{Chord, Number, Number::*, Quality, Quality::*};
-use theory::note::{Pitch, NoteLetter::*};
+use theory::note::{NoteLetter::*, Pitch};
 
 fn assert_chords(table: Vec<(&str, Pitch, Quality, Number)>) {
     for (string, pitch, quality, number) in table {
@@ -60,7 +60,12 @@ mod chord_regex_tests {
             ("E Augmented", Pitch::new(E, 0), Augmented, Triad),
             ("C augmented", Pitch::new(C, 0), Augmented, Triad),
             ("Cb augmented", Pitch::new(C, -1), Augmented, Triad),
-            ("Cb augmented seventh", Pitch::new(C, -1), Augmented, Seventh),
+            (
+                "Cb augmented seventh",
+                Pitch::new(C, -1),
+                Augmented,
+                Seventh,
+            ),
             ("C augmented", Pitch::new(C, 0), Augmented, Triad),
             ("C augmented Triad", Pitch::new(C, 0), Augmented, Triad),
             ("C Augmented Seventh", Pitch::new(C, 0), Augmented, Seventh),
@@ -76,10 +81,20 @@ mod chord_regex_tests {
             ("E Diminished", Pitch::new(E, 0), Diminished, Triad),
             ("C Diminished", Pitch::new(C, 0), Diminished, Triad),
             ("Cb Diminished", Pitch::new(C, -1), Diminished, Triad),
-            ("Cb Diminished seventh", Pitch::new(C, -1), Diminished, Seventh),
+            (
+                "Cb Diminished seventh",
+                Pitch::new(C, -1),
+                Diminished,
+                Seventh,
+            ),
             ("C Diminished", Pitch::new(C, 0), Diminished, Triad),
             ("C Diminished Triad", Pitch::new(C, 0), Diminished, Triad),
-            ("C Diminished Seventh", Pitch::new(C, 0), Diminished, Seventh),
+            (
+                "C Diminished Seventh",
+                Pitch::new(C, 0),
+                Diminished,
+                Seventh,
+            ),
         ];
 
         assert_chords(table);
@@ -88,8 +103,18 @@ mod chord_regex_tests {
     #[test]
     fn test_half_diminished() {
         let table = vec![
-            ("Cb HalfDiminished seventh", Pitch::new(C, -1), HalfDiminished, Seventh),
-            ("C HalfDiminished Seventh", Pitch::new(C, 0), HalfDiminished, Seventh),
+            (
+                "Cb HalfDiminished seventh",
+                Pitch::new(C, -1),
+                HalfDiminished,
+                Seventh,
+            ),
+            (
+                "C HalfDiminished Seventh",
+                Pitch::new(C, 0),
+                HalfDiminished,
+                Seventh,
+            ),
         ];
 
         assert_chords(table);
@@ -102,7 +127,12 @@ mod chord_regex_tests {
             ("C Dominant Seventh", Pitch::new(C, 0), Dominant, Seventh),
             ("C Dominant Ninth", Pitch::new(C, 0), Dominant, Ninth),
             ("C# Dominant Eleventh", Pitch::new(C, 1), Dominant, Eleventh),
-            ("Ds Dominant Thirteenth", Pitch::new(D, 1), Dominant, Thirteenth),
+            (
+                "Ds Dominant Thirteenth",
+                Pitch::new(D, 1),
+                Dominant,
+                Thirteenth,
+            ),
         ];
 
         assert_chords(table);

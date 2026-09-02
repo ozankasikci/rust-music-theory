@@ -6,11 +6,11 @@ use std::time::Duration as StdDuration;
 
 use midir::{MidiOutput, MidiOutputConnection};
 
+use super::scheduler::Scheduler;
+use super::timing::duration_to_ms;
+use super::PlaybackError;
 use crate::midi::{Channel, Duration, Velocity};
 use crate::note::Notes;
-use super::PlaybackError;
-use super::timing::duration_to_ms;
-use super::scheduler::Scheduler;
 
 /// Real-time MIDI player.
 pub struct MidiPlayer {
@@ -31,7 +31,10 @@ impl MidiPlayer {
         let port = ports
             .iter()
             .find(|p| {
-                midi_out.port_name(p).map(|n| n == port_name).unwrap_or(false)
+                midi_out
+                    .port_name(p)
+                    .map(|n| n == port_name)
+                    .unwrap_or(false)
             })
             .ok_or_else(|| PlaybackError::PortNotFound(port_name.to_string()))?;
 
@@ -210,11 +213,14 @@ impl MidiPlayer {
         let pc_status = 0xC0 | channel;
 
         // Bank Select MSB (CC 0)
-        self.scheduler.schedule(self.cursor_ms, vec![cc_status, 0, bank_msb & 0x7F]);
+        self.scheduler
+            .schedule(self.cursor_ms, vec![cc_status, 0, bank_msb & 0x7F]);
         // Bank Select LSB (CC 32)
-        self.scheduler.schedule(self.cursor_ms, vec![cc_status, 32, bank_lsb & 0x7F]);
+        self.scheduler
+            .schedule(self.cursor_ms, vec![cc_status, 32, bank_lsb & 0x7F]);
         // Program Change
-        self.scheduler.schedule(self.cursor_ms, vec![pc_status, program & 0x7F]);
+        self.scheduler
+            .schedule(self.cursor_ms, vec![pc_status, program & 0x7F]);
     }
 
     /// Schedule notes to play asynchronously.
@@ -225,7 +231,11 @@ impl MidiPlayer {
 
         // Schedule Note On for all pitches
         for &pitch in &pitches {
-            let message = vec![0x90 | (channel & 0x0F), pitch & 0x7F, velocity.value() & 0x7F];
+            let message = vec![
+                0x90 | (channel & 0x0F),
+                pitch & 0x7F,
+                velocity.value() & 0x7F,
+            ];
             self.scheduler.schedule(self.cursor_ms, message);
         }
 
@@ -245,7 +255,11 @@ impl MidiPlayer {
         let duration_ms = duration_to_ms(&duration, self.tempo);
         let channel = self.channel.value();
 
-        let note_on = vec![0x90 | (channel & 0x0F), pitch & 0x7F, velocity.value() & 0x7F];
+        let note_on = vec![
+            0x90 | (channel & 0x0F),
+            pitch & 0x7F,
+            velocity.value() & 0x7F,
+        ];
         self.scheduler.schedule(self.cursor_ms, note_on);
 
         let note_off_time = self.cursor_ms + duration_ms;
@@ -339,7 +353,7 @@ mod tests {
     fn control_change_message_bytes() {
         // CC message format: [0xB0 | channel, cc_number, value]
         let channel = 0u8;
-        let cc = 1u8;  // Modulation
+        let cc = 1u8; // Modulation
         let value = 64u8;
 
         let status = 0xB0 | (channel & 0x0F);

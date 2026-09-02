@@ -1,5 +1,5 @@
 extern crate rust_music_theory as theory;
-use theory::note::{PitchSymbol, Pitch, NoteLetter};
+use theory::note::{NoteLetter, Pitch, PitchSymbol};
 
 #[cfg(test)]
 mod test_pitch_symbol {

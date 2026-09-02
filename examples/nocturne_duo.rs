@@ -5,8 +5,8 @@
 //! - Track 1: MIDI From = IAC Driver, Channel = 1, load a bright piano
 //! - Track 2: MIDI From = IAC Driver, Channel = 2, load a warm piano
 
-use rust_music_theory::midi::playback::{MidiPorts, MidiPlayer};
-use rust_music_theory::midi::{Duration, Velocity, Channel};
+use rust_music_theory::midi::playback::{MidiPlayer, MidiPorts};
+use rust_music_theory::midi::{Channel, Duration, Velocity};
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let ports = MidiPorts::list()?;
@@ -52,9 +52,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     player.seek(bar_start);
     player.set_channel(ch1);
     player.rest_async(Duration::Eighth); // Melody enters after 8th rest
-    player.play_note_async(64, Duration::Eighth, mp);  // E4
-    player.play_note_async(67, Duration::Eighth, mf);  // G4
-    player.play_note_async(71, Duration::Eighth, mp);  // B4
+    player.play_note_async(64, Duration::Eighth, mp); // E4
+    player.play_note_async(67, Duration::Eighth, mf); // G4
+    player.play_note_async(71, Duration::Eighth, mp); // B4
     let ch1_end = player.cursor();
 
     // Advance to end of bar (whichever is longer)
@@ -70,7 +70,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     player.seek(bar_start);
     player.set_channel(ch1);
     player.play_note_async(72, Duration::Dotted(Box::new(Duration::Quarter)), mf); // C5
-    player.play_note_async(71, Duration::Eighth, mp);  // B4
+    player.play_note_async(71, Duration::Eighth, mp); // B4
     let ch1_end = player.cursor();
 
     player.seek(ch1_end.max(ch2_end));
@@ -84,9 +84,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     player.seek(bar_start);
     player.set_channel(ch1);
-    player.play_note_async(69, Duration::Quarter, mf);  // A4
-    player.play_note_async(67, Duration::Eighth, mp);   // G4
-    player.play_note_async(64, Duration::Eighth, p);    // E4
+    player.play_note_async(69, Duration::Quarter, mf); // A4
+    player.play_note_async(67, Duration::Eighth, mp); // G4
+    player.play_note_async(64, Duration::Eighth, p); // E4
     let ch1_end = player.cursor();
 
     player.seek(ch1_end.max(ch2_end));
@@ -100,8 +100,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     player.seek(bar_start);
     player.set_channel(ch1);
-    player.play_note_async(66, Duration::Quarter, mf);  // F#4
-    player.play_note_async(64, Duration::Quarter, mp);  // E4
+    player.play_note_async(66, Duration::Quarter, mf); // F#4
+    player.play_note_async(64, Duration::Quarter, mp); // E4
     let ch1_end = player.cursor();
 
     player.seek(ch1_end.max(ch2_end));
@@ -115,9 +115,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     player.seek(bar_start);
     player.set_channel(ch1);
-    player.play_note_async(67, Duration::Eighth, mf);   // G4
-    player.play_note_async(72, Duration::Eighth, f);    // C5
-    player.play_note_async(74, Duration::Quarter, f);   // D5
+    player.play_note_async(67, Duration::Eighth, mf); // G4
+    player.play_note_async(72, Duration::Eighth, f); // C5
+    player.play_note_async(74, Duration::Quarter, f); // D5
     let ch1_end = player.cursor();
 
     player.seek(ch1_end.max(ch2_end));
@@ -131,9 +131,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     player.seek(bar_start);
     player.set_channel(ch1);
-    player.play_note_async(76, Duration::Quarter, f);   // E5 - peak!
-    player.play_note_async(74, Duration::Eighth, mf);   // D5
-    player.play_note_async(72, Duration::Eighth, mp);   // C5
+    player.play_note_async(76, Duration::Quarter, f); // E5 - peak!
+    player.play_note_async(74, Duration::Eighth, mf); // D5
+    player.play_note_async(72, Duration::Eighth, mp); // C5
     let ch1_end = player.cursor();
 
     player.seek(ch1_end.max(ch2_end));
@@ -147,10 +147,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     player.seek(bar_start);
     player.set_channel(ch1);
-    player.play_note_async(71, Duration::Eighth, mp);   // B4
-    player.play_note_async(69, Duration::Eighth, p);    // A4
-    player.play_note_async(67, Duration::Eighth, p);    // G4
-    player.play_note_async(66, Duration::Eighth, pp);   // F#4
+    player.play_note_async(71, Duration::Eighth, mp); // B4
+    player.play_note_async(69, Duration::Eighth, p); // A4
+    player.play_note_async(67, Duration::Eighth, p); // G4
+    player.play_note_async(66, Duration::Eighth, pp); // F#4
     let ch1_end = player.cursor();
 
     player.seek(ch1_end.max(ch2_end));
@@ -164,7 +164,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     player.seek(bar_start);
     player.set_channel(ch1);
-    player.play_note_async(64, Duration::Half, mp);     // E4
+    player.play_note_async(64, Duration::Half, mp); // E4
     let ch1_end = player.cursor();
 
     player.seek(ch1_end.max(ch2_end));
@@ -179,9 +179,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     player.seek(bar_start);
     player.set_channel(ch1);
     player.rest_async(Duration::Eighth);
-    player.play_note_async(67, Duration::Eighth, mp);   // G4
-    player.play_note_async(71, Duration::Eighth, mf);   // B4
-    player.play_note_async(72, Duration::Eighth, mp);   // C5
+    player.play_note_async(67, Duration::Eighth, mp); // G4
+    player.play_note_async(71, Duration::Eighth, mf); // B4
+    player.play_note_async(72, Duration::Eighth, mp); // C5
     let ch1_end = player.cursor();
 
     player.seek(ch1_end.max(ch2_end));
@@ -196,7 +196,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     player.seek(bar_start);
     player.set_channel(ch1);
     player.play_note_async(71, Duration::Dotted(Box::new(Duration::Quarter)), mf); // B4
-    player.play_note_async(69, Duration::Eighth, mp);   // A4
+    player.play_note_async(69, Duration::Eighth, mp); // A4
     let ch1_end = player.cursor();
 
     player.seek(ch1_end.max(ch2_end));
@@ -210,9 +210,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     player.seek(bar_start);
     player.set_channel(ch1);
-    player.play_note_async(67, Duration::Quarter, mf);  // G4
-    player.play_note_async(69, Duration::Eighth, mp);   // A4
-    player.play_note_async(67, Duration::Eighth, p);    // G4
+    player.play_note_async(67, Duration::Quarter, mf); // G4
+    player.play_note_async(69, Duration::Eighth, mp); // A4
+    player.play_note_async(67, Duration::Eighth, p); // G4
     let ch1_end = player.cursor();
 
     player.seek(ch1_end.max(ch2_end));
@@ -226,8 +226,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     player.seek(bar_start);
     player.set_channel(ch1);
-    player.play_note_async(66, Duration::Quarter, mf);  // F#4
-    player.play_note_async(67, Duration::Quarter, mp);  // G4
+    player.play_note_async(66, Duration::Quarter, mf); // F#4
+    player.play_note_async(67, Duration::Quarter, mp); // G4
     let ch1_end = player.cursor();
 
     player.seek(ch1_end.max(ch2_end));
@@ -241,9 +241,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     player.seek(bar_start);
     player.set_channel(ch1);
-    player.play_note_async(72, Duration::Eighth, mf);   // C5
-    player.play_note_async(74, Duration::Eighth, f);    // D5
-    player.play_note_async(76, Duration::Quarter, f);   // E5
+    player.play_note_async(72, Duration::Eighth, mf); // C5
+    player.play_note_async(74, Duration::Eighth, f); // D5
+    player.play_note_async(76, Duration::Quarter, f); // E5
     let ch1_end = player.cursor();
 
     player.seek(ch1_end.max(ch2_end));
@@ -257,9 +257,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     player.seek(bar_start);
     player.set_channel(ch1);
-    player.play_note_async(79, Duration::Quarter, f);   // G5
-    player.play_note_async(76, Duration::Eighth, mf);   // E5
-    player.play_note_async(74, Duration::Eighth, mp);   // D5
+    player.play_note_async(79, Duration::Quarter, f); // G5
+    player.play_note_async(76, Duration::Eighth, mf); // E5
+    player.play_note_async(74, Duration::Eighth, mp); // D5
     let ch1_end = player.cursor();
 
     player.seek(ch1_end.max(ch2_end));
@@ -273,10 +273,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     player.seek(bar_start);
     player.set_channel(ch1);
-    player.play_note_async(72, Duration::Eighth, mp);   // C5
-    player.play_note_async(71, Duration::Eighth, p);    // B4
-    player.play_note_async(69, Duration::Eighth, p);    // A4
-    player.play_note_async(67, Duration::Eighth, pp);   // G4
+    player.play_note_async(72, Duration::Eighth, mp); // C5
+    player.play_note_async(71, Duration::Eighth, p); // B4
+    player.play_note_async(69, Duration::Eighth, p); // A4
+    player.play_note_async(67, Duration::Eighth, pp); // G4
     let ch1_end = player.cursor();
 
     player.seek(ch1_end.max(ch2_end));
@@ -290,7 +290,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     player.seek(bar_start);
     player.set_channel(ch1);
-    player.play_note_async(64, Duration::Half, p);      // E4
+    player.play_note_async(64, Duration::Half, p); // E4
     let ch1_end = player.cursor();
 
     player.seek(ch1_end.max(ch2_end));
@@ -309,9 +309,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     player.seek(bar_start);
     player.set_channel(ch1);
     player.rest_async(Duration::Eighth);
-    player.play_note_async(67, Duration::Eighth, mp);   // G4
-    player.play_note_async(69, Duration::Eighth, mf);   // A4
-    player.play_note_async(72, Duration::Eighth, mp);   // C5
+    player.play_note_async(67, Duration::Eighth, mp); // G4
+    player.play_note_async(69, Duration::Eighth, mf); // A4
+    player.play_note_async(72, Duration::Eighth, mp); // C5
     let ch1_end = player.cursor();
 
     player.seek(ch1_end.max(ch2_end));
@@ -326,7 +326,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     player.seek(bar_start);
     player.set_channel(ch1);
     player.play_note_async(74, Duration::Dotted(Box::new(Duration::Quarter)), mf); // D5
-    player.play_note_async(72, Duration::Eighth, mp);   // C5
+    player.play_note_async(72, Duration::Eighth, mp); // C5
     let ch1_end = player.cursor();
 
     player.seek(ch1_end.max(ch2_end));
@@ -340,9 +340,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     player.seek(bar_start);
     player.set_channel(ch1);
-    player.play_note_async(71, Duration::Quarter, mf);  // B4
-    player.play_note_async(69, Duration::Eighth, mp);   // A4
-    player.play_note_async(67, Duration::Eighth, p);    // G4
+    player.play_note_async(71, Duration::Quarter, mf); // B4
+    player.play_note_async(69, Duration::Eighth, mp); // A4
+    player.play_note_async(67, Duration::Eighth, p); // G4
     let ch1_end = player.cursor();
 
     player.seek(ch1_end.max(ch2_end));
@@ -356,8 +356,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     player.seek(bar_start);
     player.set_channel(ch1);
-    player.play_note_async(66, Duration::Quarter, mf);  // F#4
-    player.play_note_async(64, Duration::Quarter, mp);  // E4
+    player.play_note_async(66, Duration::Quarter, mf); // F#4
+    player.play_note_async(64, Duration::Quarter, mp); // E4
     let ch1_end = player.cursor();
 
     player.seek(ch1_end.max(ch2_end));
@@ -371,9 +371,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     player.seek(bar_start);
     player.set_channel(ch1);
-    player.play_note_async(64, Duration::Eighth, mf);   // E4
-    player.play_note_async(67, Duration::Eighth, f);    // G4
-    player.play_note_async(72, Duration::Quarter, f);   // C5
+    player.play_note_async(64, Duration::Eighth, mf); // E4
+    player.play_note_async(67, Duration::Eighth, f); // G4
+    player.play_note_async(72, Duration::Quarter, f); // C5
     let ch1_end = player.cursor();
 
     player.seek(ch1_end.max(ch2_end));
@@ -387,9 +387,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     player.seek(bar_start);
     player.set_channel(ch1);
-    player.play_note_async(74, Duration::Quarter, f);   // D5
-    player.play_note_async(72, Duration::Eighth, mf);   // C5
-    player.play_note_async(71, Duration::Eighth, mp);   // B4
+    player.play_note_async(74, Duration::Quarter, f); // D5
+    player.play_note_async(72, Duration::Eighth, mf); // C5
+    player.play_note_async(71, Duration::Eighth, mp); // B4
     let ch1_end = player.cursor();
 
     player.seek(ch1_end.max(ch2_end));
@@ -403,10 +403,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     player.seek(bar_start);
     player.set_channel(ch1);
-    player.play_note_async(69, Duration::Eighth, mp);   // A4
-    player.play_note_async(67, Duration::Eighth, p);    // G4
-    player.play_note_async(66, Duration::Eighth, p);    // F#4
-    player.play_note_async(64, Duration::Eighth, pp);   // E4
+    player.play_note_async(69, Duration::Eighth, mp); // A4
+    player.play_note_async(67, Duration::Eighth, p); // G4
+    player.play_note_async(66, Duration::Eighth, p); // F#4
+    player.play_note_async(64, Duration::Eighth, pp); // E4
     let ch1_end = player.cursor();
 
     player.seek(ch1_end.max(ch2_end));
@@ -420,7 +420,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     player.seek(bar_start);
     player.set_channel(ch1);
-    player.play_note_async(64, Duration::Half, pp);     // E4
+    player.play_note_async(64, Duration::Half, pp); // E4
     let ch1_end = player.cursor();
 
     player.seek(ch1_end.max(ch2_end));
@@ -435,9 +435,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     player.seek(bar_start);
     player.set_channel(ch1);
     player.rest_async(Duration::Eighth);
-    player.play_note_async(69, Duration::Eighth, mp);   // A4
-    player.play_note_async(72, Duration::Eighth, mf);   // C5
-    player.play_note_async(74, Duration::Eighth, mp);   // D5
+    player.play_note_async(69, Duration::Eighth, mp); // A4
+    player.play_note_async(72, Duration::Eighth, mf); // C5
+    player.play_note_async(74, Duration::Eighth, mp); // D5
     let ch1_end = player.cursor();
 
     player.seek(ch1_end.max(ch2_end));
@@ -452,7 +452,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     player.seek(bar_start);
     player.set_channel(ch1);
     player.play_note_async(72, Duration::Dotted(Box::new(Duration::Quarter)), mf); // C5
-    player.play_note_async(71, Duration::Eighth, mp);   // B4
+    player.play_note_async(71, Duration::Eighth, mp); // B4
     let ch1_end = player.cursor();
 
     player.seek(ch1_end.max(ch2_end));
@@ -466,9 +466,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     player.seek(bar_start);
     player.set_channel(ch1);
-    player.play_note_async(69, Duration::Quarter, mf);  // A4
-    player.play_note_async(71, Duration::Eighth, mp);   // B4
-    player.play_note_async(69, Duration::Eighth, p);    // A4
+    player.play_note_async(69, Duration::Quarter, mf); // A4
+    player.play_note_async(71, Duration::Eighth, mp); // B4
+    player.play_note_async(69, Duration::Eighth, p); // A4
     let ch1_end = player.cursor();
 
     player.seek(ch1_end.max(ch2_end));
@@ -482,8 +482,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     player.seek(bar_start);
     player.set_channel(ch1);
-    player.play_note_async(67, Duration::Quarter, mf);  // G4
-    player.play_note_async(66, Duration::Quarter, mp);  // F#4
+    player.play_note_async(67, Duration::Quarter, mf); // G4
+    player.play_note_async(66, Duration::Quarter, mp); // F#4
     let ch1_end = player.cursor();
 
     player.seek(ch1_end.max(ch2_end));
@@ -497,9 +497,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     player.seek(bar_start);
     player.set_channel(ch1);
-    player.play_note_async(72, Duration::Eighth, mf);   // C5
-    player.play_note_async(76, Duration::Eighth, f);    // E5
-    player.play_note_async(79, Duration::Quarter, f);   // G5
+    player.play_note_async(72, Duration::Eighth, mf); // C5
+    player.play_note_async(76, Duration::Eighth, f); // E5
+    player.play_note_async(79, Duration::Quarter, f); // G5
     let ch1_end = player.cursor();
 
     player.seek(ch1_end.max(ch2_end));
@@ -513,9 +513,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     player.seek(bar_start);
     player.set_channel(ch1);
-    player.play_note_async(79, Duration::Quarter, f);   // G5
-    player.play_note_async(76, Duration::Eighth, mf);   // E5
-    player.play_note_async(74, Duration::Eighth, mp);   // D5
+    player.play_note_async(79, Duration::Quarter, f); // G5
+    player.play_note_async(76, Duration::Eighth, mf); // E5
+    player.play_note_async(74, Duration::Eighth, mp); // D5
     let ch1_end = player.cursor();
 
     player.seek(ch1_end.max(ch2_end));
@@ -529,10 +529,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     player.seek(bar_start);
     player.set_channel(ch1);
-    player.play_note_async(72, Duration::Eighth, mp);   // C5
-    player.play_note_async(71, Duration::Eighth, p);    // B4
-    player.play_note_async(69, Duration::Eighth, p);    // A4
-    player.play_note_async(67, Duration::Eighth, pp);   // G4
+    player.play_note_async(72, Duration::Eighth, mp); // C5
+    player.play_note_async(71, Duration::Eighth, p); // B4
+    player.play_note_async(69, Duration::Eighth, p); // A4
+    player.play_note_async(67, Duration::Eighth, pp); // G4
     let ch1_end = player.cursor();
 
     player.seek(ch1_end.max(ch2_end));
@@ -546,7 +546,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     player.seek(bar_start);
     player.set_channel(ch1);
-    player.play_note_async(64, Duration::Half, p);      // E4
+    player.play_note_async(64, Duration::Half, p); // E4
     let ch1_end = player.cursor();
 
     player.seek(ch1_end.max(ch2_end));
@@ -565,9 +565,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     player.seek(bar_start);
     player.set_channel(ch1);
     player.rest_async(Duration::Eighth);
-    player.play_note_async(64, Duration::Eighth, p);    // E4
-    player.play_note_async(67, Duration::Eighth, mp);   // G4
-    player.play_note_async(71, Duration::Eighth, p);    // B4
+    player.play_note_async(64, Duration::Eighth, p); // E4
+    player.play_note_async(67, Duration::Eighth, mp); // G4
+    player.play_note_async(71, Duration::Eighth, p); // B4
     let ch1_end = player.cursor();
 
     player.seek(ch1_end.max(ch2_end));
@@ -582,7 +582,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     player.seek(bar_start);
     player.set_channel(ch1);
     player.play_note_async(72, Duration::Dotted(Box::new(Duration::Quarter)), mp); // C5
-    player.play_note_async(71, Duration::Eighth, p);    // B4
+    player.play_note_async(71, Duration::Eighth, p); // B4
     let ch1_end = player.cursor();
 
     player.seek(ch1_end.max(ch2_end));
@@ -596,9 +596,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     player.seek(bar_start);
     player.set_channel(ch1);
-    player.play_note_async(69, Duration::Quarter, mp);  // A4
-    player.play_note_async(67, Duration::Eighth, p);    // G4
-    player.play_note_async(66, Duration::Eighth, pp);   // F#4 (was E4)
+    player.play_note_async(69, Duration::Quarter, mp); // A4
+    player.play_note_async(67, Duration::Eighth, p); // G4
+    player.play_note_async(66, Duration::Eighth, pp); // F#4 (was E4)
     let ch1_end = player.cursor();
 
     player.seek(ch1_end.max(ch2_end));
@@ -612,8 +612,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     player.seek(bar_start);
     player.set_channel(ch1);
-    player.play_note_async(66, Duration::Quarter, mp);  // F#4
-    player.play_note_async(64, Duration::Quarter, p);   // E4
+    player.play_note_async(66, Duration::Quarter, mp); // F#4
+    player.play_note_async(64, Duration::Quarter, p); // E4
     let ch1_end = player.cursor();
 
     player.seek(ch1_end.max(ch2_end));
@@ -627,9 +627,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     player.seek(bar_start);
     player.set_channel(ch1);
-    player.play_note_async(67, Duration::Eighth, mp);   // G4
-    player.play_note_async(72, Duration::Eighth, mf);   // C5
-    player.play_note_async(74, Duration::Quarter, mf);  // D5
+    player.play_note_async(67, Duration::Eighth, mp); // G4
+    player.play_note_async(72, Duration::Eighth, mf); // C5
+    player.play_note_async(74, Duration::Quarter, mf); // D5
     let ch1_end = player.cursor();
 
     player.seek(ch1_end.max(ch2_end));
@@ -643,9 +643,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     player.seek(bar_start);
     player.set_channel(ch1);
-    player.play_note_async(76, Duration::Quarter, mf);  // E5
-    player.play_note_async(74, Duration::Eighth, mp);   // D5
-    player.play_note_async(72, Duration::Eighth, p);    // C5
+    player.play_note_async(76, Duration::Quarter, mf); // E5
+    player.play_note_async(74, Duration::Eighth, mp); // D5
+    player.play_note_async(72, Duration::Eighth, p); // C5
     let ch1_end = player.cursor();
 
     player.seek(ch1_end.max(ch2_end));
@@ -659,10 +659,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     player.seek(bar_start);
     player.set_channel(ch1);
-    player.play_note_async(71, Duration::Eighth, p);    // B4
-    player.play_note_async(69, Duration::Eighth, pp);   // A4
-    player.play_note_async(67, Duration::Eighth, pp);   // G4
-    player.play_note_async(66, Duration::Eighth, pp);   // F#4
+    player.play_note_async(71, Duration::Eighth, p); // B4
+    player.play_note_async(69, Duration::Eighth, pp); // A4
+    player.play_note_async(67, Duration::Eighth, pp); // G4
+    player.play_note_async(66, Duration::Eighth, pp); // F#4
     let ch1_end = player.cursor();
 
     player.seek(ch1_end.max(ch2_end));
@@ -676,7 +676,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     player.seek(bar_start);
     player.set_channel(ch1);
-    player.play_note_async(64, Duration::Half, p);      // E4
+    player.play_note_async(64, Duration::Half, p); // E4
     let ch1_end = player.cursor();
 
     player.seek(ch1_end.max(ch2_end));
@@ -691,9 +691,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     player.seek(bar_start);
     player.set_channel(ch1);
     player.rest_async(Duration::Eighth);
-    player.play_note_async(67, Duration::Eighth, p);    // G4
-    player.play_note_async(71, Duration::Eighth, mp);   // B4
-    player.play_note_async(72, Duration::Eighth, p);    // C5
+    player.play_note_async(67, Duration::Eighth, p); // G4
+    player.play_note_async(71, Duration::Eighth, mp); // B4
+    player.play_note_async(72, Duration::Eighth, p); // C5
     let ch1_end = player.cursor();
 
     player.seek(ch1_end.max(ch2_end));
@@ -708,7 +708,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     player.seek(bar_start);
     player.set_channel(ch1);
     player.play_note_async(71, Duration::Dotted(Box::new(Duration::Quarter)), mp); // B4
-    player.play_note_async(67, Duration::Eighth, p);    // G4 (was A4)
+    player.play_note_async(67, Duration::Eighth, p); // G4 (was A4)
     let ch1_end = player.cursor();
 
     player.seek(ch1_end.max(ch2_end));
@@ -722,9 +722,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     player.seek(bar_start);
     player.set_channel(ch1);
-    player.play_note_async(69, Duration::Quarter, mp);  // A4 (was G4)
-    player.play_note_async(67, Duration::Eighth, p);    // G4
-    player.play_note_async(64, Duration::Eighth, pp);   // E4
+    player.play_note_async(69, Duration::Quarter, mp); // A4 (was G4)
+    player.play_note_async(67, Duration::Eighth, p); // G4
+    player.play_note_async(64, Duration::Eighth, pp); // E4
     let ch1_end = player.cursor();
 
     player.seek(ch1_end.max(ch2_end));
@@ -738,8 +738,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     player.seek(bar_start);
     player.set_channel(ch1);
-    player.play_note_async(66, Duration::Quarter, p);   // F#4
-    player.play_note_async(64, Duration::Quarter, pp);  // E4 (was G4)
+    player.play_note_async(66, Duration::Quarter, p); // F#4
+    player.play_note_async(64, Duration::Quarter, pp); // E4 (was G4)
     let ch1_end = player.cursor();
 
     player.seek(ch1_end.max(ch2_end));
@@ -753,9 +753,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     player.seek(bar_start);
     player.set_channel(ch1);
-    player.play_note_async(72, Duration::Eighth, p);    // C5
-    player.play_note_async(74, Duration::Eighth, mp);   // D5
-    player.play_note_async(72, Duration::Quarter, mp);  // C5 (was E5)
+    player.play_note_async(72, Duration::Eighth, p); // C5
+    player.play_note_async(74, Duration::Eighth, mp); // D5
+    player.play_note_async(72, Duration::Quarter, mp); // C5 (was E5)
     let ch1_end = player.cursor();
 
     player.seek(ch1_end.max(ch2_end));
@@ -769,9 +769,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     player.seek(bar_start);
     player.set_channel(ch1);
-    player.play_note_async(74, Duration::Quarter, mp);  // D5 (was G5)
-    player.play_note_async(72, Duration::Eighth, p);    // C5
-    player.play_note_async(71, Duration::Eighth, pp);   // B4
+    player.play_note_async(74, Duration::Quarter, mp); // D5 (was G5)
+    player.play_note_async(72, Duration::Eighth, p); // C5
+    player.play_note_async(71, Duration::Eighth, pp); // B4
     let ch1_end = player.cursor();
 
     player.seek(ch1_end.max(ch2_end));
@@ -785,10 +785,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     player.seek(bar_start);
     player.set_channel(ch1);
-    player.play_note_async(69, Duration::Eighth, p);    // A4
-    player.play_note_async(67, Duration::Eighth, pp);   // G4
-    player.play_note_async(66, Duration::Eighth, pp);   // F#4
-    player.play_note_async(64, Duration::Eighth, pp);   // E4
+    player.play_note_async(69, Duration::Eighth, p); // A4
+    player.play_note_async(67, Duration::Eighth, pp); // G4
+    player.play_note_async(66, Duration::Eighth, pp); // F#4
+    player.play_note_async(64, Duration::Eighth, pp); // E4
     let ch1_end = player.cursor();
 
     player.seek(ch1_end.max(ch2_end));
@@ -802,7 +802,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     player.seek(bar_start);
     player.set_channel(ch1);
-    player.play_note_async(64, Duration::Half, pp);     // E4
+    player.play_note_async(64, Duration::Half, pp); // E4
     let ch1_end = player.cursor();
 
     player.seek(ch1_end.max(ch2_end));
@@ -851,14 +851,14 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let bar_start = player.cursor();
 
     player.set_channel(ch2);
-    player.play_note_async(45, Duration::Quarter, pp);  // A2
-    player.play_note_async(40, Duration::Quarter, pp);  // E2
+    player.play_note_async(45, Duration::Quarter, pp); // A2
+    player.play_note_async(40, Duration::Quarter, pp); // E2
     let ch2_end = player.cursor();
 
     player.seek(bar_start);
     player.set_channel(ch1);
-    player.play_note_async(69, Duration::Quarter, pp);  // A4
-    player.play_note_async(67, Duration::Quarter, pp);  // G4
+    player.play_note_async(69, Duration::Quarter, pp); // A4
+    player.play_note_async(67, Duration::Quarter, pp); // G4
     let ch1_end = player.cursor();
 
     player.seek(ch1_end.max(ch2_end));
@@ -869,19 +869,19 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Sustain on both channels
     player.set_channel(ch2);
     player.control_change(64, 127); // Sustain
-    player.play_note_async(40, Duration::Whole, pp);  // E2
+    player.play_note_async(40, Duration::Whole, pp); // E2
     player.seek(bar_start);
-    player.play_note_async(52, Duration::Whole, pp);  // E3
+    player.play_note_async(52, Duration::Whole, pp); // E3
     let ch2_end = player.cursor();
 
     player.seek(bar_start);
     player.set_channel(ch1);
     player.control_change(64, 127); // Sustain
-    player.play_note_async(64, Duration::Whole, pp);  // E4
+    player.play_note_async(64, Duration::Whole, pp); // E4
     player.seek(bar_start);
-    player.play_note_async(67, Duration::Whole, pp);  // G4
+    player.play_note_async(67, Duration::Whole, pp); // G4
     player.seek(bar_start);
-    player.play_note_async(71, Duration::Whole, pp);  // B4
+    player.play_note_async(71, Duration::Whole, pp); // B4
     let ch1_end = player.cursor();
 
     player.seek(ch1_end.max(ch2_end));

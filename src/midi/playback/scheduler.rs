@@ -1,11 +1,11 @@
 //! Background scheduler for async MIDI playback.
 
-use std::sync::mpsc::{self, Sender, Receiver};
-use std::sync::{Arc, Mutex, Condvar};
+use std::cmp::Ordering;
+use std::collections::BinaryHeap;
+use std::sync::mpsc::{self, Receiver, Sender};
+use std::sync::{Arc, Condvar, Mutex};
 use std::thread::{self, JoinHandle};
 use std::time::{Duration as StdDuration, Instant};
-use std::collections::BinaryHeap;
-use std::cmp::Ordering;
 
 use midir::MidiOutputConnection;
 
@@ -96,7 +96,9 @@ impl Scheduler {
         if let Ok(mut idle) = self.idle_signal.0.lock() {
             *idle = false;
         }
-        let _ = self.sender.send(SchedulerCommand::Schedule { time_ms, message });
+        let _ = self
+            .sender
+            .send(SchedulerCommand::Schedule { time_ms, message });
     }
 
     /// Stop all playing notes.
@@ -256,8 +258,14 @@ mod tests {
     #[test]
     fn scheduled_event_ordering() {
         // Earlier events should have higher priority (min-heap)
-        let early = ScheduledEvent { time_ms: 100, message: vec![] };
-        let late = ScheduledEvent { time_ms: 200, message: vec![] };
+        let early = ScheduledEvent {
+            time_ms: 100,
+            message: vec![],
+        };
+        let late = ScheduledEvent {
+            time_ms: 200,
+            message: vec![],
+        };
 
         // In a max-heap with reversed ordering, early > late
         assert!(early > late);

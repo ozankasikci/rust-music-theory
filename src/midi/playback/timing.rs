@@ -55,12 +55,18 @@ mod tests {
     #[test]
     fn dotted_quarter_at_120_bpm() {
         // Dotted quarter = 1.5 * 500 = 750ms
-        assert_eq!(duration_to_ms(&Duration::dotted(Duration::Quarter), 120), 750);
+        assert_eq!(
+            duration_to_ms(&Duration::dotted(Duration::Quarter), 120),
+            750
+        );
     }
 
     #[test]
     fn triplet_quarter_at_120_bpm() {
         // Triplet quarter = 2/3 * 500 = 333ms (rounded)
-        assert_eq!(duration_to_ms(&Duration::triplet(Duration::Quarter), 120), 333);
+        assert_eq!(
+            duration_to_ms(&Duration::triplet(Duration::Quarter), 120),
+            333
+        );
     }
 }

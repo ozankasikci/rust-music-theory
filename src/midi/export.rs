@@ -3,8 +3,8 @@
 use std::io;
 use std::path::Path;
 
+use crate::midi::{Channel, Duration, MidiBuilder, MidiFile, Velocity};
 use crate::note::{Note, Notes};
-use crate::midi::{Duration, Velocity, Channel, MidiBuilder, MidiFile};
 
 /// Quick MIDI export for Chord, Scale, and other Notes implementors.
 pub trait ToMidi: Notes {
@@ -91,13 +91,14 @@ impl MidiExport {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::chord::{Chord, Quality, Number};
+    use crate::chord::{Chord, Number, Quality};
     use crate::note::{Pitch, PitchSymbol::*};
 
     #[test]
     fn chord_to_midi() {
         let chord = Chord::new(Pitch::from(C), Quality::Major, Number::Triad);
-        let bytes = chord.to_midi(Duration::Quarter, Velocity::new(100).unwrap())
+        let bytes = chord
+            .to_midi(Duration::Quarter, Velocity::new(100).unwrap())
             .to_bytes();
 
         // Verify it's a valid MIDI file
@@ -106,7 +107,7 @@ mod tests {
 
     #[test]
     fn scale_to_midi() {
-        use crate::scale::{Scale, ScaleType, Mode, Direction};
+        use crate::scale::{Direction, Mode, Scale, ScaleType};
 
         let scale = Scale::new(
             ScaleType::Diatonic,
@@ -114,9 +115,11 @@ mod tests {
             4,
             Some(Mode::Ionian),
             Direction::Ascending,
-        ).unwrap();
+        )
+        .unwrap();
 
-        let bytes = scale.to_midi(Duration::Eighth, Velocity::new(80).unwrap())
+        let bytes = scale
+            .to_midi(Duration::Eighth, Velocity::new(80).unwrap())
             .to_bytes();
 
         assert_eq!(&bytes[0..4], b"MThd");
@@ -125,7 +128,8 @@ mod tests {
     #[test]
     fn to_midi_with_options() {
         let chord = Chord::new(Pitch::from(C), Quality::Major, Number::Triad);
-        let bytes = chord.to_midi(Duration::Quarter, Velocity::new(100).unwrap())
+        let bytes = chord
+            .to_midi(Duration::Quarter, Velocity::new(100).unwrap())
             .tempo(90)
             .channel(Channel::new(5).unwrap())
             .time_signature(3, 4)
