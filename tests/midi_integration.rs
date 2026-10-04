@@ -1,11 +1,9 @@
 #![cfg(feature = "midi")]
 
-use rust_music_theory::chord::{Chord, Quality, Number};
-use rust_music_theory::scale::{Scale, ScaleType, Mode, Direction};
+use rust_music_theory::chord::{Chord, Number, Quality};
+use rust_music_theory::midi::{Channel, Duration, MidiBuilder, MidiFile, ToMidi, Velocity};
 use rust_music_theory::note::{Pitch, PitchSymbol::*};
-use rust_music_theory::midi::{
-    MidiBuilder, MidiFile, Duration, Velocity, Channel, ToMidi,
-};
+use rust_music_theory::scale::{Direction, Mode, Scale, ScaleType};
 
 #[test]
 fn full_composition_workflow() {
@@ -13,21 +11,43 @@ fn full_composition_workflow() {
     let mut chords = MidiBuilder::new();
     chords
         .tempo(120)
-        .add(&Chord::new(Pitch::from(C), Quality::Major, Number::Triad),
-             Duration::Whole, Velocity::new(90).unwrap())
-        .add(&Chord::new(Pitch::from(G), Quality::Major, Number::Triad),
-             Duration::Whole, Velocity::new(90).unwrap())
-        .add(&Chord::new(Pitch::from(A), Quality::Minor, Number::Triad),
-             Duration::Whole, Velocity::new(90).unwrap())
-        .add(&Chord::new(Pitch::from(F), Quality::Major, Number::Triad),
-             Duration::Whole, Velocity::new(90).unwrap());
+        .add(
+            &Chord::new(Pitch::from(C), Quality::Major, Number::Triad),
+            Duration::Whole,
+            Velocity::new(90).unwrap(),
+        )
+        .add(
+            &Chord::new(Pitch::from(G), Quality::Major, Number::Triad),
+            Duration::Whole,
+            Velocity::new(90).unwrap(),
+        )
+        .add(
+            &Chord::new(Pitch::from(A), Quality::Minor, Number::Triad),
+            Duration::Whole,
+            Velocity::new(90).unwrap(),
+        )
+        .add(
+            &Chord::new(Pitch::from(F), Quality::Major, Number::Triad),
+            Duration::Whole,
+            Velocity::new(90).unwrap(),
+        );
 
     // Create melody
     let mut melody = MidiBuilder::new();
     melody
-        .rest(Duration::Half)  // Start after half note rest
-        .add(&Scale::new(ScaleType::PentatonicMajor, Pitch::from(C), 5, None, Direction::Ascending).unwrap(),
-             Duration::Eighth, Velocity::new(100).unwrap());
+        .rest(Duration::Half) // Start after half note rest
+        .add(
+            &Scale::new(
+                ScaleType::PentatonicMajor,
+                Pitch::from(C),
+                5,
+                None,
+                Direction::Ascending,
+            )
+            .unwrap(),
+            Duration::Eighth,
+            Velocity::new(100).unwrap(),
+        );
 
     // Combine into file
     let file = MidiFile::new()
@@ -49,7 +69,8 @@ fn full_composition_workflow() {
 #[test]
 fn simple_chord_export() {
     let chord = Chord::new(Pitch::from(C), Quality::Major, Number::Seventh);
-    let bytes = chord.to_midi(Duration::Half, Velocity::new(100).unwrap())
+    let bytes = chord
+        .to_midi(Duration::Half, Velocity::new(100).unwrap())
         .tempo(90)
         .to_bytes();
 
@@ -71,7 +92,8 @@ fn all_chord_qualities() {
 
     for (quality, number) in chords {
         let chord = Chord::new(Pitch::from(C), quality, number);
-        let bytes = chord.to_midi(Duration::Quarter, Velocity::new(100).unwrap())
+        let bytes = chord
+            .to_midi(Duration::Quarter, Velocity::new(100).unwrap())
             .to_bytes();
         assert_eq!(&bytes[0..4], b"MThd", "Failed for quality {:?}", quality);
     }
@@ -92,7 +114,8 @@ fn all_scale_types() {
 
     for (scale_type, mode) in scale_configs {
         let scale = Scale::new(scale_type, Pitch::from(C), 4, mode, Direction::Ascending).unwrap();
-        let bytes = scale.to_midi(Duration::Eighth, Velocity::new(80).unwrap())
+        let bytes = scale
+            .to_midi(Duration::Eighth, Velocity::new(80).unwrap())
             .to_bytes();
         assert_eq!(&bytes[0..4], b"MThd", "Failed for scale {:?}", scale_type);
     }
@@ -113,7 +136,8 @@ fn duration_varieties() {
     let chord = Chord::new(Pitch::from(C), Quality::Major, Number::Triad);
 
     for duration in durations {
-        let bytes = chord.to_midi(duration.clone(), Velocity::new(100).unwrap())
+        let bytes = chord
+            .to_midi(duration.clone(), Velocity::new(100).unwrap())
             .to_bytes();
         assert_eq!(&bytes[0..4], b"MThd", "Failed for duration {:?}", duration);
     }
@@ -134,8 +158,7 @@ fn builder_chaining() {
         .at_beat(4.0)
         .add(&c, Duration::Whole, vel);
 
-    let file = MidiFile::new()
-        .track(builder, Channel::new(0).unwrap());
+    let file = MidiFile::new().track(builder, Channel::new(0).unwrap());
 
     let bytes = file.to_bytes();
     assert_eq!(&bytes[0..4], b"MThd");

@@ -1,7 +1,7 @@
 //! Hypnotic techno bass with MIDI CC automation.
 //! Run with: cargo run --example hypnotic_techno --features midi-playback
 
-use rust_music_theory::midi::playback::{MidiPorts, MidiPlayer};
+use rust_music_theory::midi::playback::{MidiPlayer, MidiPorts};
 use rust_music_theory::midi::{Duration as NoteDuration, Velocity};
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -19,9 +19,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let soft = Velocity::new(60).unwrap();
 
     // Bass notes (E1 and octave)
-    let root: u8 = 28;      // E1
-    let fifth: u8 = 35;     // B1
-    let octave: u8 = 40;    // E2
+    let root: u8 = 28; // E1
+    let fifth: u8 = 35; // B1
+    let octave: u8 = 40; // E2
 
     println!("Starting hypnotic techno bass...");
     println!("Using CC 1 (mod wheel) and CC 74 (filter cutoff)");

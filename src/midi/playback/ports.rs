@@ -1,7 +1,7 @@
 //! MIDI port discovery.
 
-use midir::MidiOutput;
 use super::PlaybackError;
+use midir::MidiOutput;
 
 /// Lists available MIDI output ports on the system.
 #[derive(Debug)]

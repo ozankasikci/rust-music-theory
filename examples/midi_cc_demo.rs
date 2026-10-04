@@ -4,7 +4,7 @@
 use std::thread;
 use std::time::Duration;
 
-use rust_music_theory::midi::playback::{MidiPorts, MidiPlayer};
+use rust_music_theory::midi::playback::{MidiPlayer, MidiPorts};
 use rust_music_theory::midi::{Duration as NoteDuration, Velocity};
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {

@@ -1,6 +1,6 @@
 //! Internal MIDI event representation.
 
-use crate::midi::{Velocity, Channel};
+use crate::midi::{Channel, Velocity};
 
 /// Internal representation of a MIDI event.
 #[derive(Debug, Clone, PartialEq, Eq)]

@@ -22,7 +22,8 @@ pub fn init() {
 #[wasm_bindgen]
 pub fn get_chromatic_pitches() -> JsValue {
     let pitches = vec![
-        "C", "C#", "Db", "D", "D#", "Eb", "E", "F", "F#", "Gb", "G", "G#", "Ab", "A", "A#", "Bb", "B"
+        "C", "C#", "Db", "D", "D#", "Eb", "E", "F", "F#", "Gb", "G", "G#", "Ab", "A", "A#", "Bb",
+        "B",
     ];
     serde_wasm_bindgen::to_value(&pitches).unwrap_or(JsValue::NULL)
 }
@@ -34,8 +35,8 @@ mod tests {
     #[wasm_bindgen_test::wasm_bindgen_test]
     fn test_chromatic_pitches_count() {
         let pitches = vec![
-            "C", "C#", "Db", "D", "D#", "Eb", "E", "F",
-            "F#", "Gb", "G", "G#", "Ab", "A", "A#", "Bb", "B"
+            "C", "C#", "Db", "D", "D#", "Eb", "E", "F", "F#", "Gb", "G", "G#", "Ab", "A", "A#",
+            "Bb", "B",
         ];
         assert_eq!(pitches.len(), 17);
     }
@@ -43,8 +44,8 @@ mod tests {
     #[wasm_bindgen_test::wasm_bindgen_test]
     fn test_chromatic_pitches_content() {
         let pitches = vec![
-            "C", "C#", "Db", "D", "D#", "Eb", "E", "F",
-            "F#", "Gb", "G", "G#", "Ab", "A", "A#", "Bb", "B"
+            "C", "C#", "Db", "D", "D#", "Eb", "E", "F", "F#", "Gb", "G", "G#", "Ab", "A", "A#",
+            "Bb", "B",
         ];
 
         // Test that we have both sharps and flats
@@ -65,8 +66,7 @@ mod tests {
 
     #[wasm_bindgen_test::wasm_bindgen_test]
     fn test_exported_chromatic_pitches() {
-        let pitches: Vec<String> =
-            serde_wasm_bindgen::from_value(get_chromatic_pitches()).unwrap();
+        let pitches: Vec<String> = serde_wasm_bindgen::from_value(get_chromatic_pitches()).unwrap();
         assert_eq!(pitches.len(), 17);
         assert!(pitches.contains(&"C#".to_string()));
         assert!(pitches.contains(&"Db".to_string()));

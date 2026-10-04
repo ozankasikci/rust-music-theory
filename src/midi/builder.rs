@@ -1,7 +1,7 @@
 //! MIDI track builder with sequential and absolute positioning.
 
 use crate::midi::event::MidiEvent;
-use crate::midi::{Duration, Velocity, Channel};
+use crate::midi::{Channel, Duration, Velocity};
 use crate::note::Notes;
 
 /// Default PPQ (Pulses Per Quarter Note).
@@ -51,7 +51,12 @@ impl MidiBuilder {
     ///
     /// All notes are played simultaneously (chord-style) for the given duration.
     /// The cursor advances by the duration after adding.
-    pub fn add<N: Notes>(&mut self, notes: &N, duration: Duration, velocity: Velocity) -> &mut Self {
+    pub fn add<N: Notes>(
+        &mut self,
+        notes: &N,
+        duration: Duration,
+        velocity: Velocity,
+    ) -> &mut Self {
         let ticks = duration.to_ticks(self.ppq);
         let note_off_tick = self.cursor + ticks;
 
@@ -132,7 +137,7 @@ impl Default for MidiBuilder {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::chord::{Chord, Quality, Number};
+    use crate::chord::{Chord, Number, Quality};
     use crate::note::{Pitch, PitchSymbol::*};
 
     #[test]
@@ -241,7 +246,10 @@ mod tests {
 
         assert_eq!(builder.events.len(), 1);
         match &builder.events[0] {
-            MidiEvent::Tempo { tick, microseconds_per_beat } => {
+            MidiEvent::Tempo {
+                tick,
+                microseconds_per_beat,
+            } => {
                 assert_eq!(*tick, 0);
                 assert_eq!(*microseconds_per_beat, 500_000); // 120 BPM
             }
@@ -256,7 +264,11 @@ mod tests {
 
         assert_eq!(builder.events.len(), 1);
         match &builder.events[0] {
-            MidiEvent::TimeSignature { tick, numerator, denominator } => {
+            MidiEvent::TimeSignature {
+                tick,
+                numerator,
+                denominator,
+            } => {
                 assert_eq!(*tick, 0);
                 assert_eq!(*numerator, 6);
                 assert_eq!(*denominator, 8);
@@ -276,7 +288,9 @@ mod tests {
         builder.tempo(140); // Tempo change after first chord
 
         // Find tempo events
-        let tempo_events: Vec<_> = builder.events.iter()
+        let tempo_events: Vec<_> = builder
+            .events
+            .iter()
             .filter(|e| matches!(e, MidiEvent::Tempo { .. }))
             .collect();
 

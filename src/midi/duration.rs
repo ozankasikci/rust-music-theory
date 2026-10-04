@@ -79,27 +79,41 @@ mod tests {
     #[test]
     fn dotted_durations() {
         // Dotted quarter = 1.5 * 480 = 720
-        assert_eq!(Duration::Dotted(Box::new(Duration::Quarter)).to_ticks(PPQ), 720);
+        assert_eq!(
+            Duration::Dotted(Box::new(Duration::Quarter)).to_ticks(PPQ),
+            720
+        );
         // Dotted half = 1.5 * 960 = 1440
-        assert_eq!(Duration::Dotted(Box::new(Duration::Half)).to_ticks(PPQ), 1440);
+        assert_eq!(
+            Duration::Dotted(Box::new(Duration::Half)).to_ticks(PPQ),
+            1440
+        );
         // Dotted eighth = 1.5 * 240 = 360
-        assert_eq!(Duration::Dotted(Box::new(Duration::Eighth)).to_ticks(PPQ), 360);
+        assert_eq!(
+            Duration::Dotted(Box::new(Duration::Eighth)).to_ticks(PPQ),
+            360
+        );
     }
 
     #[test]
     fn triplet_durations() {
         // Triplet quarter = 2/3 * 480 = 320
-        assert_eq!(Duration::Triplet(Box::new(Duration::Quarter)).to_ticks(PPQ), 320);
+        assert_eq!(
+            Duration::Triplet(Box::new(Duration::Quarter)).to_ticks(PPQ),
+            320
+        );
         // Triplet eighth = 2/3 * 240 = 160
-        assert_eq!(Duration::Triplet(Box::new(Duration::Eighth)).to_ticks(PPQ), 160);
+        assert_eq!(
+            Duration::Triplet(Box::new(Duration::Eighth)).to_ticks(PPQ),
+            160
+        );
     }
 
     #[test]
     fn nested_modifiers() {
         // Dotted triplet quarter = 1.5 * (2/3 * 480) = 1.5 * 320 = 480
-        let dotted_triplet = Duration::Dotted(Box::new(
-            Duration::Triplet(Box::new(Duration::Quarter))
-        ));
+        let dotted_triplet =
+            Duration::Dotted(Box::new(Duration::Triplet(Box::new(Duration::Quarter))));
         assert_eq!(dotted_triplet.to_ticks(PPQ), 480);
     }
 

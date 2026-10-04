@@ -1,7 +1,7 @@
 //! Techno bass pattern.
 //! Run with: cargo run --example techno_bass --features midi-playback
 
-use rust_music_theory::midi::playback::{MidiPorts, MidiPlayer};
+use rust_music_theory::midi::playback::{MidiPlayer, MidiPorts};
 use rust_music_theory::midi::{Duration, Velocity};
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -19,9 +19,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let soft = Velocity::new(70).unwrap();
 
     // E1 = MIDI note 28, E2 = 40
-    let root_low: u8 = 28;  // E1
+    let root_low: u8 = 28; // E1
     let root_high: u8 = 40; // E2
-    let fifth: u8 = 35;     // B1
+    let fifth: u8 = 35; // B1
 
     println!("Playing techno bass... (Ctrl+C to stop)");
 

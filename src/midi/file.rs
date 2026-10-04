@@ -3,12 +3,12 @@
 use std::io;
 use std::path::Path;
 
-use midly::{Format, Header, Smf, Timing, Track, TrackEvent, TrackEventKind, MidiMessage};
-use midly::num::{u4, u7, u15, u24, u28};
+use midly::num::{u15, u24, u28, u4, u7};
 use midly::MetaMessage;
+use midly::{Format, Header, MidiMessage, Smf, Timing, Track, TrackEvent, TrackEventKind};
 
-use crate::midi::{MidiBuilder, Channel};
 use crate::midi::event::MidiEvent;
+use crate::midi::{Channel, MidiBuilder};
 
 /// Combines multiple tracks into a complete MIDI file.
 #[derive(Debug, Clone)]
@@ -65,7 +65,8 @@ impl MidiFile {
     pub fn to_bytes(&self) -> Vec<u8> {
         let smf = self.to_smf();
         let mut bytes = Vec::new();
-        smf.write(&mut bytes).expect("Failed to write MIDI to bytes");
+        smf.write(&mut bytes)
+            .expect("Failed to write MIDI to bytes");
         bytes
     }
 
@@ -77,10 +78,7 @@ impl MidiFile {
 
     /// Convert to midly Smf structure.
     fn to_smf(&self) -> Smf<'static> {
-        let header = Header::new(
-            Format::Parallel,
-            Timing::Metrical(u15::new(self.ppq)),
-        );
+        let header = Header::new(Format::Parallel, Timing::Metrical(u15::new(self.ppq)));
 
         let mut smf = Smf::new(header);
 
@@ -88,9 +86,9 @@ impl MidiFile {
         let tempo_track: Track = vec![
             TrackEvent {
                 delta: u28::new(0),
-                kind: TrackEventKind::Meta(MetaMessage::Tempo(
-                    u24::new(MidiEvent::bpm_to_microseconds(self.default_tempo))
-                )),
+                kind: TrackEventKind::Meta(MetaMessage::Tempo(u24::new(
+                    MidiEvent::bpm_to_microseconds(self.default_tempo),
+                ))),
             },
             TrackEvent {
                 delta: u28::new(0),
@@ -132,7 +130,9 @@ impl MidiFile {
             last_tick = event.tick();
 
             let track_event = match event {
-                MidiEvent::NoteOn { pitch, velocity, .. } => TrackEvent {
+                MidiEvent::NoteOn {
+                    pitch, velocity, ..
+                } => TrackEvent {
                     delta: u28::new(delta),
                     kind: TrackEventKind::Midi {
                         channel: u4::new(channel.value()),
@@ -152,13 +152,18 @@ impl MidiFile {
                         },
                     },
                 },
-                MidiEvent::Tempo { microseconds_per_beat, .. } => TrackEvent {
+                MidiEvent::Tempo {
+                    microseconds_per_beat,
+                    ..
+                } => TrackEvent {
                     delta: u28::new(delta),
-                    kind: TrackEventKind::Meta(MetaMessage::Tempo(
-                        u24::new(microseconds_per_beat)
-                    )),
+                    kind: TrackEventKind::Meta(MetaMessage::Tempo(u24::new(microseconds_per_beat))),
                 },
-                MidiEvent::TimeSignature { numerator, denominator, .. } => TrackEvent {
+                MidiEvent::TimeSignature {
+                    numerator,
+                    denominator,
+                    ..
+                } => TrackEvent {
                     delta: u28::new(delta),
                     kind: TrackEventKind::Meta(MetaMessage::TimeSignature(
                         numerator,
@@ -204,10 +209,10 @@ impl Default for MidiFile {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::chord::{Chord, Number, Quality};
     use crate::midi::builder::MidiBuilder;
-    use crate::chord::{Chord, Quality, Number};
-    use crate::note::{Pitch, PitchSymbol::*};
     use crate::midi::{Duration, Velocity};
+    use crate::note::{Pitch, PitchSymbol::*};
 
     #[test]
     fn new_file_defaults() {
@@ -220,10 +225,7 @@ mod tests {
 
     #[test]
     fn builder_pattern() {
-        let file = MidiFile::new()
-            .tempo(90)
-            .time_signature(6, 8)
-            .ppq(960);
+        let file = MidiFile::new().tempo(90).time_signature(6, 8).ppq(960);
 
         assert_eq!(file.default_tempo, 90);
         assert_eq!(file.default_time_sig, (6, 8));
@@ -248,8 +250,7 @@ mod tests {
         let chord = Chord::new(Pitch::from(C), Quality::Major, Number::Triad);
         track.add(&chord, Duration::Quarter, Velocity::new(100).unwrap());
 
-        let file = MidiFile::new()
-            .track(track, Channel::new(0).unwrap());
+        let file = MidiFile::new().track(track, Channel::new(0).unwrap());
 
         let bytes = file.to_bytes();
 
@@ -270,9 +271,7 @@ mod tests {
 
         // Count "MTrk" occurrences (track headers)
         // Should be 3: 1 tempo track + 2 note tracks
-        let mtrk_count = bytes.windows(4)
-            .filter(|w| w == b"MTrk")
-            .count();
+        let mtrk_count = bytes.windows(4).filter(|w| w == b"MTrk").count();
         assert_eq!(mtrk_count, 3);
     }
 }

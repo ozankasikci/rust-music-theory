@@ -35,7 +35,8 @@ mod chord_tests {
             for inversion in 0..pitches.len() {
                 assert_notes(
                     &symbols,
-                    Chord::with_inversion(Pitch::from(chord.0), chord.1, chord.2, inversion as u8).notes(),
+                    Chord::with_inversion(Pitch::from(chord.0), chord.1, chord.2, inversion as u8)
+                        .notes(),
                 );
                 symbols.rotate_left(1);
             }
@@ -61,9 +62,13 @@ mod chord_tests {
             [4, 5, 5, 6, 6],
         ];
         for inversion in 0..octaves[0].len() {
-            let notes =
-                Chord::with_inversion(Pitch::from(chord_desc.0), chord_desc.1, chord_desc.2, inversion as u8)
-                    .notes();
+            let notes = Chord::with_inversion(
+                Pitch::from(chord_desc.0),
+                chord_desc.1,
+                chord_desc.2,
+                inversion as u8,
+            )
+            .notes();
             assert_eq!(
                 notes
                     .into_iter()
@@ -109,7 +114,10 @@ mod chord_tests {
     #[test]
     fn test_major_seventh_modifiers_are_not_lost() {
         let augmented = Chord::parse("C Augmented Major Seventh").unwrap();
-        assert_eq!((augmented.quality(), augmented.number()), (Augmented, MajorSeventh));
+        assert_eq!(
+            (augmented.quality(), augmented.number()),
+            (Augmented, MajorSeventh)
+        );
         assert_notes(&[C, E, Gs, B], augmented.notes());
 
         let minor = Chord::parse("C Minor Major Seventh").unwrap();
@@ -173,7 +181,11 @@ mod chord_tests {
     #[test]
     fn test_chord_from_string_returns_errors_instead_of_panicking() {
         for input in ["", "C nope G", "C D", "C C C"] {
-            assert!(Chord::from_string(input).is_err(), "{} should be invalid", input);
+            assert!(
+                Chord::from_string(input).is_err(),
+                "{} should be invalid",
+                input
+            );
         }
     }
 
@@ -190,11 +202,7 @@ mod chord_tests {
     #[test]
     fn test_invalid_chord_regex() {
         // Test definitely invalid chord strings
-        let invalid_chords = vec![
-            "",
-            "123",
-            "!@#$%",
-        ];
+        let invalid_chords = vec!["", "123", "!@#$%"];
 
         for invalid_chord in invalid_chords {
             assert!(
@@ -212,9 +220,9 @@ mod chord_tests {
 
         // Test with invalid interval patterns
         let invalid_patterns = vec![
-            vec![1, 2],           // Too few intervals for any chord
-            vec![5, 5, 5, 5, 5],  // Nonsensical pattern
-            vec![13, 14, 15],     // Intervals too large
+            vec![1, 2],          // Too few intervals for any chord
+            vec![5, 5, 5, 5, 5], // Nonsensical pattern
+            vec![13, 14, 15],    // Intervals too large
         ];
 
         for pattern in invalid_patterns {
@@ -240,11 +248,7 @@ mod chord_tests {
         assert_eq!(default_chord.bass(), None);
 
         // Default chord has empty intervals, so we need to create one properly
-        let c_major = Chord::new(
-            Pitch::new(NoteLetter::C, 0),
-            Quality::Major,
-            Number::Triad
-        );
+        let c_major = Chord::new(Pitch::new(NoteLetter::C, 0), Quality::Major, Number::Triad);
         let notes = c_major.notes();
         assert_eq!(notes[0].pitch, Pitch::new(NoteLetter::C, 0));
         assert_eq!(notes[1].pitch, Pitch::new(NoteLetter::E, 0));

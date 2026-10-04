@@ -11,10 +11,8 @@ mod test_interval {
         let major_second = Interval::from_semitone(2).unwrap();
         let cases = [("C", 3, "D", 3), ("E", 3, "Fs", 3), ("As", 3, "Bs", 3)];
         for (first, first_octave, expected, expected_octave) in cases {
-            let next_note = major_second.second_note_from(Note::new(
-                Pitch::from_str(first).unwrap(),
-                first_octave,
-            ));
+            let next_note = major_second
+                .second_note_from(Note::new(Pitch::from_str(first).unwrap(), first_octave));
             assert_eq!(next_note.pitch, Pitch::from_str(expected).unwrap());
             assert_eq!(next_note.octave, expected_octave);
         }
@@ -25,10 +23,8 @@ mod test_interval {
         let major_second = Interval::from_semitone(2).unwrap();
         let cases = [("C", 4, "Bb", 3), ("Fs", 3, "E", 3), ("Cb", 4, "Bbb", 3)];
         for (first, first_octave, expected, expected_octave) in cases {
-            let next_note = major_second.second_note_down_from(Note::new(
-                Pitch::from_str(first).unwrap(),
-                first_octave,
-            ));
+            let next_note = major_second
+                .second_note_down_from(Note::new(Pitch::from_str(first).unwrap(), first_octave));
             assert_eq!(next_note.pitch, Pitch::from_str(expected).unwrap());
             assert_eq!(next_note.octave, expected_octave);
         }
@@ -191,7 +187,7 @@ mod test_interval {
 
     #[test]
     fn test_interval_quality_and_number() {
-        use theory::interval::{Quality, Number};
+        use theory::interval::{Number, Quality};
 
         // Test perfect intervals
         let unison = Interval::from_semitone(0).unwrap();

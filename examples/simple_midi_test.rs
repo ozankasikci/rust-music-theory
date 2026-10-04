@@ -1,10 +1,10 @@
 //! Quick test for MIDI playback.
 //! Run with: cargo run --example midi_test --features midi-playback
 
-use rust_music_theory::chord::{Chord, Quality, Number};
-use rust_music_theory::note::{Pitch, PitchSymbol::*};
-use rust_music_theory::midi::playback::{MidiPorts, MidiPlayer};
+use rust_music_theory::chord::{Chord, Number, Quality};
+use rust_music_theory::midi::playback::{MidiPlayer, MidiPorts};
 use rust_music_theory::midi::{Duration, Velocity};
+use rust_music_theory::note::{Pitch, PitchSymbol::*};
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     // List available ports
